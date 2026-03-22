@@ -33,7 +33,9 @@ Complexity rating: 3/5 — the hash chain is the hard part, everything else is s
 
 ### IN SCOPE (must ship):
 
-✅ **Evidence Capture** — Upload documents, photos, logs, notes. SHA-256 hash computed on ingestion. Immutable timestamp recorded. This is the atomic unit of the entire system. Without it, nothing downstream works.
+✅ **Custody Plan + Evidence Requirements** — Before evidence capture begins, the trustee defines what will be custodied, at what milestones, by whom. Each requirement is a trackable item: pending, fulfilled, or overdue. The plan is hashed when activated (draft → active), locking it as a pre-dispute record of intent. This is what transforms AetherTrace from a filing cabinet into a custody service.
+
+✅ **Evidence Capture Against Plan** — Upload documents, photos, logs, notes. SHA-256 hash computed on ingestion. Immutable timestamp recorded. Each upload can be tagged to a specific requirement in the custody plan, tracking fulfillment. Ad-hoc evidence (not mapped to a requirement) is also supported. This is the atomic unit of the entire system. Without it, nothing downstream works.
 
 ✅ **Chain-of-Custody Ledger** — Append-only, cryptographically chained, tamper-evident log of every custody event. Each event links to the previous event's hash, creating an unbreakable chain. This is AetherTrace's core differentiator — the thing no competitor does.
 
@@ -90,15 +92,21 @@ Complexity rating: 3/5 — the hash chain is the hard part, everything else is s
 [Browser] → [Next.js App (Vercel)]
                ├── /app (React UI)
                │    ├── /dashboard — project list, evidence feed
-               │    ├── /project/[id] — evidence items, custody log
+               │    ├── /project/[id] — project overview + completeness dashboard
+               │    ├── /project/[id]/plan — custody plan builder + requirement tracker
+               │    ├── /project/[id]/evidence — evidence items, custody log
                │    ├── /project/[id]/export — package generation
                │    └── /verify/[hash] — public verification (no auth)
                │
                └── /api (API Routes)
-                    ├── /api/evidence/upload — file + metadata → hash + custody event
+                    ├── /api/plan/create — create custody plan for project
+                    ├── /api/plan/[id]/activate — lock plan + hash (draft → active)
+                    ├── /api/plan/[id]/requirements — CRUD requirements
+                    ├── /api/evidence/upload — file + metadata + requirement_id → hash + custody event
                     ├── /api/evidence/[id] — read evidence item
                     ├── /api/custody/[projectId] — full custody chain
-                    ├── /api/export/[projectId] — generate evidence package
+                    ├── /api/completeness/[projectId] — plan completeness status
+                    ├── /api/export/[projectId] — generate evidence package (includes plan + completeness)
                     ├── /api/verify/[hash] — public hash verification
                     ├── /api/stripe/checkout — create checkout session
                     └── /api/stripe/webhook — handle subscription events
@@ -107,6 +115,8 @@ Complexity rating: 3/5 — the hash chain is the hard part, everything else is s
   ├── Postgres (with RLS)
   │    ├── organizations
   │    ├── projects
+  │    ├── custody_plans
+  │    ├── evidence_requirements
   │    ├── evidence_items
   │    ├── custody_events
   │    ├── evidence_packages
@@ -122,6 +132,30 @@ Complexity rating: 3/5 — the hash chain is the hard part, everything else is s
   ├── Stripe — payments + subscription lifecycle
   └── Resend — transactional email
 ```
+
+## The Trustee Function — How AetherTrace Actually Works
+
+AetherTrace is not a passive evidence bucket. It is a custody service with a defined workflow that maps to how real projects operate — especially in procurement, where the work is planned before it's executed.
+
+### The Workflow (How Casey Operates as Trustee)
+
+**Step 1: Custody Plan** — Before any evidence is captured, the trustee (Casey or the org owner) creates a Custody Plan for the project. This defines: what evidence categories will be custodied, at what milestones, by whom, and what constitutes a complete custody record. In construction: "We will custody daily progress photos, inspection reports at each milestone, material delivery receipts, and change order documentation." In ESPC: "We will custody M&V baseline readings, monthly performance data, equipment installation verification, and commissioning reports."
+
+**Step 2: Evidence Requirements** — Each custody plan contains specific Evidence Requirements — the individual items that MUST be captured. These are checkboxes, not suggestions. "Foundation inspection photo — due at milestone 1." "HVAC commissioning report — due at milestone 3." The plan defines what "complete" looks like before the first piece of evidence arrives.
+
+**Step 3: Evidence Capture Against Plan** — Submitters upload evidence and tag it to a specific requirement in the plan. The system tracks: which requirements have been fulfilled, which are pending, which are overdue. Every upload is hashed and chained as before — but now it's mapped to a requirement, not floating in a void.
+
+**Step 4: Completeness Verification** — At any point, the trustee can see a completeness dashboard: 14 of 22 requirements fulfilled, 3 pending, 5 overdue. The evidence package export includes this completeness status. An attorney or auditor doesn't just see "here are some files" — they see "here is what was supposed to be custodied, here is what was actually custodied, and here is the gap."
+
+**Step 5: Evidence Package Export** — Same as before, but now includes the custody plan, requirement status, and completeness score alongside the hash chain and verification data.
+
+### Why This Matters
+
+For **Path A** (commercial SaaS): A subcontractor who defines their custody plan before work begins has a fundamentally stronger legal position. "We planned to custody these 22 items. All 22 are here, cryptographically verified." vs. "Here are some photos we took."
+
+For **Path B** (federal subcontractor): Casey sits at the planning table during project kickoff. "I'm your evidence custodian. Here's the custody plan. These are the items we'll track against your milestones." This is a professional service, not a software subscription. The custody plan IS the deliverable that primes pay for — the software is just the engine that enforces it.
+
+For **legal credibility**: A pre-defined custody plan that was created before any dispute existed is exponentially more credible than ad-hoc evidence collection. It shows intent, process, and completeness — the three things attorneys and auditors look for.
 
 ## Core Data Model
 
@@ -153,6 +187,41 @@ CREATE TABLE projects (
   updated_at TIMESTAMPTZ DEFAULT now()
 );
 
+-- Custody Plans (the trustee function — defines what WILL be custodied)
+-- Created BEFORE evidence capture begins. This is the contract.
+CREATE TABLE custody_plans (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  project_id UUID NOT NULL REFERENCES projects(id),
+  created_by UUID NOT NULL REFERENCES auth.users(id),
+  name TEXT NOT NULL,              -- e.g., "Phase 1 Construction Custody Plan"
+  description TEXT,                -- scope of custody
+  status TEXT DEFAULT 'draft',     -- draft, active, completed, archived
+  plan_hash TEXT NOT NULL,         -- SHA-256 of plan contents at activation
+  activated_at TIMESTAMPTZ,        -- when plan moved from draft → active (locked)
+  completed_at TIMESTAMPTZ,        -- when all requirements fulfilled
+  metadata JSONB DEFAULT '{}',     -- flexible: milestones, parties, contract refs
+  created_at TIMESTAMPTZ DEFAULT now(),
+  updated_at TIMESTAMPTZ DEFAULT now()
+);
+
+-- Evidence Requirements (what MUST be custodied — defined in advance)
+-- Each requirement is a checkbox: either fulfilled or not
+CREATE TABLE evidence_requirements (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  custody_plan_id UUID NOT NULL REFERENCES custody_plans(id),
+  category TEXT NOT NULL,          -- e.g., "inspection", "delivery", "testing", "m&v"
+  description TEXT NOT NULL,       -- e.g., "Foundation inspection photo at milestone 1"
+  milestone TEXT,                  -- optional grouping: "Pre-construction", "Phase 1", etc.
+  due_date TIMESTAMPTZ,            -- when this evidence is expected
+  required BOOLEAN DEFAULT true,   -- required vs. optional evidence
+  status TEXT DEFAULT 'pending',   -- pending, fulfilled, overdue, waived
+  fulfilled_by UUID REFERENCES evidence_items(id), -- links to the actual evidence when captured
+  fulfilled_at TIMESTAMPTZ,
+  sort_order INTEGER DEFAULT 0,    -- display ordering within plan
+  metadata JSONB DEFAULT '{}',     -- flexible: responsible party, notes
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+
 -- Evidence Items (the atomic unit)
 -- DOMAIN-AGNOSTIC: no construction-specific fields
 CREATE TABLE evidence_items (
@@ -164,6 +233,7 @@ CREATE TABLE evidence_items (
   file_type TEXT NOT NULL,          -- MIME type
   file_size BIGINT NOT NULL,        -- bytes
   content_hash TEXT NOT NULL,       -- SHA-256 of file contents
+  requirement_id UUID REFERENCES evidence_requirements(id), -- links to custody plan requirement (NULL if ad-hoc)
   metadata JSONB DEFAULT '{}',      -- flexible metadata (labels, notes, location)
   chain_hash TEXT NOT NULL,         -- hash linking to previous item in project chain
   chain_position INTEGER NOT NULL,  -- sequential position in chain
@@ -207,11 +277,20 @@ CREATE TABLE evidence_packages (
 ### Key Relationships
 ```
 Organization (1) ──→ (many) Projects
+Project (1) ──→ (many) Custody Plans
+Custody Plan (1) ──→ (many) Evidence Requirements
+Evidence Requirement (1) ──→ (0 or 1) Evidence Item (fulfillment link)
 Project (1) ──→ (many) Evidence Items (hash-chained)
+Evidence Item (0 or 1) ←── (0 or 1) Evidence Requirement (requirement_id)
 Project (1) ──→ (many) Custody Events (hash-chained)
 Project (1) ──→ (many) Evidence Packages
 Evidence Item (1) ──→ (many) Custody Events
 ```
+
+The custody plan → requirement → evidence item chain is the trustee workflow:
+Plan defines requirements. Requirements get fulfilled by evidence items.
+Evidence items are hash-chained regardless of whether they fulfill a requirement.
+Ad-hoc evidence (requirement_id = NULL) is still valid — it just isn't mapped to the plan.
 
 ### The Hash Chain — How It Works
 
@@ -378,10 +457,10 @@ ANVIL executes in this order. Each phase has a clear "done" gate.
 **Done gate:** Can create org, create project, upload file to storage, insert evidence_item with hash chain, and verify RLS blocks cross-tenant access.
 **Files:** `supabase/migrations/001_initial_schema.sql`, `supabase/seed.sql`
 
-### Phase 3: Core API (Week 2-3)
-**What:** API routes for evidence upload, custody event logging, chain verification, evidence retrieval.
-**Done gate:** Can upload evidence via API, see custody chain via API, verify chain integrity via API. All behind auth. All with RLS enforced.
-**Files:** `app/api/evidence/`, `app/api/custody/`, `app/api/verify/`
+### Phase 3: Custody Plan + Core API (Week 2-3)
+**What:** Custody plan CRUD, evidence requirement management, plan activation (hash + lock), evidence upload with requirement tagging, custody event logging, chain verification, completeness tracking.
+**Done gate:** Can create a custody plan with requirements, activate (lock) it, upload evidence tagged to a requirement, see completeness status (X of Y requirements fulfilled), see custody chain via API, verify chain integrity via API. All behind auth. All with RLS enforced.
+**Files:** `app/api/plan/`, `app/api/evidence/`, `app/api/custody/`, `app/api/completeness/`, `app/api/verify/`
 
 ### Phase 4: Evidence Package Export (Week 3-4)
 **What:** Generate PDF + ZIP bundle from a project's evidence chain. PDF includes: project summary, evidence inventory, full custody log with timestamps and hashes, chain verification status, instructions for third-party verification.

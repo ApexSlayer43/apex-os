@@ -49,3 +49,5 @@ Status: in-progress
 
 ## Decision Queue
 No decisions pending.
+
+<!-- MCP write test: 2026-03-22 from Cowork session -->

@@ -1,13 +1,13 @@
 ---
 type: system-state
 last-updated: 2026-03-22
-updated-by: anvil
+updated-by: cowork-session
 ---
 
 # APEX OS — System State
 
 ## Last Updated
-2026-03-22 by ANVIL (initial vault scaffold)
+2026-03-22 by Cowork session (infrastructure configuration complete)
 
 ## Active Sprint
 Sprint: S-2026-Q1-13
@@ -44,10 +44,27 @@ Status: in-progress
 - Cumulative approval rate: N/A
 
 ## Blockers
-- MCP connection to Obsidian not yet configured (requires Windows setup outside Cowork)
-- Obsidian plugins not yet installed
+None. All infrastructure operational.
+
+## Infrastructure Status (Updated 2026-03-22)
+
+| Component | Status | Notes |
+|-----------|--------|-------|
+| MCP Bridge (mcp-obsidian) | LIVE | Read/write/search/list verified from Cowork |
+| Local REST API | LIVE | Port 27124, Obsidian must be running |
+| Git Auto-Sync | LIVE | 10-min interval, pushing to GitHub |
+| Dataview | LIVE | JS queries enabled |
+| Templater | LIVE | Template folder: 00-system/templates/ |
+| Periodic Notes | LIVE | Daily notes active |
+| Tasks | LIVE | Task tracking across vault |
+| Nexus | LIVE | Anthropic provider, Claude Sonnet 4.6, workspace: apex-os |
+| Smart Connections | LIVE | Local embeddings (TaylorAI/bge-micro-v2), no API cost |
+| BRAT | LIVE | Beta plugin manager |
+| Claude Code MCP (iansinnott) | LIVE | Connected to Claude Desktop |
+
+### Pending (Non-blocking)
+- Day 3 plugins not yet installed: QuickAdd, Linter, Commander, Meta Bind
+- Tier 1 connectors not yet wired: Stripe, Sentry, PostHog
 
 ## Decision Queue
 No decisions pending.
-
-<!-- MCP write test: 2026-03-22 from Cowork session -->

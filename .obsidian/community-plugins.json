@@ -8,5 +8,9 @@
   "obsidian-git",
   "nexus",
   "obsidian-tasks-plugin",
-  "smart-connections"
+  "smart-connections",
+  "quickadd",
+  "obsidian-linter",
+  "cmdr",
+  "obsidian-meta-bind-plugin"
 ]

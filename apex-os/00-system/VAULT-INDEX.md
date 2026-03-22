@@ -6,6 +6,32 @@ last-updated: 2026-03-22
 
 # Apex OS — Vault Index
 
+## Quick Actions
+
+```meta-bind-button
+label: New Agent Output
+style: primary
+action:
+  type: command
+  command: quickadd:runQuickAdd
+```
+
+```meta-bind-button
+label: Open Sprint
+style: default
+action:
+  type: open
+  link: "[[00-system/SPRINT]]"
+```
+
+```meta-bind-button
+label: Open STATE
+style: default
+action:
+  type: open
+  link: "[[00-system/STATE]]"
+```
+
 ## System Status
 ![[00-system/STATE.md]]
 

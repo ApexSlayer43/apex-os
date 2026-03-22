@@ -62,8 +62,12 @@ None. All infrastructure operational.
 | BRAT | LIVE | Beta plugin manager |
 | Claude Code MCP (iansinnott) | LIVE | Connected to Claude Desktop |
 
+| QuickAdd | LIVE | 9 agent templates configured |
+| Linter | LIVE | Auto-format on save |
+| Commander | LIVE | QuickAdd ribbon button |
+| Meta Bind | LIVE | Dashboard buttons in VAULT-INDEX |
+
 ### Pending (Non-blocking)
-- Day 3 plugins not yet installed: QuickAdd, Linter, Commander, Meta Bind
 - Tier 1 connectors not yet wired: Stripe, Sentry, PostHog
 
 ## Decision Queue

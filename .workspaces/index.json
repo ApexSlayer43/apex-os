@@ -1,8 +1,56 @@
 {
-  "workspaces": {},
-  "byName": {},
-  "byDescription": {},
-  "byFolder": {},
-  "sessionsByWorkspace": {},
-  "lastUpdated": 1774205931747
+  "workspaces": {
+    "default": {
+      "id": "default",
+      "name": "Default Workspace",
+      "description": "Default workspace for tool calls without explicit workspace context",
+      "rootFolder": "/",
+      "created": 1774206225510,
+      "lastAccessed": 1774206225510,
+      "isActive": true,
+      "sessionCount": 0,
+      "traceCount": 0
+    }
+  },
+  "byName": {
+    "default": [
+      "default"
+    ],
+    "workspace": [
+      "default"
+    ]
+  },
+  "byDescription": {
+    "default": [
+      "default"
+    ],
+    "workspace": [
+      "default"
+    ],
+    "for": [
+      "default"
+    ],
+    "tool": [
+      "default"
+    ],
+    "calls": [
+      "default"
+    ],
+    "without": [
+      "default"
+    ],
+    "explicit": [
+      "default"
+    ],
+    "context": [
+      "default"
+    ]
+  },
+  "byFolder": {
+    "/": "default"
+  },
+  "sessionsByWorkspace": {
+    "default": []
+  },
+  "lastUpdated": 1774206225688
 }

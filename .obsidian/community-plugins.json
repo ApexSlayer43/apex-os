@@ -1,4 +1,12 @@
 [
   "obsidian-local-rest-api",
-  "obsidian42-brat"
+  "obsidian42-brat",
+  "claude-code-mcp",
+  "templater-obsidian",
+  "periodic-notes",
+  "dataview",
+  "obsidian-git",
+  "nexus",
+  "obsidian-tasks-plugin",
+  "smart-connections"
 ]

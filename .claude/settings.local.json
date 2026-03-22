@@ -40,7 +40,17 @@
       "Bash(uvx --version)",
       "Bash(where uvx:*)",
       "Bash(git init:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git remote:*)",
+      "Bash(git branch:*)",
+      "Bash(git push:*)",
+      "Bash(gh auth:*)",
+      "Bash(claude mcp:*)",
+      "Bash(npx.cmd --yes mcp-remote --help)",
+      "Bash(npm config:*)",
+      "Bash(npx.cmd --yes --registry https://registry.npmjs.org mcp-remote --help)",
+      "Bash(NODE_OPTIONS=\"--dns-result-order=ipv4first\" npx.cmd --yes mcp-remote --help)"
     ]
   }
 }

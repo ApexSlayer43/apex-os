@@ -441,7 +441,10 @@ Working web app: sign up → pay → create project → upload evidence → see 
 Federal report templates (audit-ready formatting). Mobile PWA for field capture. Prime contractor accounts. Procore integration if demanded. Custom domains for verification URLs (client.aethertrace.com/verify/[hash]). This is where Path B diverges from Path A at the UI layer — same engine, different presentation.
 
 ### What must NOT change between v0.1 and v2:
-The hash chain algorithm. The custody event schema. The verification logic. The evidence_items and custody_events table structures. These are the invariant core. Everything else can change.
+The hash chain algorithm. The custody event schema. The verification logic. The evidence_items and custody_events table structures. The custody plan + requirements structure. These are the invariant core. Everything else can change.
+
+### Design Invariant — AI Reconstruction Rule (Future Path D)
+When AI reconstruction is built (Year 3+), this rule is immutable: **The AI can NEVER infer. It can ONLY construct derived evidence from data that already lives in the custody chain.** Every statement must trace to a specific hash. Gaps are reported as findings, not filled. The AI is a compiler, not an analyst. This is what makes reconstruction legally defensible and eliminates hallucination risk. This invariant is on the same level as the hash chain — it is non-negotiable.
 
 ## Build Sequence
 

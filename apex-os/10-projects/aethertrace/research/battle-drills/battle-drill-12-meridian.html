@@ -1,0 +1,1305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Meridian — Cloud-Native Observability</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ── PRISM Design Tokens ── */
+:root {
+  --font-heading: 'Inter', sans-serif;
+  --font-body: 'Inter', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --color-primary: #0D9488;
+  --color-primary-light: #14B8A6;
+  --color-primary-dark: #0F766E;
+  --color-primary-glow: rgba(13,148,136,0.15);
+  --color-bg-hero: #0A0F1E;
+  --color-bg-hero-surface: rgba(255,255,255,0.04);
+  --color-bg: #F8FAFC;
+  --color-surface: #FFFFFF;
+  --color-text: #0F172A;
+  --color-text-hero: #F1F5F9;
+  --color-text-muted: #64748B;
+  --color-accent: #F59E0B;
+  --color-border: #E2E8F0;
+  --color-border-hero: rgba(255,255,255,0.08);
+  --color-success: #22C55E;
+  --color-error: #EF4444;
+  --color-warning: #F59E0B;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+  --shadow-md: 0 8px 30px rgba(0,0,0,0.08);
+  --shadow-lg: 0 20px 60px rgba(0,0,0,0.12);
+  --transition-fast: 150ms ease;
+  --transition-base: 200ms ease;
+  --transition-slow: 300ms ease;
+  --max-width: 1200px;
+}
+
+/* ── Reset ── */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-body);
+  color: var(--color-text);
+  background: var(--color-bg);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+a { text-decoration: none; color: inherit; }
+img { max-width: 100%; display: block; }
+button { font-family: inherit; cursor: pointer; border: none; background: none; }
+
+.container { max-width: var(--max-width); margin: 0 auto; padding: 0 24px; }
+
+/* ── NAV ── */
+.nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  background: rgba(10,15,30,0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--color-border-hero);
+  transition: background var(--transition-base);
+}
+.nav-inner {
+  max-width: var(--max-width); margin: 0 auto; padding: 0 24px;
+  display: flex; align-items: center; justify-content: space-between;
+  height: 64px;
+}
+.nav-logo {
+  font-family: var(--font-heading); font-weight: 800; font-size: 20px;
+  color: #FFFFFF; letter-spacing: -0.02em;
+  display: flex; align-items: center; gap: 8px;
+}
+.nav-logo .logo-mark {
+  width: 28px; height: 28px; border-radius: 6px;
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-light));
+  display: flex; align-items: center; justify-content: center;
+}
+.nav-logo .logo-mark svg { width: 16px; height: 16px; }
+.nav-links { display: flex; align-items: center; gap: 4px; }
+.nav-item {
+  position: relative; padding: 8px 14px; font-size: 14px; font-weight: 500;
+  color: rgba(255,255,255,0.7); border-radius: var(--radius-sm);
+  transition: color var(--transition-fast);
+  display: flex; align-items: center; gap: 4px;
+}
+.nav-item:hover { color: #FFFFFF; }
+.nav-item svg { width: 14px; height: 14px; opacity: 0.5; transition: transform var(--transition-fast); }
+.nav-item:hover svg { transform: rotate(180deg); opacity: 0.8; }
+.nav-right { display: flex; align-items: center; gap: 12px; }
+.nav-login { font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.7); padding: 8px 16px; transition: color var(--transition-fast); }
+.nav-login:hover { color: #FFFFFF; }
+.nav-cta {
+  font-size: 14px; font-weight: 600; color: #FFFFFF;
+  background: var(--color-primary); padding: 8px 20px;
+  border-radius: var(--radius-md); transition: all var(--transition-base);
+}
+.nav-cta:hover { background: var(--color-primary-dark); box-shadow: 0 0 20px var(--color-primary-glow); }
+
+/* ── MEGA DROPDOWN ── */
+.mega-dropdown {
+  position: absolute; top: calc(100% + 16px); left: 50%; transform: translateX(-50%);
+  background: var(--color-surface); border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg); padding: 24px;
+  box-shadow: var(--shadow-lg);
+  opacity: 0; pointer-events: none; transform: translateX(-50%) translateY(-8px);
+  transition: opacity var(--transition-base), transform var(--transition-base);
+  min-width: 560px;
+}
+.nav-item:hover .mega-dropdown,
+.mega-dropdown.open {
+  opacity: 1; pointer-events: auto; transform: translateX(-50%) translateY(0);
+}
+.mega-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 4px; }
+.mega-grid.cols-3 { grid-template-columns: repeat(3, 1fr); min-width: 680px; }
+.mega-item {
+  display: flex; gap: 12px; padding: 12px; border-radius: var(--radius-md);
+  transition: background var(--transition-fast);
+}
+.mega-item:hover { background: var(--color-bg); }
+.mega-icon {
+  width: 36px; height: 36px; border-radius: var(--radius-md);
+  background: var(--color-primary-glow); display: flex;
+  align-items: center; justify-content: center; flex-shrink: 0;
+}
+.mega-icon svg { width: 18px; height: 18px; color: var(--color-primary); }
+.mega-label { font-size: 14px; font-weight: 600; color: var(--color-text); margin-bottom: 2px; }
+.mega-desc { font-size: 12px; color: var(--color-text-muted); line-height: 1.4; }
+
+/* ── HERO ── */
+.hero {
+  background: var(--color-bg-hero);
+  background-image:
+    radial-gradient(circle at 20% 50%, rgba(13,148,136,0.06) 0%, transparent 50%),
+    radial-gradient(circle at 80% 30%, rgba(99,102,241,0.04) 0%, transparent 50%);
+  padding: 160px 0 100px;
+  position: relative; overflow: hidden;
+}
+.hero::before {
+  content: ''; position: absolute; inset: 0;
+  background-image: radial-gradient(rgba(255,255,255,0.03) 1px, transparent 1px);
+  background-size: 32px 32px;
+  pointer-events: none;
+}
+.hero-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
+.hero-text h1 {
+  font-family: var(--font-heading); font-weight: 800; font-size: 56px;
+  line-height: 1.08; letter-spacing: -0.03em;
+  color: var(--color-text-hero); margin-bottom: 20px;
+}
+.hero-text h1 span { color: var(--color-primary-light); }
+.hero-text p {
+  font-size: 18px; color: rgba(241,245,249,0.6); line-height: 1.6;
+  max-width: 480px; margin-bottom: 32px;
+}
+.hero-ctas { display: flex; gap: 12px; }
+.btn-primary {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 14px 28px; font-size: 15px; font-weight: 600; color: #FFFFFF;
+  background: var(--color-primary); border-radius: var(--radius-md);
+  transition: all var(--transition-base);
+}
+.btn-primary:hover { background: var(--color-primary-dark); box-shadow: 0 0 30px rgba(13,148,136,0.3); }
+.btn-secondary {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 14px 28px; font-size: 15px; font-weight: 600;
+  color: rgba(255,255,255,0.8); background: transparent;
+  border: 1px solid rgba(255,255,255,0.15); border-radius: var(--radius-md);
+  transition: all var(--transition-base);
+}
+.btn-secondary:hover { border-color: rgba(255,255,255,0.3); background: rgba(255,255,255,0.05); }
+
+/* Hero Dashboard Mock */
+.hero-dashboard {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--color-border-hero);
+  border-radius: var(--radius-lg); padding: 20px;
+  position: relative;
+}
+.hero-dashboard::after {
+  content: ''; position: absolute; inset: -1px;
+  border-radius: var(--radius-lg);
+  background: linear-gradient(135deg, rgba(13,148,136,0.2), transparent 50%);
+  z-index: -1; filter: blur(30px);
+}
+.dash-header {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 16px; padding-bottom: 12px;
+  border-bottom: 1px solid var(--color-border-hero);
+}
+.dash-title { font-family: var(--font-mono); font-size: 12px; font-weight: 500; color: rgba(255,255,255,0.4); letter-spacing: 0.05em; text-transform: uppercase; }
+.dash-status { display: flex; align-items: center; gap: 6px; font-family: var(--font-mono); font-size: 12px; color: var(--color-success); }
+.status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--color-success); animation: pulse 2s ease-in-out infinite; }
+@keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.6; transform: scale(1.3); } }
+
+.dash-metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 16px; }
+.dash-metric {
+  background: var(--color-bg-hero-surface);
+  border: 1px solid var(--color-border-hero);
+  border-radius: var(--radius-md); padding: 14px;
+}
+.dash-metric-label { font-family: var(--font-mono); font-size: 10px; color: rgba(255,255,255,0.35); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px; }
+.dash-metric-value { font-family: var(--font-mono); font-size: 22px; font-weight: 600; color: var(--color-text-hero); }
+.dash-metric-value.teal { color: var(--color-primary-light); }
+.dash-metric-value.green { color: var(--color-success); }
+.dash-metric-change { font-family: var(--font-mono); font-size: 11px; color: var(--color-success); margin-top: 4px; }
+
+.dash-chart {
+  background: var(--color-bg-hero-surface);
+  border: 1px solid var(--color-border-hero);
+  border-radius: var(--radius-md); padding: 14px; height: 100px;
+  position: relative; overflow: hidden;
+}
+.chart-line {
+  position: absolute; bottom: 14px; left: 14px; right: 14px; height: 60px;
+}
+.chart-line svg { width: 100%; height: 100%; }
+
+/* ── LOGO BAR ── */
+.logo-bar {
+  padding: 48px 0;
+  border-bottom: 1px solid var(--color-border);
+}
+.logo-bar-label {
+  text-align: center; font-size: 13px; font-weight: 500;
+  color: var(--color-text-muted); letter-spacing: 0.04em;
+  text-transform: uppercase; margin-bottom: 28px;
+}
+.logo-bar-grid {
+  display: flex; justify-content: center; align-items: center;
+  gap: 48px; flex-wrap: wrap;
+}
+.logo-placeholder {
+  font-family: var(--font-heading); font-weight: 700; font-size: 16px;
+  color: #CBD5E1; letter-spacing: -0.01em;
+  transition: color var(--transition-slow);
+}
+.logo-placeholder:hover { color: var(--color-text-muted); }
+
+/* ── FEATURES ── */
+.features { padding: 96px 0; }
+.section-label {
+  font-family: var(--font-mono); font-size: 13px; font-weight: 600;
+  color: var(--color-primary); letter-spacing: 0.06em;
+  text-transform: uppercase; margin-bottom: 12px;
+}
+.section-title {
+  font-family: var(--font-heading); font-weight: 800; font-size: 40px;
+  letter-spacing: -0.025em; line-height: 1.15; margin-bottom: 16px;
+}
+.section-subtitle {
+  font-size: 18px; color: var(--color-text-muted); max-width: 560px;
+  margin-bottom: 56px;
+}
+.feature-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+.feature-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md); padding: 32px;
+  transition: transform var(--transition-base), box-shadow var(--transition-base);
+}
+.feature-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+.feature-icon {
+  width: 44px; height: 44px; border-radius: var(--radius-md);
+  background: var(--color-primary-glow);
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 20px;
+}
+.feature-icon svg { width: 22px; height: 22px; color: var(--color-primary); }
+.feature-card h3 {
+  font-family: var(--font-heading); font-weight: 700; font-size: 17px;
+  margin-bottom: 8px; letter-spacing: -0.01em;
+}
+.feature-card p { font-size: 14px; color: var(--color-text-muted); line-height: 1.6; margin-bottom: 16px; }
+.feature-link {
+  font-size: 14px; font-weight: 600; color: var(--color-primary);
+  display: inline-flex; align-items: center; gap: 4px;
+  transition: gap var(--transition-fast);
+}
+.feature-link:hover { gap: 8px; }
+
+/* ── PRODUCT SCREENSHOT ── */
+.product-shot {
+  background: var(--color-bg-hero);
+  padding: 80px 0;
+  position: relative; overflow: hidden;
+}
+.product-shot::before {
+  content: ''; position: absolute; inset: 0;
+  background-image: radial-gradient(rgba(255,255,255,0.02) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+.shot-wrapper {
+  max-width: 960px; margin: 0 auto; position: relative;
+}
+.shot-label {
+  text-align: center; font-family: var(--font-mono); font-size: 13px;
+  color: rgba(255,255,255,0.4); letter-spacing: 0.05em;
+  text-transform: uppercase; margin-bottom: 24px;
+}
+.shot-mock {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--color-border-hero);
+  border-radius: var(--radius-lg); padding: 2px;
+  position: relative;
+}
+.shot-mock::after {
+  content: ''; position: absolute; inset: -2px;
+  border-radius: calc(var(--radius-lg) + 2px);
+  background: linear-gradient(135deg, rgba(13,148,136,0.15), transparent 40%, transparent 60%, rgba(99,102,241,0.1));
+  z-index: -1;
+}
+.shot-topbar {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 16px; border-bottom: 1px solid var(--color-border-hero);
+}
+.shot-dot { width: 10px; height: 10px; border-radius: 50%; }
+.shot-dot:nth-child(1) { background: #EF4444; }
+.shot-dot:nth-child(2) { background: #F59E0B; }
+.shot-dot:nth-child(3) { background: #22C55E; }
+.shot-body {
+  display: grid; grid-template-columns: 200px 1fr; min-height: 320px;
+}
+.shot-sidebar {
+  border-right: 1px solid var(--color-border-hero); padding: 16px;
+}
+.shot-sidebar-item {
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 10px; border-radius: var(--radius-sm);
+  font-size: 12px; font-weight: 500; color: rgba(255,255,255,0.4);
+  margin-bottom: 2px;
+}
+.shot-sidebar-item.active { background: rgba(13,148,136,0.1); color: var(--color-primary-light); }
+.shot-sidebar-dot { width: 6px; height: 6px; border-radius: 50%; }
+.shot-main { padding: 16px; }
+.shot-main-header {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 16px;
+}
+.shot-main-title { font-family: var(--font-heading); font-weight: 700; font-size: 16px; color: var(--color-text-hero); }
+.shot-main-tabs { display: flex; gap: 4px; }
+.shot-tab {
+  padding: 4px 12px; border-radius: var(--radius-sm);
+  font-size: 12px; font-weight: 500; color: rgba(255,255,255,0.4);
+}
+.shot-tab.active { background: rgba(13,148,136,0.15); color: var(--color-primary-light); }
+.shot-rows { display: flex; flex-direction: column; gap: 6px; }
+.shot-row {
+  display: grid; grid-template-columns: 24px 1fr 80px 80px 80px;
+  align-items: center; gap: 12px; padding: 8px 10px;
+  border-radius: var(--radius-sm); font-size: 12px;
+  color: rgba(255,255,255,0.5);
+  border: 1px solid transparent;
+}
+.shot-row:hover { background: rgba(255,255,255,0.02); border-color: var(--color-border-hero); }
+.shot-row-status { width: 8px; height: 8px; border-radius: 50%; }
+.shot-row-name { font-family: var(--font-mono); font-weight: 500; color: rgba(255,255,255,0.7); }
+.shot-row-val { font-family: var(--font-mono); text-align: right; }
+.shot-caption {
+  text-align: center; font-size: 16px; color: rgba(255,255,255,0.5);
+  margin-top: 28px; font-style: italic;
+}
+
+/* ── HOW IT WORKS ── */
+.how-it-works { padding: 96px 0; background: var(--color-surface); }
+.steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; position: relative; margin-top: 56px; }
+.steps::before {
+  content: ''; position: absolute;
+  top: 28px; left: 16.66%; right: 16.66%; height: 2px;
+  border-top: 2px dashed var(--color-border);
+}
+.step { text-align: center; position: relative; padding: 0 24px; }
+.step-number {
+  width: 56px; height: 56px; border-radius: 50%;
+  background: var(--color-primary); color: #FFFFFF;
+  font-family: var(--font-heading); font-weight: 800; font-size: 20px;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 20px; position: relative; z-index: 1;
+}
+.step h3 { font-family: var(--font-heading); font-weight: 700; font-size: 18px; margin-bottom: 8px; }
+.step p { font-size: 14px; color: var(--color-text-muted); line-height: 1.6; }
+
+/* ── METRICS BAR ── */
+.metrics-bar {
+  background: var(--color-bg-hero);
+  padding: 56px 0;
+}
+.metrics-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px;
+  text-align: center;
+}
+.metric-item {}
+.metric-value {
+  font-family: var(--font-mono); font-weight: 600; font-size: 36px;
+  color: var(--color-text-hero); margin-bottom: 6px;
+}
+.metric-label {
+  font-size: 14px; color: rgba(255,255,255,0.4); font-weight: 500;
+}
+
+/* ── CASE STUDIES ── */
+.case-studies { padding: 96px 0; }
+.case-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 56px; }
+.case-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md); padding: 32px;
+  display: flex; flex-direction: column;
+  transition: transform var(--transition-base), box-shadow var(--transition-base);
+}
+.case-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+.case-logo {
+  font-family: var(--font-heading); font-weight: 800; font-size: 18px;
+  color: var(--color-text); margin-bottom: 16px; letter-spacing: -0.01em;
+}
+.case-quote {
+  font-size: 15px; color: var(--color-text-muted); line-height: 1.6;
+  font-style: italic; margin-bottom: 20px; flex: 1;
+}
+.case-stat {
+  font-family: var(--font-mono); font-weight: 600; font-size: 24px;
+  color: var(--color-primary); margin-bottom: 4px;
+}
+.case-stat-label { font-size: 13px; color: var(--color-text-muted); margin-bottom: 16px; }
+.case-link { font-size: 14px; font-weight: 600; color: var(--color-primary); display: inline-flex; align-items: center; gap: 4px; }
+.case-link:hover { gap: 8px; }
+
+/* ── INTEGRATIONS ── */
+.integrations { padding: 96px 0; background: var(--color-surface); }
+.int-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;
+  margin-top: 56px;
+}
+.int-item {
+  display: flex; align-items: center; justify-content: center;
+  padding: 24px; border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-family: var(--font-heading); font-weight: 700; font-size: 14px;
+  color: #94A3B8; letter-spacing: -0.01em;
+  transition: all var(--transition-slow);
+  filter: grayscale(100%); opacity: 0.6;
+}
+.int-item:hover { filter: grayscale(0%); opacity: 1; color: var(--color-text); border-color: var(--color-primary); background: var(--color-primary-glow); }
+
+/* ── PRICING ── */
+.pricing { padding: 96px 0; }
+.pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 56px; }
+.price-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md); padding: 36px;
+  position: relative;
+}
+.price-card.featured {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 1px var(--color-primary), 0 8px 30px rgba(13,148,136,0.1);
+}
+.price-badge {
+  position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+  background: var(--color-primary); color: #FFFFFF;
+  font-size: 12px; font-weight: 600; padding: 4px 14px;
+  border-radius: 20px; letter-spacing: 0.02em;
+}
+.price-tier {
+  font-family: var(--font-heading); font-weight: 700; font-size: 20px;
+  margin-bottom: 8px;
+}
+.price-amount {
+  font-family: var(--font-heading); font-weight: 800; font-size: 48px;
+  letter-spacing: -0.03em; line-height: 1; margin-bottom: 4px;
+}
+.price-amount span { font-size: 16px; font-weight: 500; color: var(--color-text-muted); }
+.price-desc { font-size: 14px; color: var(--color-text-muted); margin-bottom: 28px; }
+.price-features { list-style: none; margin-bottom: 32px; }
+.price-features li {
+  display: flex; align-items: center; gap: 10px;
+  font-size: 14px; color: var(--color-text); padding: 8px 0;
+  border-bottom: 1px solid #F1F5F9;
+}
+.price-features li::before {
+  content: '';
+  width: 18px; height: 18px; border-radius: 50%;
+  background: var(--color-primary-glow); flex-shrink: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%230D9488' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: center;
+}
+.price-btn {
+  display: block; width: 100%; text-align: center;
+  padding: 12px 0; font-size: 15px; font-weight: 600;
+  border-radius: var(--radius-md); transition: all var(--transition-base);
+}
+.price-btn.primary { background: var(--color-primary); color: #FFFFFF; }
+.price-btn.primary:hover { background: var(--color-primary-dark); }
+.price-btn.outline { border: 1px solid var(--color-border); color: var(--color-text); }
+.price-btn.outline:hover { border-color: var(--color-primary); color: var(--color-primary); }
+
+/* ── RESOURCES ── */
+.resources { padding: 96px 0; background: var(--color-surface); }
+.resource-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 56px; }
+.resource-card {
+  border: 1px solid var(--color-border); border-radius: var(--radius-md);
+  overflow: hidden; transition: transform var(--transition-base), box-shadow var(--transition-base);
+}
+.resource-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+.resource-img {
+  height: 180px; background: linear-gradient(135deg, var(--color-bg-hero), #1a2332);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-mono); font-size: 32px; color: rgba(255,255,255,0.1);
+}
+.resource-body { padding: 24px; }
+.resource-tag {
+  font-family: var(--font-mono); font-size: 11px; font-weight: 600;
+  color: var(--color-primary); text-transform: uppercase;
+  letter-spacing: 0.06em; margin-bottom: 8px;
+}
+.resource-card h3 {
+  font-family: var(--font-heading); font-weight: 700; font-size: 16px;
+  margin-bottom: 8px; letter-spacing: -0.01em;
+}
+.resource-card p { font-size: 14px; color: var(--color-text-muted); line-height: 1.5; }
+
+/* ── CTA BANNER ── */
+.cta-banner {
+  padding: 80px 0;
+  background: linear-gradient(135deg, var(--color-primary-dark), var(--color-primary), #0E7490);
+  text-align: center;
+}
+.cta-banner h2 {
+  font-family: var(--font-heading); font-weight: 800; font-size: 40px;
+  color: #FFFFFF; letter-spacing: -0.025em; margin-bottom: 16px;
+}
+.cta-banner p { font-size: 18px; color: rgba(255,255,255,0.8); margin-bottom: 32px; }
+.cta-banner-btns { display: flex; justify-content: center; gap: 12px; }
+.btn-white {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 14px 28px; font-size: 15px; font-weight: 600;
+  color: var(--color-primary-dark); background: #FFFFFF;
+  border-radius: var(--radius-md);
+  transition: all var(--transition-base);
+}
+.btn-white:hover { box-shadow: 0 8px 30px rgba(0,0,0,0.15); }
+.btn-ghost-white {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 14px 28px; font-size: 15px; font-weight: 600;
+  color: #FFFFFF; background: transparent;
+  border: 1px solid rgba(255,255,255,0.3);
+  border-radius: var(--radius-md);
+  transition: all var(--transition-base);
+}
+.btn-ghost-white:hover { background: rgba(255,255,255,0.1); }
+
+/* ── FOOTER ── */
+.footer {
+  background: var(--color-bg-hero); padding: 64px 0 32px;
+  border-top: 1px solid var(--color-border-hero);
+}
+.footer-grid {
+  display: grid; grid-template-columns: 2fr repeat(4, 1fr); gap: 48px;
+  margin-bottom: 48px;
+}
+.footer-brand {}
+.footer-logo {
+  font-family: var(--font-heading); font-weight: 800; font-size: 20px;
+  color: #FFFFFF; margin-bottom: 12px;
+  display: flex; align-items: center; gap: 8px;
+}
+.footer-desc { font-size: 14px; color: rgba(255,255,255,0.4); line-height: 1.6; max-width: 280px; margin-bottom: 20px; }
+.footer-badges { display: flex; gap: 12px; }
+.footer-badge {
+  padding: 6px 12px; border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border-hero);
+  font-family: var(--font-mono); font-size: 11px; font-weight: 600;
+  color: rgba(255,255,255,0.4); letter-spacing: 0.04em;
+}
+.footer-col h4 {
+  font-family: var(--font-heading); font-weight: 700; font-size: 13px;
+  color: rgba(255,255,255,0.6); text-transform: uppercase;
+  letter-spacing: 0.06em; margin-bottom: 16px;
+}
+.footer-col a {
+  display: block; font-size: 14px; color: rgba(255,255,255,0.4);
+  padding: 4px 0; transition: color var(--transition-fast);
+}
+.footer-col a:hover { color: var(--color-primary-light); }
+.footer-bottom {
+  padding-top: 24px; border-top: 1px solid var(--color-border-hero);
+  display: flex; justify-content: space-between; align-items: center;
+}
+.footer-copy { font-size: 13px; color: rgba(255,255,255,0.3); }
+.footer-socials { display: flex; gap: 16px; }
+.footer-socials a {
+  width: 32px; height: 32px; border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border-hero);
+  display: flex; align-items: center; justify-content: center;
+  color: rgba(255,255,255,0.3); transition: all var(--transition-fast);
+}
+.footer-socials a:hover { color: var(--color-primary-light); border-color: var(--color-primary); }
+
+/* ── SCROLL REVEAL ── */
+.reveal {
+  opacity: 0; transform: translateY(20px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 1024px) {
+  .hero-inner { grid-template-columns: 1fr; }
+  .hero-dashboard { display: none; }
+  .hero-text h1 { font-size: 44px; }
+  .feature-grid { grid-template-columns: repeat(2, 1fr); }
+  .metrics-grid { grid-template-columns: repeat(2, 1fr); gap: 24px; }
+  .pricing-grid { grid-template-columns: 1fr; max-width: 400px; margin-left: auto; margin-right: auto; }
+  .footer-grid { grid-template-columns: repeat(2, 1fr); gap: 32px; }
+}
+@media (max-width: 768px) {
+  .nav-links { display: none; }
+  .hero { padding: 120px 0 60px; }
+  .hero-text h1 { font-size: 36px; }
+  .hero-ctas { flex-direction: column; }
+  .section-title { font-size: 32px; }
+  .feature-grid, .case-grid, .resource-grid { grid-template-columns: 1fr; }
+  .int-grid { grid-template-columns: repeat(2, 1fr); }
+  .steps { grid-template-columns: 1fr; gap: 40px; }
+  .steps::before { display: none; }
+  .metrics-grid { grid-template-columns: 1fr 1fr; }
+  .footer-grid { grid-template-columns: 1fr 1fr; }
+  .shot-body { grid-template-columns: 1fr; }
+  .shot-sidebar { display: none; }
+}
+
+/* ── REDUCED MOTION ── */
+@media (prefers-reduced-motion: reduce) {
+  .reveal { transition: none; opacity: 1; transform: none; }
+  .status-dot { animation: none; }
+  *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
+}
+</style>
+</head>
+<body>
+
+<!-- ════════ NAV ════════ -->
+<nav class="nav" role="navigation" aria-label="Main navigation">
+  <div class="nav-inner">
+    <a href="#" class="nav-logo">
+      <span class="logo-mark">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+      </span>
+      Meridian
+    </a>
+    <div class="nav-links">
+      <!-- Products -->
+      <div class="nav-item" aria-haspopup="true" aria-expanded="false">
+        Products <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        <div class="mega-dropdown">
+          <div class="mega-grid cols-3">
+            <a class="mega-item" href="#">
+              <div class="mega-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg></div>
+              <div><div class="mega-label">Infrastructure Monitoring</div><div class="mega-desc">Full-stack visibility across hosts, containers, and cloud services</div></div>
+            </a>
+            <a class="mega-item" href="#">
+              <div class="mega-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div>
+              <div><div class="mega-label">APM & Traces</div><div class="mega-desc">End-to-end distributed tracing with automatic service maps</div></div>
+            </a>
+            <a class="mega-item" href="#">
+              <div class="mega-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg></div>
+              <div><div class="mega-label">Log Management</div><div class="mega-desc">Ingest, index, and analyze logs at any scale with live tail</div></div>
+            </a>
+            <a class="mega-item" href="#">
+              <div class="mega-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg></div>
+              <div><div class="mega-label">Real User Monitoring</div><div class="mega-desc">Track real user sessions, core web vitals, and frontend errors</div></div>
+            </a>
+            <a class="mega-item" href="#">
+              <div class="mega-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div>
+              <div><div class="mega-label">Synthetic Monitoring</div><div class="mega-desc">Proactive uptime checks and API tests from 40+ global locations</div></div>
+            </a>
+            <a class="mega-item" href="#">
+              <div class="mega-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
+              <div><div class="mega-label">Incident Management</div><div class="mega-desc">Automated alerting, on-call routing, and war room collaboration</div></div>
+            </a>
+          </div>
+        </div>
+      </div>
+      <!-- Solutions -->
+      <div class="nav-item" aria-haspopup="true" aria-expanded="false">
+        Solutions <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        <div class="mega-dropdown">
+          <div class="mega-grid">
+            <a class="mega-item" href="#">
+              <div class="mega-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 10h-1.26A8 8 0 109 20h9a5 5 0 000-10z"/></svg></div>
+              <div><div class="mega-label">Cloud Migration</div><div class="mega-desc">Unified visibility during lift-and-shift or replatform</div></div>
+            </a>
+            <a class="mega-item" href="#">
+              <div class="mega-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="8" height="8" rx="1"/><rect x="14" y="2" width="8" height="8" rx="1"/><rect x="2" y="14" width="8" height="8" rx="1"/><rect x="14" y="14" width="8" height="8" rx="1"/></svg></div>
+              <div><div class="mega-label">Microservices</div><div class="mega-desc">Trace requests across hundreds of services automatically</div></div>
+            </a>
+            <a class="mega-item" href="#">
+              <div class="mega-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5"/></svg></div>
+              <div><div class="mega-label">Kubernetes</div><div class="mega-desc">Deep container and pod-level observability with auto-discovery</div></div>
+            </a>
+            <a class="mega-item" href="#">
+              <div class="mega-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></div>
+              <div><div class="mega-label">CI/CD Pipelines</div><div class="mega-desc">Monitor build health, deploy frequency, and failure rates</div></div>
+            </a>
+          </div>
+        </div>
+      </div>
+      <!-- Resources -->
+      <div class="nav-item" aria-haspopup="true" aria-expanded="false">
+        Resources <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        <div class="mega-dropdown">
+          <div class="mega-grid cols-3">
+            <a class="mega-item" href="#">
+              <div class="mega-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg></div>
+              <div><div class="mega-label">Documentation</div><div class="mega-desc">Guides, API reference, and integration docs</div></div>
+            </a>
+            <a class="mega-item" href="#">
+              <div class="mega-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></div>
+              <div><div class="mega-label">Blog</div><div class="mega-desc">Engineering deep dives and product updates</div></div>
+            </a>
+            <a class="mega-item" href="#">
+              <div class="mega-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg></div>
+              <div><div class="mega-label">Webinars</div><div class="mega-desc">Live sessions with engineering leaders</div></div>
+            </a>
+            <a class="mega-item" href="#">
+              <div class="mega-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/></svg></div>
+              <div><div class="mega-label">Case Studies</div><div class="mega-desc">How teams ship faster with Meridian</div></div>
+            </a>
+            <a class="mega-item" href="#">
+              <div class="mega-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg></div>
+              <div><div class="mega-label">Community</div><div class="mega-desc">Connect with 20K+ observability practitioners</div></div>
+            </a>
+            <a class="mega-item" href="#">
+              <div class="mega-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3M12 17h.01"/></svg></div>
+              <div><div class="mega-label">Support</div><div class="mega-desc">24/7 enterprise support and status page</div></div>
+            </a>
+          </div>
+        </div>
+      </div>
+      <!-- Pricing -->
+      <a class="nav-item" href="#pricing">Pricing</a>
+    </div>
+    <div class="nav-right">
+      <a href="#" class="nav-login">Log in</a>
+      <a href="#" class="nav-cta">Start Free Trial</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ════════ HERO ════════ -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-inner">
+      <div class="hero-text">
+        <h1>See everything.<br><span>Resolve faster.</span></h1>
+        <p>Meridian unifies metrics, traces, and logs into a single pane of glass. Full-stack observability for cloud-native teams — from infrastructure to end-user experience.</p>
+        <div class="hero-ctas">
+          <a href="#" class="btn-primary">Start Free Trial <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+          <a href="#" class="btn-secondary">Book a Demo</a>
+        </div>
+      </div>
+      <div class="hero-dashboard" aria-hidden="true">
+        <div class="dash-header">
+          <span class="dash-title">Service Health</span>
+          <span class="dash-status"><span class="status-dot"></span> All Systems Operational</span>
+        </div>
+        <div class="dash-metrics">
+          <div class="dash-metric">
+            <div class="dash-metric-label">P95 Latency</div>
+            <div class="dash-metric-value teal" data-count="42">0</div>
+            <div class="dash-metric-change">ms &nbsp; -12% vs last week</div>
+          </div>
+          <div class="dash-metric">
+            <div class="dash-metric-label">Throughput</div>
+            <div class="dash-metric-value" data-count="847" data-suffix="K">0</div>
+            <div class="dash-metric-change">req/s &nbsp; +8%</div>
+          </div>
+          <div class="dash-metric">
+            <div class="dash-metric-label">Error Rate</div>
+            <div class="dash-metric-value green" data-count="0.02" data-decimal="true">0</div>
+            <div class="dash-metric-change">% &nbsp; -0.01%</div>
+          </div>
+        </div>
+        <div class="dash-chart">
+          <svg class="chart-line" viewBox="0 0 400 60" preserveAspectRatio="none">
+            <defs>
+              <linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="rgba(13,148,136,0.3)"/>
+                <stop offset="100%" stop-color="rgba(13,148,136,0)"/>
+              </linearGradient>
+            </defs>
+            <path d="M0,45 C20,42 40,38 60,35 C80,32 100,28 120,30 C140,32 160,25 180,20 C200,15 220,18 240,22 C260,26 280,15 300,12 C320,9 340,14 360,10 C380,6 400,8 400,8 L400,60 L0,60 Z" fill="url(#chartGrad)"/>
+            <path d="M0,45 C20,42 40,38 60,35 C80,32 100,28 120,30 C140,32 160,25 180,20 C200,15 220,18 240,22 C260,26 280,15 300,12 C320,9 340,14 360,10 C380,6 400,8" fill="none" stroke="var(--color-primary-light)" stroke-width="2"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════ LOGO BAR ════════ -->
+<section class="logo-bar">
+  <div class="container">
+    <div class="logo-bar-label">Trusted by engineering teams at</div>
+    <div class="logo-bar-grid">
+      <span class="logo-placeholder">Stripe</span>
+      <span class="logo-placeholder">Vercel</span>
+      <span class="logo-placeholder">Coinbase</span>
+      <span class="logo-placeholder">Figma</span>
+      <span class="logo-placeholder">Notion</span>
+      <span class="logo-placeholder">Linear</span>
+      <span class="logo-placeholder">GitLab</span>
+      <span class="logo-placeholder">Twilio</span>
+    </div>
+  </div>
+</section>
+
+<!-- ════════ FEATURES ════════ -->
+<section class="features reveal">
+  <div class="container">
+    <div class="section-label">Platform</div>
+    <h2 class="section-title">Everything you need to observe,<br>debug, and resolve.</h2>
+    <p class="section-subtitle">Six products, one platform. No context switching between tools. Every signal correlated automatically.</p>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg></div>
+        <h3>Infrastructure Monitoring</h3>
+        <p>800+ integrations. Metrics from every host, container, and cloud service in one dashboard with sub-second granularity.</p>
+        <a href="#" class="feature-link">Learn more <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div>
+        <h3>APM & Distributed Tracing</h3>
+        <p>Trace every request across services with flame graphs, dependency maps, and automatic anomaly detection.</p>
+        <a href="#" class="feature-link">Learn more <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8"/></svg></div>
+        <h3>Log Management</h3>
+        <p>Ingest billions of log events per day. Live tail, pattern recognition, and log-to-trace correlation in one click.</p>
+        <a href="#" class="feature-link">Learn more <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/></svg></div>
+        <h3>Real User Monitoring</h3>
+        <p>Core Web Vitals, session replay, and error tracking. Understand the experience your users actually have.</p>
+        <a href="#" class="feature-link">Learn more <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div>
+        <h3>Synthetic Monitoring</h3>
+        <p>Proactive uptime checks and multi-step API tests from 40+ locations worldwide. Know before your users do.</p>
+        <a href="#" class="feature-link">Learn more <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
+        <h3>Incident Management</h3>
+        <p>Automated alerting with intelligent deduplication, on-call scheduling, and integrated war rooms for faster resolution.</p>
+        <a href="#" class="feature-link">Learn more <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════ PRODUCT SCREENSHOT ════════ -->
+<section class="product-shot">
+  <div class="container">
+    <div class="shot-wrapper">
+      <div class="shot-label">Meridian Platform</div>
+      <div class="shot-mock">
+        <div class="shot-topbar">
+          <span class="shot-dot"></span><span class="shot-dot"></span><span class="shot-dot"></span>
+        </div>
+        <div class="shot-body">
+          <div class="shot-sidebar">
+            <div class="shot-sidebar-item active"><span class="shot-sidebar-dot" style="background:var(--color-success)"></span> Services</div>
+            <div class="shot-sidebar-item"><span class="shot-sidebar-dot" style="background:var(--color-primary-light)"></span> Traces</div>
+            <div class="shot-sidebar-item"><span class="shot-sidebar-dot" style="background:var(--color-accent)"></span> Logs</div>
+            <div class="shot-sidebar-item"><span class="shot-sidebar-dot" style="background:rgba(255,255,255,0.2)"></span> Alerts</div>
+            <div class="shot-sidebar-item"><span class="shot-sidebar-dot" style="background:rgba(255,255,255,0.2)"></span> Dashboards</div>
+            <div class="shot-sidebar-item"><span class="shot-sidebar-dot" style="background:rgba(255,255,255,0.2)"></span> SLOs</div>
+          </div>
+          <div class="shot-main">
+            <div class="shot-main-header">
+              <div class="shot-main-title">Service Overview</div>
+              <div class="shot-main-tabs">
+                <span class="shot-tab active">All</span>
+                <span class="shot-tab">Critical</span>
+                <span class="shot-tab">Warning</span>
+              </div>
+            </div>
+            <div class="shot-rows">
+              <div class="shot-row">
+                <span class="shot-row-status" style="background:var(--color-success)"></span>
+                <span class="shot-row-name">api-gateway</span>
+                <span class="shot-row-val" style="color:var(--color-success)">99.99%</span>
+                <span class="shot-row-val">12ms</span>
+                <span class="shot-row-val">2.4K rps</span>
+              </div>
+              <div class="shot-row">
+                <span class="shot-row-status" style="background:var(--color-success)"></span>
+                <span class="shot-row-name">auth-service</span>
+                <span class="shot-row-val" style="color:var(--color-success)">99.98%</span>
+                <span class="shot-row-val">8ms</span>
+                <span class="shot-row-val">890 rps</span>
+              </div>
+              <div class="shot-row">
+                <span class="shot-row-status" style="background:var(--color-accent)"></span>
+                <span class="shot-row-name">payment-processor</span>
+                <span class="shot-row-val" style="color:var(--color-accent)">99.91%</span>
+                <span class="shot-row-val">45ms</span>
+                <span class="shot-row-val">340 rps</span>
+              </div>
+              <div class="shot-row">
+                <span class="shot-row-status" style="background:var(--color-success)"></span>
+                <span class="shot-row-name">search-index</span>
+                <span class="shot-row-val" style="color:var(--color-success)">99.97%</span>
+                <span class="shot-row-val">22ms</span>
+                <span class="shot-row-val">1.1K rps</span>
+              </div>
+              <div class="shot-row">
+                <span class="shot-row-status" style="background:var(--color-success)"></span>
+                <span class="shot-row-name">notification-svc</span>
+                <span class="shot-row-val" style="color:var(--color-success)">100%</span>
+                <span class="shot-row-val">6ms</span>
+                <span class="shot-row-val">560 rps</span>
+              </div>
+              <div class="shot-row">
+                <span class="shot-row-status" style="background:var(--color-error)"></span>
+                <span class="shot-row-name">ml-pipeline</span>
+                <span class="shot-row-val" style="color:var(--color-error)">98.72%</span>
+                <span class="shot-row-val">210ms</span>
+                <span class="shot-row-val">45 rps</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p class="shot-caption">See every service, every dependency, every anomaly.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ════════ HOW IT WORKS ════════ -->
+<section class="how-it-works reveal">
+  <div class="container">
+    <div style="text-align:center">
+      <div class="section-label">How It Works</div>
+      <h2 class="section-title">From zero to observability in minutes.</h2>
+      <p class="section-subtitle" style="margin:0 auto 0">One agent. Three lines of config. Full visibility.</p>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-number">1</div>
+        <h3>Install the Agent</h3>
+        <p>One-line install on any host, container, or serverless function. Auto-discovers services and dependencies.</p>
+      </div>
+      <div class="step">
+        <div class="step-number">2</div>
+        <h3>Metrics Flow In</h3>
+        <p>Metrics, traces, and logs appear within 60 seconds. Pre-built dashboards activate automatically for your stack.</p>
+      </div>
+      <div class="step">
+        <div class="step-number">3</div>
+        <h3>Resolve Faster</h3>
+        <p>AI-assisted root cause analysis correlates signals across your entire stack. MTTR drops from hours to minutes.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════ METRICS BAR ════════ -->
+<section class="metrics-bar">
+  <div class="container">
+    <div class="metrics-grid">
+      <div class="metric-item">
+        <div class="metric-value" data-count="99.99" data-decimal="true" data-suffix="%">0</div>
+        <div class="metric-label">Uptime SLA</div>
+      </div>
+      <div class="metric-item">
+        <div class="metric-value" data-count="50" data-suffix="ms">0</div>
+        <div class="metric-label">P95 Query Latency</div>
+      </div>
+      <div class="metric-item">
+        <div class="metric-value" data-count="2" data-suffix="B+">0</div>
+        <div class="metric-label">Events Ingested / Day</div>
+      </div>
+      <div class="metric-item">
+        <div class="metric-value" data-count="500" data-suffix="+">0</div>
+        <div class="metric-label">Integrations</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════ CASE STUDIES ════════ -->
+<section class="case-studies reveal">
+  <div class="container">
+    <div class="section-label">Customer Stories</div>
+    <h2 class="section-title">Teams that ship faster with Meridian.</h2>
+    <div class="case-grid">
+      <div class="case-card">
+        <div class="case-logo">Lattice</div>
+        <p class="case-quote">"We cut our mean time to resolution by 73% in the first quarter. The trace-to-log correlation alone justified the switch."</p>
+        <div class="case-stat">73%</div>
+        <div class="case-stat-label">Reduction in MTTR</div>
+        <a href="#" class="case-link">Read case study <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+      </div>
+      <div class="case-card">
+        <div class="case-logo">Ramp</div>
+        <p class="case-quote">"Meridian replaced three separate monitoring tools. One platform, one bill, one source of truth for our entire SRE team."</p>
+        <div class="case-stat">3x</div>
+        <div class="case-stat-label">Tool consolidation</div>
+        <a href="#" class="case-link">Read case study <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+      </div>
+      <div class="case-card">
+        <div class="case-logo">Neon</div>
+        <p class="case-quote">"The Kubernetes auto-discovery was a game-changer. We went from manual tagging across 400 pods to full visibility in under an hour."</p>
+        <div class="case-stat">400+</div>
+        <div class="case-stat-label">Pods auto-discovered</div>
+        <a href="#" class="case-link">Read case study <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════ INTEGRATIONS ════════ -->
+<section class="integrations reveal">
+  <div class="container">
+    <div style="text-align:center">
+      <div class="section-label">Integrations</div>
+      <h2 class="section-title">Connects to everything you already run.</h2>
+      <p class="section-subtitle" style="margin:0 auto 56px">500+ integrations out of the box. If it emits data, Meridian ingests it.</p>
+    </div>
+    <div class="int-grid">
+      <div class="int-item">AWS</div>
+      <div class="int-item">Google Cloud</div>
+      <div class="int-item">Azure</div>
+      <div class="int-item">Kubernetes</div>
+      <div class="int-item">Docker</div>
+      <div class="int-item">Terraform</div>
+      <div class="int-item">GitHub</div>
+      <div class="int-item">GitLab</div>
+      <div class="int-item">PagerDuty</div>
+      <div class="int-item">Slack</div>
+      <div class="int-item">Prometheus</div>
+      <div class="int-item">Grafana</div>
+      <div class="int-item">Jenkins</div>
+      <div class="int-item">Nginx</div>
+      <div class="int-item">PostgreSQL</div>
+      <div class="int-item">Redis</div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════ PRICING ════════ -->
+<section class="pricing reveal" id="pricing">
+  <div class="container">
+    <div style="text-align:center">
+      <div class="section-label">Pricing</div>
+      <h2 class="section-title">Predictable pricing. No surprise bills.</h2>
+      <p class="section-subtitle" style="margin:0 auto 0">Every plan includes unlimited users. Pay for the data you ingest, not the seats you fill.</p>
+    </div>
+    <div class="pricing-grid">
+      <div class="price-card">
+        <div class="price-tier">Developer</div>
+        <div class="price-amount">Free</div>
+        <div class="price-desc">For individual developers and hobby projects.</div>
+        <ul class="price-features">
+          <li>5 hosts included</li>
+          <li>1GB logs / day</li>
+          <li>7-day retention</li>
+          <li>Community support</li>
+          <li>Core integrations</li>
+        </ul>
+        <a href="#" class="price-btn outline">Get Started Free</a>
+      </div>
+      <div class="price-card featured">
+        <div class="price-badge">Most Popular</div>
+        <div class="price-tier">Team</div>
+        <div class="price-amount">$49 <span>/ seat / mo</span></div>
+        <div class="price-desc">For growing engineering teams that need full-stack visibility.</div>
+        <ul class="price-features">
+          <li>Unlimited hosts</li>
+          <li>50GB logs / day</li>
+          <li>30-day retention</li>
+          <li>APM & distributed tracing</li>
+          <li>Custom dashboards</li>
+          <li>Slack & PagerDuty alerts</li>
+        </ul>
+        <a href="#" class="price-btn primary">Start Free Trial</a>
+      </div>
+      <div class="price-card">
+        <div class="price-tier">Enterprise</div>
+        <div class="price-amount">Custom</div>
+        <div class="price-desc">For organizations with advanced security and compliance needs.</div>
+        <ul class="price-features">
+          <li>Everything in Team</li>
+          <li>Unlimited retention</li>
+          <li>SSO / SAML</li>
+          <li>Dedicated support engineer</li>
+          <li>Custom SLAs</li>
+          <li>SOC 2 Type II report</li>
+        </ul>
+        <a href="#" class="price-btn outline">Contact Sales</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════ RESOURCES ════════ -->
+<section class="resources reveal">
+  <div class="container">
+    <div class="section-label">Resources</div>
+    <h2 class="section-title">Learn, build, and ship.</h2>
+    <div class="resource-grid">
+      <a href="#" class="resource-card">
+        <div class="resource-img">//BLOG</div>
+        <div class="resource-body">
+          <div class="resource-tag">Blog</div>
+          <h3>How We Scaled Our Ingestion Pipeline to 2B Events/Day</h3>
+          <p>A deep dive into the architecture behind Meridian's real-time ingestion layer.</p>
+        </div>
+      </a>
+      <a href="#" class="resource-card">
+        <div class="resource-img" style="background: linear-gradient(135deg, #0F766E, #0D9488);">//DOCS</div>
+        <div class="resource-body">
+          <div class="resource-tag">Documentation</div>
+          <h3>Getting Started with Meridian in Under 5 Minutes</h3>
+          <p>Install the agent, configure your first dashboard, and start monitoring.</p>
+        </div>
+      </a>
+      <a href="#" class="resource-card">
+        <div class="resource-img" style="background: linear-gradient(135deg, #1E293B, #334155);">//LIVE</div>
+        <div class="resource-body">
+          <div class="resource-tag">Webinar</div>
+          <h3>Observability Best Practices for Kubernetes at Scale</h3>
+          <p>Join our SRE team for a live walkthrough of monitoring 1000+ pod clusters.</p>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ════════ CTA BANNER ════════ -->
+<section class="cta-banner">
+  <div class="container">
+    <h2>Start observing in 5 minutes.</h2>
+    <p>No credit card required. Full platform access for 14 days.</p>
+    <div class="cta-banner-btns">
+      <a href="#" class="btn-white">Start Free Trial <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+      <a href="#" class="btn-ghost-white">Talk to Sales</a>
+    </div>
+  </div>
+</section>
+
+<!-- ════════ FOOTER ════════ -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="footer-logo">
+          <span class="logo-mark" style="width:24px;height:24px;border-radius:5px;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" width="14" height="14"><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4"/></svg>
+          </span>
+          Meridian
+        </div>
+        <p class="footer-desc">Cloud-native observability for modern engineering teams. Metrics, traces, and logs — unified.</p>
+        <div class="footer-badges">
+          <span class="footer-badge">SOC 2</span>
+          <span class="footer-badge">ISO 27001</span>
+          <span class="footer-badge">GDPR</span>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Products</h4>
+        <a href="#">Infrastructure</a>
+        <a href="#">APM & Traces</a>
+        <a href="#">Log Management</a>
+        <a href="#">Real User Monitoring</a>
+        <a href="#">Synthetic Monitoring</a>
+        <a href="#">Incident Management</a>
+      </div>
+      <div class="footer-col">
+        <h4>Solutions</h4>
+        <a href="#">Cloud Migration</a>
+        <a href="#">Microservices</a>
+        <a href="#">Kubernetes</a>
+        <a href="#">CI/CD Pipelines</a>
+        <a href="#">For DevOps</a>
+        <a href="#">For SREs</a>
+      </div>
+      <div class="footer-col">
+        <h4>Resources</h4>
+        <a href="#">Documentation</a>
+        <a href="#">API Reference</a>
+        <a href="#">Blog</a>
+        <a href="#">Webinars</a>
+        <a href="#">Case Studies</a>
+        <a href="#">Community</a>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <a href="#">About</a>
+        <a href="#">Careers</a>
+        <a href="#">Press</a>
+        <a href="#">Contact</a>
+        <a href="#">Status Page</a>
+        <a href="#">Security</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span class="footer-copy">&copy; 2026 Meridian, Inc. All rights reserved.</span>
+      <div class="footer-socials">
+        <a href="#" aria-label="Twitter"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+        <a href="#" aria-label="GitHub"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.605-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12z"/></svg></a>
+        <a href="#" aria-label="LinkedIn"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- ════════ JS ════════ -->
+<script>
+// Count-up animation
+function animateCountUp(el) {
+  const target = parseFloat(el.dataset.count);
+  const suffix = el.dataset.suffix || '';
+  const isDecimal = el.dataset.decimal === 'true';
+  const duration = 2000;
+  const start = performance.now();
+
+  function tick(now) {
+    const elapsed = now - start;
+    const progress = Math.min(elapsed / duration, 1);
+    const eased = 1 - Math.pow(1 - progress, 3);
+    const current = target * eased;
+
+    if (isDecimal) {
+      el.textContent = current.toFixed(2) + suffix;
+    } else {
+      el.textContent = Math.round(current) + suffix;
+    }
+
+    if (progress < 1) requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+}
+
+// Scroll reveal + count-up trigger
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      // Trigger count-ups within this section
+      entry.target.querySelectorAll('[data-count]').forEach(el => {
+        if (!el.dataset.animated) {
+          el.dataset.animated = 'true';
+          animateCountUp(el);
+        }
+      });
+      observer.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.15 });
+
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// Hero dashboard metrics (auto-animate on load)
+window.addEventListener('load', () => {
+  document.querySelectorAll('.hero-dashboard [data-count]').forEach(el => {
+    if (!el.dataset.animated) {
+      el.dataset.animated = 'true';
+      animateCountUp(el);
+    }
+  });
+});
+
+// Metrics bar scroll trigger
+const metricsBar = document.querySelector('.metrics-bar');
+if (metricsBar) {
+  const metricsObs = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.querySelectorAll('[data-count]').forEach(el => {
+          if (!el.dataset.animated) {
+            el.dataset.animated = 'true';
+            animateCountUp(el);
+          }
+        });
+        metricsObs.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.3 });
+  metricsObs.observe(metricsBar);
+}
+</script>
+</body>
+</html>

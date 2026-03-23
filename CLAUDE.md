@@ -59,22 +59,62 @@ Windows Environment Notes
 * Mullvad VPN may block npm — use --registry https://registry.npmjs.org
 * NODE_OPTIONS="--dns-result-order=ipv4first" if IPv6 connection issues occur
 
-UI/UX Design Intelligence (UI Pro Max Skill)
-Location: Aethertrace/ui-ux-pro-max/ (persists on local machine)
-This is a fully functional design intelligence engine with BM25 search across 16 CSV databases. It contains 161 reasoning rules, 67+ UI styles, 161 color palettes, 57 typography pairings, 25 chart types, and 99 UX guidelines.
-How to Use (Every Session)
-Run from the Aethertrace/ui-ux-pro-max/ directory:
-* Full design system: python3 scripts/search.py "<keywords>" --design-system -p "ProjectName"
-* Domain search: python3 scripts/search.py "<query>" --domain <domain> [-n max_results]
-* Stack search: python3 scripts/search.py "<query>" --stack <stack>
-Available Domains: product, style, typography, color, landing, chart, ux, react, web, prompt
-Available Stacks: html-tailwind (default), react, nextjs, astro, vue, nuxtjs, nuxt-ui, svelte, swiftui, react-native, flutter, shadcn, jetpack-compose
-When to Use
-* Any UI/UX design decision — run --design-system first
-* Choosing styles, colors, fonts — run --domain with relevant domain
-* Before building any page or component — generate design system, then build
-* UX review or accessibility check — run --domain ux
-Standing Order: For any AetherTrace UI work, run the design system search BEFORE writing code. Do not guess at styles, colors, or typography — search first.
+## Vault Structure (as of 2026-03-23)
+
+```
+Aethertrace/ (vault root)
+├── CLAUDE.md                          ← this file — auto-loads every session
+├── Welcome.md
+├── setup-mcp-obsidian.ps1             ← MCP bridge setup script
+├── *.skill                            ← agent skill config files
+│
+├── apex-os/                           ← THE OPERATING SYSTEM
+│   ├── CONSTITUTION.md                ← immutable rules — read every session
+│   ├── CLAUDE.md                      ← OS-level context
+│   ├── DELIVERY-MANIFEST.md
+│   ├── 00-system/                     ← kernel
+│   │   ├── STATE.md                   ← live battle drill position — read every session
+│   │   ├── SPRINT.md                  ← current sprint
+│   │   ├── VAULT-INDEX.md             ← Dataview dashboard
+│   │   ├── agents/                    ← 9 agent PERSONA + RUBRIC + CAPABILITIES files
+│   │   └── [WORKFLOW, GIT-STRATEGY, BATTLE-DRILL, NAMING, SETUP, DECISIONS]
+│   ├── 10-projects/
+│   │   └── aethertrace/               ← AetherTrace project hub
+│   │       ├── _index.md              ← project dashboard (Dataview queries live here)
+│   │       ├── architecture/          ← FORGE outputs + architecture diagram
+│   │       ├── design/                ← PRISM outputs
+│   │       │   ├── AETHERTRACE-UI-PROMPT.md
+│   │       │   ├── previews/          ← HTML design previews v1-v5
+│   │       │   └── inspiration/       ← component vault (16 components × 2 files)
+│   │       │       ├── VAULT-MAP.md
+│   │       │       ├── BUILD-PROTOCOL.md
+│   │       │       └── components/
+│   │       ├── research/              ← VIGIL + HELIOS outputs
+│   │       │   └── battle-drills/     ← 15 historical battle drill HTML files
+│   │       ├── build/                 ← ANVIL outputs + build reference
+│   │       ├── marketing/             ← BEACON outputs
+│   │       ├── content/               ← SCRIBE outputs
+│   │       └── finance/               ← LEDGER outputs
+│   └── 50-journal/
+│
+├── aethertrace-mvp/                   ← Next.js MVP codebase (stays at root for build stability)
+│   └── src/app/, src/lib/, src/components/
+│
+├── aethertrace/                       ← Early scaffold / archive (hash-chain tests)
+│
+└── ui-ux-pro-max/                     ← PRISM design intelligence engine (stays at root)
+    └── scripts/search.py              ← BM25 search: 161 palettes, 57 font pairs, 16 CSVs
+```
+
+## UI/UX Design Intelligence Engine
+
+Location: `ui-ux-pro-max/` (at vault root — stays here for path stability)
+
+Standing order for any UI work — run BEFORE writing code:
+- Full design system: `python3 ui-ux-pro-max/scripts/search.py "<keywords>" --design-system -p "AetherTrace"`
+- Domain search: `python3 ui-ux-pro-max/scripts/search.py "<query>" --domain <domain>`
+- Available domains: product, style, typography, color, landing, chart, ux, react, web, prompt
+- Read `ui-ux-pro-max/PRISM-OVERRIDE.md` before activating PRISM skill
 
 PRISM Override
 When PRISM activates, read Aethertrace/ui-ux-pro-max/PRISM-OVERRIDE.md BEFORE using PRISM's built-in inline data. The override file connects PRISM to the full search engine (161 reasoning rules, 67+ styles, 161 palettes, 57 font pairings) and changes PRISM's output format to include implementation-ready specs (CSS variables, design tokens, component specs) that ANVIL can build from directly without guessing. PRISM's inline data (20 palettes, 20 fonts, 12 styles) is the fallback only.

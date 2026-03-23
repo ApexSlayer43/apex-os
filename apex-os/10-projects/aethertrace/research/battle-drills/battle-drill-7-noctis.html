@@ -1,0 +1,1050 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Noctis — Private Stargazing Experiences, New Mexico</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;0,500;0,600;0,700;0,900;1,400;1,500&family=Outfit:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --void: #020210;
+    --deep: #080820;
+    --surface: #0D0D2B;
+    --elevated: #12123A;
+    --border: rgba(167,139,250,0.08);
+    --border-hover: rgba(167,139,250,0.18);
+    --text: #EEEEFF;
+    --text-soft: rgba(238,238,255,0.7);
+    --text-muted: rgba(238,238,255,0.4);
+    --indigo: #6366F1;
+    --violet: #7C3AED;
+    --nebula: #A78BFA;
+    --star: #F1F0FF;
+    --gold: #C9A84C;
+    --gold-glow: rgba(201,168,76,0.2);
+    --font-display: 'Bodoni Moda', serif;
+    --font-body: 'Outfit', sans-serif;
+    --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--font-body);
+    background: var(--void);
+    color: var(--text);
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── STAR FIELD ── */
+  .starfield {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+  }
+  .star {
+    position: absolute;
+    border-radius: 50%;
+    background: var(--star);
+  }
+  .star-sm { width: 1px; height: 1px; }
+  .star-md { width: 2px; height: 2px; }
+  .star-lg { width: 3px; height: 3px; box-shadow: 0 0 6px 1px rgba(241,240,255,0.3); }
+  @keyframes twinkle {
+    0%, 100% { opacity: var(--base-o); }
+    50% { opacity: 0.1; }
+  }
+
+  /* ── NEBULA GLOW ── */
+  .nebula {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(100px);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .nebula-1 {
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(99,102,241,0.08) 0%, transparent 70%);
+    top: 10%; left: -10%;
+    animation: nebula-drift 30s ease-in-out infinite;
+  }
+  .nebula-2 {
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(124,58,237,0.06) 0%, transparent 70%);
+    bottom: 5%; right: -5%;
+    animation: nebula-drift 35s ease-in-out infinite reverse;
+  }
+  .nebula-3 {
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(201,168,76,0.04) 0%, transparent 70%);
+    top: 50%; left: 40%;
+    animation: nebula-drift 40s ease-in-out infinite;
+  }
+  @keyframes nebula-drift {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    33% { transform: translate(40px, -30px) scale(1.1); }
+    66% { transform: translate(-30px, 50px) scale(0.95); }
+  }
+
+  /* ── LAYOUT ── */
+  .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 1; }
+  .section-tag {
+    font-family: var(--font-body);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--nebula);
+    opacity: 0.7;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 24px 0;
+    background: rgba(2,2,16,0.6);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border-bottom: 1px solid var(--border);
+    transition: background 0.4s;
+  }
+  nav .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .nav-logo {
+    font-family: var(--font-display);
+    font-size: 24px;
+    font-weight: 500;
+    letter-spacing: 6px;
+    text-transform: uppercase;
+    color: var(--star);
+  }
+  .nav-logo span { color: var(--gold); }
+  .nav-links {
+    display: flex;
+    gap: 36px;
+    list-style: none;
+  }
+  .nav-links a {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 400;
+    letter-spacing: 1px;
+    transition: color 0.4s var(--ease);
+  }
+  .nav-links a:hover { color: var(--text); }
+  .nav-cta {
+    font-family: var(--font-body);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 12px 28px;
+    background: transparent;
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    border-radius: 0;
+    cursor: pointer;
+    transition: all 0.4s var(--ease);
+    text-decoration: none;
+  }
+  .nav-cta:hover {
+    background: var(--gold);
+    color: var(--void);
+    box-shadow: 0 0 40px var(--gold-glow);
+  }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    position: relative;
+  }
+  .hero-content { max-width: 800px; }
+  .hero-eyebrow {
+    font-family: var(--font-body);
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: 6px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 32px;
+  }
+  .hero h1 {
+    font-family: var(--font-display);
+    font-size: clamp(52px, 8vw, 110px);
+    font-weight: 400;
+    font-style: italic;
+    line-height: 1.0;
+    letter-spacing: -1px;
+    margin-bottom: 32px;
+    background: linear-gradient(180deg, var(--star) 0%, var(--nebula) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .hero p {
+    font-size: 17px;
+    font-weight: 300;
+    color: var(--text-soft);
+    line-height: 1.8;
+    max-width: 520px;
+    margin: 0 auto 48px;
+  }
+  .hero-cta {
+    display: inline-block;
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    padding: 18px 48px;
+    background: transparent;
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    text-decoration: none;
+    transition: all 0.5s var(--ease);
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-cta::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--gold);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.5s var(--ease);
+    z-index: -1;
+  }
+  .hero-cta:hover {
+    color: var(--void);
+    box-shadow: 0 0 60px var(--gold-glow);
+  }
+  .hero-cta:hover::before { transform: scaleX(1); }
+  .hero-scroll {
+    position: absolute;
+    bottom: 48px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+  .hero-scroll span {
+    font-size: 10px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+  .scroll-line {
+    width: 1px;
+    height: 48px;
+    background: linear-gradient(180deg, var(--nebula), transparent);
+    animation: scroll-pulse 2s ease-in-out infinite;
+  }
+  @keyframes scroll-pulse {
+    0%, 100% { opacity: 1; height: 48px; }
+    50% { opacity: 0.3; height: 24px; }
+  }
+
+  /* ── CONSTELLATION DIVIDER ── */
+  .constellation-divider {
+    padding: 60px 0;
+    text-align: center;
+    position: relative;
+  }
+  .constellation-divider svg {
+    width: 200px;
+    height: 40px;
+    opacity: 0.3;
+  }
+
+  /* ── PHILOSOPHY ── */
+  .philosophy {
+    padding: 120px 0;
+  }
+  .philosophy-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+  }
+  .philosophy-text h2 {
+    font-family: var(--font-display);
+    font-size: clamp(32px, 4vw, 48px);
+    font-weight: 400;
+    font-style: italic;
+    line-height: 1.2;
+    margin-bottom: 32px;
+    letter-spacing: -0.5px;
+  }
+  .philosophy-text p {
+    font-size: 16px;
+    font-weight: 300;
+    color: var(--text-soft);
+    line-height: 1.8;
+    margin-bottom: 20px;
+  }
+  .philosophy-visual {
+    position: relative;
+    height: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  /* Animated orbital rings */
+  .orbit {
+    position: absolute;
+    border: 1px solid var(--border);
+    border-radius: 50%;
+  }
+  .orbit-1 {
+    width: 200px; height: 200px;
+    animation: orbit-spin 20s linear infinite;
+  }
+  .orbit-2 {
+    width: 300px; height: 300px;
+    animation: orbit-spin 30s linear infinite reverse;
+    border-color: rgba(167,139,250,0.05);
+  }
+  .orbit-3 {
+    width: 380px; height: 380px;
+    animation: orbit-spin 45s linear infinite;
+    border-color: rgba(167,139,250,0.03);
+  }
+  @keyframes orbit-spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+  .orbit-dot {
+    position: absolute;
+    width: 6px; height: 6px;
+    background: var(--nebula);
+    border-radius: 50%;
+    box-shadow: 0 0 12px var(--nebula);
+  }
+  .orbit-1 .orbit-dot { top: -3px; left: 50%; transform: translateX(-50%); }
+  .orbit-2 .orbit-dot { bottom: -3px; left: 50%; transform: translateX(-50%); }
+  .orbit-center {
+    width: 8px; height: 8px;
+    background: var(--gold);
+    border-radius: 50%;
+    box-shadow: 0 0 20px var(--gold-glow), 0 0 60px var(--gold-glow);
+    z-index: 2;
+  }
+
+  /* ── EXPERIENCES ── */
+  .experiences {
+    padding: 120px 0;
+  }
+  .experiences-header {
+    text-align: center;
+    margin-bottom: 80px;
+  }
+  .experiences-header h2 {
+    font-family: var(--font-display);
+    font-size: clamp(32px, 4vw, 48px);
+    font-weight: 400;
+    font-style: italic;
+    margin-top: 16px;
+    line-height: 1.2;
+  }
+  .exp-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--border);
+  }
+  .exp-card {
+    background: var(--void);
+    padding: 56px 40px;
+    position: relative;
+    transition: all 0.6s var(--ease);
+    cursor: default;
+    overflow: hidden;
+  }
+  .exp-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at bottom center, rgba(99,102,241,0.06) 0%, transparent 70%);
+    opacity: 0;
+    transition: opacity 0.6s var(--ease);
+  }
+  .exp-card:hover::before { opacity: 1; }
+  .exp-card:hover { background: var(--deep); }
+  .exp-icon {
+    width: 48px; height: 48px;
+    margin-bottom: 28px;
+    position: relative;
+    z-index: 1;
+  }
+  .exp-icon-ring {
+    width: 48px; height: 48px;
+    border: 1px solid var(--nebula);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.5;
+    transition: all 0.5s var(--ease);
+  }
+  .exp-card:hover .exp-icon-ring {
+    opacity: 1;
+    box-shadow: 0 0 20px rgba(167,139,250,0.15);
+  }
+  .exp-icon-dot {
+    width: 6px; height: 6px;
+    background: var(--nebula);
+    border-radius: 50%;
+  }
+  .exp-card h3 {
+    font-family: var(--font-display);
+    font-size: 26px;
+    font-weight: 500;
+    margin-bottom: 12px;
+    letter-spacing: -0.3px;
+    position: relative;
+    z-index: 1;
+  }
+  .exp-duration {
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 20px;
+    position: relative;
+    z-index: 1;
+  }
+  .exp-card p {
+    font-size: 14px;
+    font-weight: 300;
+    color: var(--text-soft);
+    line-height: 1.8;
+    position: relative;
+    z-index: 1;
+  }
+  .exp-price {
+    margin-top: 32px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    position: relative;
+    z-index: 1;
+  }
+  .exp-price-val {
+    font-family: var(--font-display);
+    font-size: 36px;
+    font-weight: 500;
+    letter-spacing: -1px;
+  }
+  .exp-price-unit {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-top: 4px;
+  }
+
+  /* ── WHAT YOU'LL SEE ── */
+  .celestial {
+    padding: 120px 0;
+    border-top: 1px solid var(--border);
+  }
+  .celestial-header {
+    text-align: center;
+    margin-bottom: 80px;
+  }
+  .celestial-header h2 {
+    font-family: var(--font-display);
+    font-size: clamp(32px, 4vw, 48px);
+    font-weight: 400;
+    font-style: italic;
+    margin-top: 16px;
+  }
+  .celestial-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 32px;
+  }
+  .celestial-item {
+    text-align: center;
+    padding: 40px 20px;
+    transition: all 0.5s var(--ease);
+  }
+  .celestial-item:hover { transform: translateY(-8px); }
+  .celestial-glyph {
+    font-size: 40px;
+    margin-bottom: 20px;
+    display: block;
+    opacity: 0.8;
+    filter: grayscale(0.3);
+  }
+  .celestial-item h4 {
+    font-family: var(--font-display);
+    font-size: 18px;
+    font-weight: 500;
+    margin-bottom: 8px;
+  }
+  .celestial-item p {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.7;
+    font-weight: 300;
+  }
+
+  /* ── LOCATION ── */
+  .location {
+    padding: 120px 0;
+    border-top: 1px solid var(--border);
+  }
+  .location-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+  }
+  .location-text h2 {
+    font-family: var(--font-display);
+    font-size: clamp(28px, 3.5vw, 42px);
+    font-weight: 400;
+    font-style: italic;
+    line-height: 1.2;
+    margin-bottom: 24px;
+  }
+  .location-text p {
+    font-size: 15px;
+    font-weight: 300;
+    color: var(--text-soft);
+    line-height: 1.8;
+    margin-bottom: 16px;
+  }
+  .location-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-top: 40px;
+  }
+  .loc-stat {
+    text-align: center;
+  }
+  .loc-stat-val {
+    font-family: var(--font-display);
+    font-size: 36px;
+    font-weight: 500;
+    color: var(--gold);
+  }
+  .loc-stat-label {
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-top: 4px;
+  }
+  .location-visual {
+    position: relative;
+    height: 400px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+  .location-visual::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at center, rgba(99,102,241,0.05) 0%, transparent 70%);
+  }
+  .horizon-line {
+    position: absolute;
+    bottom: 30%;
+    left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--nebula), transparent);
+    opacity: 0.3;
+  }
+  .mesa-shape {
+    position: absolute;
+    bottom: 30%;
+    width: 100%;
+    height: 60px;
+  }
+  .sky-glow {
+    position: absolute;
+    bottom: 30%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 200px;
+    height: 100px;
+    background: radial-gradient(ellipse, rgba(201,168,76,0.1) 0%, transparent 70%);
+  }
+
+  /* ── TESTIMONIAL ── */
+  .testimonial {
+    padding: 120px 0;
+    border-top: 1px solid var(--border);
+    text-align: center;
+  }
+  .testimonial-quote {
+    font-family: var(--font-display);
+    font-size: clamp(22px, 3vw, 34px);
+    font-weight: 400;
+    font-style: italic;
+    line-height: 1.5;
+    max-width: 700px;
+    margin: 0 auto 40px;
+    position: relative;
+  }
+  .testimonial-quote::before {
+    content: '\2726';
+    display: block;
+    font-size: 32px;
+    color: var(--gold);
+    opacity: 0.4;
+    margin-bottom: 32px;
+    font-style: normal;
+  }
+  .testimonial-attr {
+    font-size: 13px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    font-weight: 400;
+  }
+
+  /* ── CTA ── */
+  .final-cta {
+    padding: 160px 0;
+    text-align: center;
+    position: relative;
+  }
+  .final-cta::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at center bottom, rgba(124,58,237,0.08) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .final-cta h2 {
+    font-family: var(--font-display);
+    font-size: clamp(36px, 5vw, 64px);
+    font-weight: 400;
+    font-style: italic;
+    line-height: 1.1;
+    margin-bottom: 24px;
+    position: relative;
+  }
+  .final-cta p {
+    font-size: 16px;
+    font-weight: 300;
+    color: var(--text-soft);
+    margin-bottom: 48px;
+    position: relative;
+  }
+  .final-cta-btn {
+    display: inline-block;
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    padding: 20px 56px;
+    background: var(--gold);
+    color: var(--void);
+    text-decoration: none;
+    transition: all 0.5s var(--ease);
+    position: relative;
+  }
+  .final-cta-btn:hover {
+    box-shadow: 0 0 60px var(--gold-glow), 0 0 120px rgba(201,168,76,0.1);
+    transform: translateY(-2px);
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    padding: 48px 0;
+    border-top: 1px solid var(--border);
+  }
+  .footer-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .footer-left {
+    font-size: 13px;
+    color: var(--text-muted);
+    font-weight: 300;
+  }
+  .footer-left strong {
+    font-family: var(--font-display);
+    font-weight: 500;
+    color: var(--text-soft);
+    letter-spacing: 2px;
+  }
+  .footer-right {
+    display: flex;
+    gap: 28px;
+  }
+  .footer-right a {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 300;
+    transition: color 0.4s;
+  }
+  .footer-right a:hover { color: var(--gold); }
+
+  /* ── SCROLL ANIMATIONS ── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 1s var(--ease), transform 1s var(--ease);
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    .nav-links { display: none; }
+    .philosophy-grid { grid-template-columns: 1fr; gap: 48px; }
+    .philosophy-visual { height: 280px; }
+    .exp-grid { grid-template-columns: 1fr; }
+    .celestial-grid { grid-template-columns: repeat(2, 1fr); }
+    .location-grid { grid-template-columns: 1fr; gap: 48px; }
+    .location-visual { height: 280px; }
+    .location-stats { grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .hero h1 { font-size: 48px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+</style>
+</head>
+<body>
+
+<!-- STAR FIELD -->
+<div class="starfield" id="starfield"></div>
+
+<!-- NEBULA GLOWS -->
+<div class="nebula nebula-1"></div>
+<div class="nebula nebula-2"></div>
+<div class="nebula nebula-3"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="container">
+    <div class="nav-logo">Nocti<span>s</span></div>
+    <ul class="nav-links">
+      <li><a href="#experiences">Experiences</a></li>
+      <li><a href="#celestial">What You'll See</a></li>
+      <li><a href="#location">Location</a></li>
+    </ul>
+    <a href="#book" class="nav-cta">Reserve a Night</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-content">
+      <div class="hero-eyebrow">Private Stargazing &middot; New Mexico</div>
+      <h1>The sky<br>remembers<br>everything</h1>
+      <p>Private observatory experiences in the darkest skies in North America. No light pollution. No crowds. Just you and thirteen billion years of light arriving tonight.</p>
+      <a href="#book" class="hero-cta">Reserve Your Night</a>
+    </div>
+  </div>
+  <div class="hero-scroll">
+    <span>Scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- CONSTELLATION DIVIDER -->
+<div class="constellation-divider">
+  <svg viewBox="0 0 200 40" fill="none">
+    <circle cx="20" cy="20" r="2" fill="#A78BFA" opacity="0.6"/>
+    <circle cx="60" cy="12" r="1.5" fill="#A78BFA" opacity="0.4"/>
+    <circle cx="100" cy="28" r="2" fill="#C9A84C" opacity="0.5"/>
+    <circle cx="140" cy="14" r="1.5" fill="#A78BFA" opacity="0.4"/>
+    <circle cx="180" cy="22" r="2" fill="#A78BFA" opacity="0.6"/>
+    <line x1="20" y1="20" x2="60" y2="12" stroke="#A78BFA" stroke-width="0.5" opacity="0.2"/>
+    <line x1="60" y1="12" x2="100" y2="28" stroke="#A78BFA" stroke-width="0.5" opacity="0.2"/>
+    <line x1="100" y1="28" x2="140" y2="14" stroke="#A78BFA" stroke-width="0.5" opacity="0.2"/>
+    <line x1="140" y1="14" x2="180" y2="22" stroke="#A78BFA" stroke-width="0.5" opacity="0.2"/>
+  </svg>
+</div>
+
+<!-- PHILOSOPHY -->
+<section class="philosophy">
+  <div class="container">
+    <div class="philosophy-grid">
+      <div class="philosophy-text reveal">
+        <div class="section-tag">Our Belief</div>
+        <h2>Darkness is not the absence of something. It is the presence of everything.</h2>
+        <p>Most people have never seen a truly dark sky. Light pollution has erased it for 80% of the world's population. The Milky Way — the galaxy you live inside — is invisible to most humans alive today.</p>
+        <p>We exist to reverse that loss. Even if only for one night.</p>
+      </div>
+      <div class="philosophy-visual reveal">
+        <div class="orbit orbit-3"><div class="orbit-dot"></div></div>
+        <div class="orbit orbit-2"><div class="orbit-dot"></div></div>
+        <div class="orbit orbit-1"><div class="orbit-dot"></div></div>
+        <div class="orbit-center"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCES -->
+<section class="experiences" id="experiences">
+  <div class="container">
+    <div class="experiences-header reveal">
+      <div class="section-tag">Experiences</div>
+      <h2>Three ways to meet the sky</h2>
+    </div>
+    <div class="exp-grid">
+      <div class="exp-card reveal">
+        <div class="exp-icon">
+          <div class="exp-icon-ring"><div class="exp-icon-dot"></div></div>
+        </div>
+        <h3>First Light</h3>
+        <div class="exp-duration">3 hours &middot; Sunset to deep dark</div>
+        <p>A guided introduction to the night sky. Learn to navigate by the stars. See Saturn's rings and Jupiter's moons through our 16-inch Dobsonian. Hot cider under the Milky Way. Perfect for first-timers and families.</p>
+        <div class="exp-price">
+          <div class="exp-price-val">$295</div>
+          <div class="exp-price-unit">per person &middot; max 8 guests</div>
+        </div>
+      </div>
+      <div class="exp-card reveal">
+        <div class="exp-icon">
+          <div class="exp-icon-ring"><div class="exp-icon-dot" style="width:8px;height:8px;"></div></div>
+        </div>
+        <h3>Deep Sky</h3>
+        <div class="exp-duration">5 hours &middot; Full night immersion</div>
+        <p>Extended observation with our research-grade telescope. Hunt nebulae, galaxies, and star clusters. Astrophotography station included. Your guide is a former NASA JPL imaging specialist. Limited to four guests for intimate instruction.</p>
+        <div class="exp-price">
+          <div class="exp-price-val">$650</div>
+          <div class="exp-price-unit">per person &middot; max 4 guests</div>
+        </div>
+      </div>
+      <div class="exp-card reveal">
+        <div class="exp-icon">
+          <div class="exp-icon-ring"><div class="exp-icon-dot" style="width:10px;height:10px;box-shadow:0 0 16px var(--gold);background:var(--gold);"></div></div>
+        </div>
+        <h3>Solstice</h3>
+        <div class="exp-duration">Dusk to dawn &middot; The complete night</div>
+        <p>The full experience. Sunset dinner under open sky. Private observatory access until dawn. Sleep in our stargazing casitas with retractable roofs. Wake to coffee and the last stars fading. You and one other couple, maximum.</p>
+        <div class="exp-price">
+          <div class="exp-price-val">$2,400</div>
+          <div class="exp-price-unit">per couple &middot; includes lodging + dinner</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHAT YOU'LL SEE -->
+<section class="celestial" id="celestial">
+  <div class="container">
+    <div class="celestial-header reveal">
+      <div class="section-tag">What You'll See</div>
+      <h2>Thirteen billion years of arrivals</h2>
+    </div>
+    <div class="celestial-grid reveal">
+      <div class="celestial-item">
+        <span class="celestial-glyph">&#9795;</span>
+        <h4>Saturn</h4>
+        <p>Rings visible in sharp detail. Titan and Rhea in attendance.</p>
+      </div>
+      <div class="celestial-item">
+        <span class="celestial-glyph">&#9796;</span>
+        <h4>Jupiter</h4>
+        <p>Four Galilean moons. Great Red Spot. Cloud bands in real time.</p>
+      </div>
+      <div class="celestial-item">
+        <span class="celestial-glyph">&#10026;</span>
+        <h4>Orion Nebula</h4>
+        <p>Stellar nursery. 1,344 light-years away. Visible color through the eyepiece.</p>
+      </div>
+      <div class="celestial-item">
+        <span class="celestial-glyph">&#10037;</span>
+        <h4>Andromeda</h4>
+        <p>The nearest galaxy. 2.5 million light-years. Approaching at 110 km/s.</p>
+      </div>
+      <div class="celestial-item">
+        <span class="celestial-glyph">&#8258;</span>
+        <h4>Milky Way Core</h4>
+        <p>Our own galaxy's center. Visible as a river of light horizon to horizon.</p>
+      </div>
+      <div class="celestial-item">
+        <span class="celestial-glyph">&#10038;</span>
+        <h4>Star Clusters</h4>
+        <p>Pleiades. Hercules Cluster. Thousands of stars in a single field of view.</p>
+      </div>
+      <div class="celestial-item">
+        <span class="celestial-glyph">&#9789;</span>
+        <h4>Lunar Detail</h4>
+        <p>Craters, mountains, and mare in resolution that feels close enough to touch.</p>
+      </div>
+      <div class="celestial-item">
+        <span class="celestial-glyph">&#10024;</span>
+        <h4>Meteor Showers</h4>
+        <p>Seasonal events — Perseids, Geminids, Leonids. Dates on our calendar.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LOCATION -->
+<section class="location" id="location">
+  <div class="container">
+    <div class="location-grid">
+      <div class="location-text reveal">
+        <div class="section-tag">Location</div>
+        <h2>The darkest sky you'll ever stand under</h2>
+        <p>We operate from a private mesa in the Gila Wilderness region of southwestern New Mexico — one of the largest Bortle Class 1 dark sky zones in the continental United States. No city glow for 80 miles in any direction.</p>
+        <p>The nearest town is Silver City (pop. 9,600). Albuquerque is 3.5 hours. El Paso is 2.5 hours. We provide detailed directions upon booking confirmation.</p>
+        <div class="location-stats">
+          <div class="loc-stat">
+            <div class="loc-stat-val">1</div>
+            <div class="loc-stat-label">Bortle Class</div>
+          </div>
+          <div class="loc-stat">
+            <div class="loc-stat-val">7,200'</div>
+            <div class="loc-stat-label">Elevation</div>
+          </div>
+          <div class="loc-stat">
+            <div class="loc-stat-val">290+</div>
+            <div class="loc-stat-label">Clear Nights/Yr</div>
+          </div>
+        </div>
+      </div>
+      <div class="location-visual reveal">
+        <div class="sky-glow"></div>
+        <div class="horizon-line"></div>
+        <svg class="mesa-shape" viewBox="0 0 500 60" fill="none" preserveAspectRatio="none" style="position:absolute;bottom:28%;left:0;width:100%;">
+          <path d="M0 60 L0 40 L80 35 L120 20 L180 18 L220 22 L260 15 L300 20 L340 25 L400 22 L440 30 L500 35 L500 60Z" fill="#0D0D2B" stroke="rgba(167,139,250,0.1)" stroke-width="1"/>
+        </svg>
+        <!-- Mini stars in the visual box -->
+        <div id="locationStars" style="position:absolute;inset:0;top:0;bottom:35%;"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIAL -->
+<section class="testimonial">
+  <div class="container">
+    <div class="reveal">
+      <div class="testimonial-quote">
+        I have traveled to four continents. I have seen the Northern Lights. Nothing prepared me for what the sky looks like when you remove every light humans have ever built.
+      </div>
+      <div class="testimonial-attr">Sarah Chen &middot; Deep Sky guest, March 2026</div>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="final-cta" id="book">
+  <div class="container">
+    <h2>The light left those stars<br>before you were born.<br>It's arriving tonight.</h2>
+    <p>Limited availability. We host a maximum of 8 guests per evening.</p>
+    <a href="mailto:hello@noctisskies.com" class="final-cta-btn">Reserve Your Night</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-inner">
+      <div class="footer-left">
+        <strong>NOCTIS</strong><br>
+        Gila Wilderness Region, New Mexico
+      </div>
+      <div class="footer-right">
+        <a href="#">Instagram</a>
+        <a href="#">Journal</a>
+        <a href="mailto:hello@noctisskies.com">Contact</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // ── Star Field Generator ──
+  (function() {
+    const field = document.getElementById('starfield');
+    if (!field) return;
+    const w = window.innerWidth, h = window.innerHeight * 3;
+    const stars = 200;
+    for (let i = 0; i < stars; i++) {
+      const star = document.createElement('div');
+      star.className = 'star';
+      const r = Math.random();
+      if (r < 0.65) star.classList.add('star-sm');
+      else if (r < 0.9) star.classList.add('star-md');
+      else star.classList.add('star-lg');
+      star.style.left = Math.random() * 100 + '%';
+      star.style.top = Math.random() * 100 + '%';
+      const baseO = 0.3 + Math.random() * 0.7;
+      star.style.setProperty('--base-o', baseO);
+      star.style.opacity = baseO;
+      if (Math.random() > 0.5) {
+        star.style.animation = `twinkle ${3 + Math.random() * 5}s ease-in-out ${Math.random() * 5}s infinite`;
+      }
+      field.appendChild(star);
+    }
+  })();
+
+  // ── Location mini stars ──
+  (function() {
+    const box = document.getElementById('locationStars');
+    if (!box) return;
+    for (let i = 0; i < 40; i++) {
+      const s = document.createElement('div');
+      s.style.position = 'absolute';
+      s.style.width = (Math.random() > 0.7 ? 2 : 1) + 'px';
+      s.style.height = s.style.width;
+      s.style.background = '#F1F0FF';
+      s.style.borderRadius = '50%';
+      s.style.left = Math.random() * 100 + '%';
+      s.style.top = Math.random() * 100 + '%';
+      s.style.opacity = 0.2 + Math.random() * 0.6;
+      if (Math.random() > 0.6) {
+        s.style.animation = `twinkle ${3 + Math.random() * 4}s ease-in-out ${Math.random() * 3}s infinite`;
+        s.style.setProperty('--base-o', s.style.opacity);
+      }
+      box.appendChild(s);
+    }
+  })();
+
+  // ── Scroll Reveal ──
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) entry.target.classList.add('visible');
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>

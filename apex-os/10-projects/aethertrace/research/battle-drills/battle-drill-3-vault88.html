@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vault 88 — Parking Intelligence Platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Fira+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --bg: #0A0F1C;
+    --surface: #111827;
+    --card: #1A2235;
+    --border: #2A3548;
+    --text: #E2E8F0;
+    --muted: #64748B;
+    --green: #10B981;
+    --green-dim: rgba(16,185,129,0.15);
+    --amber: #F59E0B;
+    --amber-dim: rgba(245,158,11,0.15);
+    --red: #EF4444;
+    --red-dim: rgba(239,68,68,0.15);
+    --blue: #3B82F6;
+    --blue-dim: rgba(59,130,246,0.1);
+  }
+  body {
+    font-family: 'Fira Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── NAV ── */
+  .nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.7rem 2rem;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .nav-logo {
+    font-family: 'Fira Code', monospace;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--green);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .logo-dot {
+    width: 8px;
+    height: 8px;
+    background: var(--green);
+    border-radius: 2px;
+    box-shadow: 0 0 8px var(--green);
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+  .nav-right {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+  }
+  .nav-link {
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--muted);
+    cursor: pointer;
+    transition: color 0.2s;
+    text-decoration: none;
+  }
+  .nav-link:hover { color: var(--text); }
+  .nav-btn {
+    font-family: 'Fira Code', monospace;
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--bg);
+    background: var(--green);
+    border: none;
+    border-radius: 4px;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+  .nav-btn:hover { opacity: 0.85; }
+
+  /* ── HERO / DASHBOARD ── */
+  .hero {
+    padding: 2.5rem 2rem 1.5rem;
+  }
+  .hero-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  .hero h1 {
+    font-family: 'Fira Sans', sans-serif;
+    font-size: clamp(1.4rem, 2.8vw, 1.9rem);
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.25;
+  }
+  .hero-sub {
+    font-size: 0.82rem;
+    font-weight: 400;
+    color: var(--muted);
+    margin-top: 0.3rem;
+  }
+  .live-tag {
+    font-family: 'Fira Code', monospace;
+    font-size: 0.68rem;
+    font-weight: 600;
+    color: var(--green);
+    background: var(--green-dim);
+    padding: 0.3rem 0.75rem;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    white-space: nowrap;
+  }
+  .live-dot {
+    width: 6px;
+    height: 6px;
+    background: var(--green);
+    border-radius: 50%;
+    box-shadow: 0 0 6px var(--green);
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  /* ── METRICS ── */
+  .metrics {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 0.75rem;
+    margin-bottom: 2rem;
+    padding: 0 2rem;
+  }
+  .metric-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.2rem;
+    transition: border-color 0.2s;
+  }
+  .metric-card:hover { border-color: var(--muted); }
+  .metric-label {
+    font-size: 0.68rem;
+    font-weight: 500;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.5rem;
+  }
+  .metric-value {
+    font-family: 'Fira Code', monospace;
+    font-size: 1.75rem;
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: 0.3rem;
+  }
+  .metric-change {
+    font-family: 'Fira Code', monospace;
+    font-size: 0.68rem;
+    font-weight: 500;
+  }
+  .metric-change.up { color: var(--green); }
+  .metric-change.down { color: var(--red); }
+
+  /* ── TABLE ── */
+  .table-section {
+    padding: 0 2rem 2.5rem;
+  }
+  .table-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+  }
+  .table-title {
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--text);
+  }
+  .table-filter {
+    font-family: 'Fira Code', monospace;
+    font-size: 0.68rem;
+    color: var(--muted);
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 0.35rem 0.75rem;
+    cursor: pointer;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--card);
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+  th {
+    font-family: 'Fira Code', monospace;
+    font-size: 0.62rem;
+    font-weight: 600;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    text-align: left;
+    padding: 0.75rem 1rem;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+  }
+  td {
+    font-size: 0.8rem;
+    color: var(--text);
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--border);
+  }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(255,255,255,0.02); }
+  .td-mono {
+    font-family: 'Fira Code', monospace;
+    font-size: 0.72rem;
+    color: var(--muted);
+  }
+  .status-badge {
+    font-family: 'Fira Code', monospace;
+    font-size: 0.62rem;
+    font-weight: 600;
+    padding: 0.2rem 0.5rem;
+    border-radius: 3px;
+    display: inline-block;
+  }
+  .status-online { color: var(--green); background: var(--green-dim); }
+  .status-warning { color: var(--amber); background: var(--amber-dim); }
+  .status-offline { color: var(--red); background: var(--red-dim); }
+  .occupancy-bar {
+    width: 100%;
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-top: 4px;
+  }
+  .occupancy-fill {
+    height: 100%;
+    border-radius: 2px;
+    transition: width 0.6s ease;
+  }
+  .fill-green { background: var(--green); }
+  .fill-amber { background: var(--amber); }
+  .fill-red { background: var(--red); }
+
+  /* ── ALERT TICKER ── */
+  .alert-bar {
+    padding: 0.6rem 2rem;
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    overflow: hidden;
+  }
+  .alert-label {
+    font-family: 'Fira Code', monospace;
+    font-size: 0.62rem;
+    font-weight: 600;
+    color: var(--amber);
+    background: var(--amber-dim);
+    padding: 0.2rem 0.5rem;
+    border-radius: 3px;
+    white-space: nowrap;
+  }
+  .alert-text {
+    font-size: 0.75rem;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+  .alert-text span { color: var(--text); font-weight: 500; }
+
+  /* ── FEATURES ── */
+  .features {
+    padding: 2.5rem 2rem;
+  }
+  .features-label {
+    font-family: 'Fira Code', monospace;
+    font-size: 0.62rem;
+    font-weight: 600;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 1rem;
+  }
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .feature-cell {
+    background: var(--surface);
+    padding: 1.5rem;
+    transition: background 0.2s;
+  }
+  .feature-cell:hover { background: var(--card); }
+  .feature-title {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 0.4rem;
+  }
+  .feature-desc {
+    font-size: 0.78rem;
+    font-weight: 400;
+    color: var(--muted);
+    line-height: 1.55;
+    margin-bottom: 0.5rem;
+  }
+  .feature-code {
+    font-family: 'Fira Code', monospace;
+    font-size: 0.68rem;
+    color: var(--green);
+  }
+
+  /* ── INTEGRATIONS ── */
+  .integrations {
+    padding: 2.5rem 2rem;
+    border-top: 1px solid var(--border);
+  }
+  .int-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1rem;
+  }
+  .int-chip {
+    font-family: 'Fira Code', monospace;
+    font-size: 0.68rem;
+    font-weight: 500;
+    color: var(--muted);
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 0.4rem 0.8rem;
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .int-chip:hover { border-color: var(--green); color: var(--green); }
+
+  /* ── PRICING ── */
+  .pricing {
+    padding: 3rem 2rem;
+    border-top: 1px solid var(--border);
+  }
+  .pricing-header {
+    margin-bottom: 1.5rem;
+  }
+  .pricing-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 0.25rem;
+  }
+  .pricing-sub {
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+  .pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 0.75rem;
+    max-width: 800px;
+  }
+  .pricing-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.5rem;
+    transition: border-color 0.2s;
+  }
+  .pricing-card:hover { border-color: var(--muted); }
+  .pricing-card.featured { border-color: var(--green); }
+  .pricing-name {
+    font-family: 'Fira Code', monospace;
+    font-size: 0.68rem;
+    font-weight: 600;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.75rem;
+  }
+  .pricing-card.featured .pricing-name { color: var(--green); }
+  .pricing-amount {
+    font-family: 'Fira Code', monospace;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 0.2rem;
+  }
+  .pricing-per {
+    font-size: 0.72rem;
+    color: var(--muted);
+    margin-bottom: 1rem;
+  }
+  .pricing-feature {
+    font-size: 0.78rem;
+    color: var(--muted);
+    padding: 0.3rem 0;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+  .pricing-feature .check { color: var(--green); font-size: 0.8rem; }
+  .pricing-btn {
+    font-family: 'Fira Code', monospace;
+    font-size: 0.72rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 4px;
+    padding: 0.6rem 1.2rem;
+    cursor: pointer;
+    margin-top: 1.2rem;
+    width: 100%;
+    transition: opacity 0.2s;
+  }
+  .pricing-btn.outline {
+    color: var(--text);
+    background: transparent;
+    border: 1px solid var(--border);
+  }
+  .pricing-btn.filled {
+    color: var(--bg);
+    background: var(--green);
+  }
+
+  /* ── CTA ── */
+  .cta {
+    padding: 4rem 2rem;
+    text-align: center;
+    border-top: 1px solid var(--border);
+  }
+  .cta h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 0.5rem;
+  }
+  .cta p {
+    font-size: 0.85rem;
+    color: var(--muted);
+    margin-bottom: 2rem;
+  }
+  .cta-btn {
+    font-family: 'Fira Code', monospace;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--bg);
+    background: var(--green);
+    border: none;
+    border-radius: 4px;
+    padding: 0.85rem 2.2rem;
+    cursor: pointer;
+    box-shadow: 0 0 20px rgba(16,185,129,0.2);
+    transition: box-shadow 0.2s, opacity 0.2s;
+  }
+  .cta-btn:hover { box-shadow: 0 0 30px rgba(16,185,129,0.3); }
+
+  /* ── FOOTER ── */
+  .footer {
+    padding: 2rem;
+    text-align: center;
+    border-top: 1px solid var(--border);
+  }
+  .footer-text {
+    font-family: 'Fira Code', monospace;
+    font-size: 0.62rem;
+    color: var(--muted);
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 640px) {
+    .nav-link { display: none; }
+    .hero-top { flex-direction: column; align-items: flex-start; }
+    th:nth-child(2), td:nth-child(2) { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-logo"><div class="logo-dot"></div> VAULT 88</div>
+  <div class="nav-right">
+    <a class="nav-link">Docs</a>
+    <a class="nav-link">Integrations</a>
+    <a class="nav-link">Pricing</a>
+    <a class="nav-link">Login</a>
+    <button class="nav-btn">Request Demo</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-top">
+    <div>
+      <h1>Garage management that<br>doesn't waste your time.</h1>
+      <div class="hero-sub">Real-time occupancy, revenue, and ops across your entire parking portfolio.</div>
+    </div>
+    <div class="live-tag"><div class="live-dot"></div> LIVE DEMO DATA</div>
+  </div>
+</section>
+
+<!-- METRICS -->
+<div class="metrics">
+  <div class="metric-card">
+    <div class="metric-label">Total Spaces</div>
+    <div class="metric-value" style="color: var(--blue);">4,832</div>
+    <div class="metric-change up">+120 this quarter</div>
+  </div>
+  <div class="metric-card">
+    <div class="metric-label">Occupied Now</div>
+    <div class="metric-value" style="color: var(--green);">3,617</div>
+    <div class="metric-change up">74.8% utilization</div>
+  </div>
+  <div class="metric-card">
+    <div class="metric-label">Revenue (MTD)</div>
+    <div class="metric-value" style="color: var(--green);">$847K</div>
+    <div class="metric-change up">+12.3% vs last month</div>
+  </div>
+  <div class="metric-card">
+    <div class="metric-label">Active Incidents</div>
+    <div class="metric-value" style="color: var(--amber);">3</div>
+    <div class="metric-change up">-2 vs last month</div>
+  </div>
+</div>
+
+<!-- ALERT BAR -->
+<div class="alert-bar">
+  <div class="alert-label">ALERT</div>
+  <div class="alert-text"><span>City Center Underground (CCU)</span> — Occupancy at 98.9%. Gate sensor B-4 intermittent. Technician dispatched, ETA 14:30.</div>
+</div>
+
+<!-- TABLE -->
+<section class="table-section">
+  <div class="table-header">
+    <div class="table-title">Facilities</div>
+    <div class="table-filter">Filter: All Active ▾</div>
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th>Facility</th>
+        <th>ID</th>
+        <th>Status</th>
+        <th>Occupancy</th>
+        <th>Revenue (MTD)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Gateway Tower A</td>
+        <td class="td-mono">GT-A</td>
+        <td><span class="status-badge status-online">ONLINE</span></td>
+        <td>
+          <span class="td-mono">756 / 820 (92%)</span>
+          <div class="occupancy-bar"><div class="occupancy-fill fill-amber" style="width:92%;"></div></div>
+        </td>
+        <td class="td-mono">$184,200</td>
+      </tr>
+      <tr>
+        <td>Riverside Deck</td>
+        <td class="td-mono">RVD</td>
+        <td><span class="status-badge status-online">ONLINE</span></td>
+        <td>
+          <span class="td-mono">891 / 1,200 (74%)</span>
+          <div class="occupancy-bar"><div class="occupancy-fill fill-amber" style="width:74%;"></div></div>
+        </td>
+        <td class="td-mono">$226,400</td>
+      </tr>
+      <tr>
+        <td>City Center Underground</td>
+        <td class="td-mono">CCU</td>
+        <td><span class="status-badge status-warning">WARNING</span></td>
+        <td>
+          <span class="td-mono">643 / 650 (99%)</span>
+          <div class="occupancy-bar"><div class="occupancy-fill fill-red" style="width:99%;"></div></div>
+        </td>
+        <td class="td-mono">$198,700</td>
+      </tr>
+      <tr>
+        <td>Airport Long-Term B</td>
+        <td class="td-mono">ALT-B</td>
+        <td><span class="status-badge status-online">ONLINE</span></td>
+        <td>
+          <span class="td-mono">1,102 / 1,540 (72%)</span>
+          <div class="occupancy-bar"><div class="occupancy-fill fill-amber" style="width:72%;"></div></div>
+        </td>
+        <td class="td-mono">$189,300</td>
+      </tr>
+      <tr>
+        <td>Memorial Hospital</td>
+        <td class="td-mono">MH-1</td>
+        <td><span class="status-badge status-online">ONLINE</span></td>
+        <td>
+          <span class="td-mono">225 / 622 (36%)</span>
+          <div class="occupancy-bar"><div class="occupancy-fill fill-green" style="width:36%;"></div></div>
+        </td>
+        <td class="td-mono">$50,100</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- FEATURES -->
+<section class="features">
+  <div class="features-label">Capabilities</div>
+  <div class="features-grid">
+    <div class="feature-cell">
+      <div class="feature-title">Real-Time Occupancy</div>
+      <div class="feature-desc">Sensor-level visibility into every space. Know what's open, what's full, what's expiring.</div>
+      <div class="feature-code">GET /api/v2/garages/{id}/occupancy</div>
+    </div>
+    <div class="feature-cell">
+      <div class="feature-title">Revenue Analytics</div>
+      <div class="feature-desc">Hourly, daily, monthly breakdowns. Rate optimization suggestions based on demand curves.</div>
+      <div class="feature-code">Revenue up 18% with dynamic pricing</div>
+    </div>
+    <div class="feature-cell">
+      <div class="feature-title">Incident Management</div>
+      <div class="feature-desc">Gate failures, sensor faults, security events. Auto-escalation with configurable thresholds.</div>
+      <div class="feature-code">MTTR reduced from 4.2h → 0.8h</div>
+    </div>
+    <div class="feature-cell">
+      <div class="feature-title">Multi-Site Rollup</div>
+      <div class="feature-desc">One view across your entire portfolio. Drill down to individual garages, levels, and zones.</div>
+      <div class="feature-code">Supports 1–500 facilities</div>
+    </div>
+    <div class="feature-cell">
+      <div class="feature-title">Hardware Agnostic</div>
+      <div class="feature-desc">Works with SKIDATA, TIBA, FlashParking, HUB, or any PARCS system. No rip-and-replace.</div>
+      <div class="feature-code">12 integrations shipping</div>
+    </div>
+    <div class="feature-cell">
+      <div class="feature-title">API-First</div>
+      <div class="feature-desc">Everything in the dashboard is available via API. Build your own reports. Trigger your own alerts.</div>
+      <div class="feature-code">REST + WebSocket + Webhooks</div>
+    </div>
+  </div>
+</section>
+
+<!-- INTEGRATIONS -->
+<section class="integrations">
+  <div class="features-label">Works With</div>
+  <div class="int-grid">
+    <div class="int-chip">SKIDATA</div>
+    <div class="int-chip">TIBA</div>
+    <div class="int-chip">FlashParking</div>
+    <div class="int-chip">HUB</div>
+    <div class="int-chip">PARCS</div>
+    <div class="int-chip">ParkMobile</div>
+    <div class="int-chip">SpotHero</div>
+    <div class="int-chip">Sentry</div>
+    <div class="int-chip">Slack</div>
+    <div class="int-chip">PagerDuty</div>
+    <div class="int-chip">Datadog</div>
+    <div class="int-chip">REST API</div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing">
+  <div class="pricing-header">
+    <div class="pricing-title">Transparent pricing. No hardware lock-in.</div>
+    <div class="pricing-sub">Per-facility pricing. Cancel anytime. 30-minute onboarding.</div>
+  </div>
+  <div class="pricing-grid">
+    <div class="pricing-card">
+      <div class="pricing-name">Starter</div>
+      <div class="pricing-amount">$299</div>
+      <div class="pricing-per">/facility/month · up to 5 facilities</div>
+      <div class="pricing-feature"><span class="check">✓</span> Real-time occupancy</div>
+      <div class="pricing-feature"><span class="check">✓</span> Revenue dashboard</div>
+      <div class="pricing-feature"><span class="check">✓</span> Email alerts</div>
+      <div class="pricing-feature"><span class="check">✓</span> API access</div>
+      <button class="pricing-btn outline">Start Trial</button>
+    </div>
+    <div class="pricing-card featured">
+      <div class="pricing-name">Operations</div>
+      <div class="pricing-amount">$499</div>
+      <div class="pricing-per">/facility/month · unlimited facilities</div>
+      <div class="pricing-feature"><span class="check">✓</span> Everything in Starter</div>
+      <div class="pricing-feature"><span class="check">✓</span> Incident management</div>
+      <div class="pricing-feature"><span class="check">✓</span> Dynamic pricing engine</div>
+      <div class="pricing-feature"><span class="check">✓</span> PagerDuty + Slack</div>
+      <div class="pricing-feature"><span class="check">✓</span> Dedicated support</div>
+      <button class="pricing-btn filled">Request Demo</button>
+    </div>
+    <div class="pricing-card">
+      <div class="pricing-name">Enterprise</div>
+      <div class="pricing-amount">Custom</div>
+      <div class="pricing-per">50+ facilities · SLA guaranteed</div>
+      <div class="pricing-feature"><span class="check">✓</span> Everything in Operations</div>
+      <div class="pricing-feature"><span class="check">✓</span> On-prem deployment option</div>
+      <div class="pricing-feature"><span class="check">✓</span> Custom integrations</div>
+      <div class="pricing-feature"><span class="check">✓</span> 99.9% uptime SLA</div>
+      <button class="pricing-btn outline">Contact Sales</button>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta">
+  <h2>See your portfolio in one view.</h2>
+  <p>30-minute setup. No hardware changes. Cancel anytime.</p>
+  <button class="cta-btn">Request a Demo →</button>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-text">VAULT 88 · Parking Intelligence Platform · © 2026</div>
+</footer>
+
+</body>
+</html>

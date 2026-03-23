@@ -1,0 +1,1060 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AetherTrace MVP — Visual Preview</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  /* ─── Trust Fortress Design System: Vault Steel ─── */
+  :root {
+    --primary: #1E293B;
+    --primary-hover: #334155;
+    --accent: #059669;
+    --accent-hover: #047857;
+    --background: #F8FAFC;
+    --surface: #FFFFFF;
+    --foreground: #0F172A;
+    --muted: #64748B;
+    --border: #E2E8F0;
+    --border-accent: #CBD5E1;
+    --verified: #059669;
+    --warning: #F59E0B;
+    --error: #DC2626;
+    --pending: #94A3B8;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'IBM Plex Sans', system-ui, sans-serif;
+    background: #111827;
+    color: var(--foreground);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .mono { font-family: 'IBM Plex Mono', monospace; }
+
+  /* ─── Page Navigation Shell ─── */
+  .preview-shell {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 24px;
+  }
+
+  .preview-header {
+    text-align: center;
+    padding: 32px 0 24px;
+    color: #F3F4F6;
+  }
+  .preview-header h1 { font-size: 24px; font-weight: 600; letter-spacing: -0.02em; }
+  .preview-header p { font-size: 14px; color: #9CA3AF; margin-top: 6px; }
+
+  .page-tabs {
+    display: flex;
+    gap: 4px;
+    justify-content: center;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+  }
+  .page-tab {
+    padding: 8px 18px;
+    font-size: 13px;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-weight: 500;
+    background: #1F2937;
+    color: #9CA3AF;
+    border: 1px solid #374151;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .page-tab:hover { background: #374151; color: #E5E7EB; }
+  .page-tab.active { background: var(--accent); color: white; border-color: var(--accent); }
+
+  /* ─── Browser Frame ─── */
+  .browser-frame {
+    background: #1F2937;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+  }
+  .browser-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    background: #111827;
+    border-bottom: 1px solid #374151;
+  }
+  .browser-dots { display: flex; gap: 6px; }
+  .browser-dot {
+    width: 12px; height: 12px; border-radius: 50%;
+  }
+  .dot-red { background: #EF4444; }
+  .dot-yellow { background: #F59E0B; }
+  .dot-green { background: #22C55E; }
+  .browser-url {
+    flex: 1;
+    background: #1F2937;
+    border: 1px solid #374151;
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-size: 12px;
+    font-family: 'IBM Plex Mono', monospace;
+    color: #9CA3AF;
+    margin-left: 12px;
+  }
+
+  .page-content {
+    min-height: 700px;
+    background: var(--background);
+  }
+
+  /* ─── All page views ─── */
+  .page-view { display: none; }
+  .page-view.active { display: block; }
+
+  /* ─── Shared Styles ─── */
+  .nav-bar {
+    background: white;
+    border-bottom: 1px solid var(--border);
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 100%;
+  }
+  .nav-brand { font-size: 18px; font-weight: 600; color: var(--primary); letter-spacing: -0.02em; }
+  .nav-links { display: flex; align-items: center; gap: 16px; }
+  .nav-link { font-size: 13px; color: var(--muted); text-decoration: none; }
+  .nav-link:hover { color: var(--primary); }
+
+  .btn-primary {
+    background: var(--primary);
+    color: white;
+    padding: 6px 16px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+  }
+  .btn-primary:hover { background: var(--primary-hover); }
+
+  .btn-accent {
+    background: var(--accent);
+    color: white;
+    padding: 6px 16px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+  }
+  .btn-accent:hover { background: var(--accent-hover); }
+
+  .btn-outline {
+    background: white;
+    color: var(--primary);
+    border: 1px solid var(--border);
+    padding: 6px 16px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+  }
+
+  .card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+  }
+
+  .container { max-width: 960px; margin: 0 auto; padding: 0 24px; }
+  .container-lg { max-width: 1152px; margin: 0 auto; padding: 0 24px; }
+
+  /* ════════════════════════════════════════════════════ */
+  /* PAGE 1: LANDING                                     */
+  /* ════════════════════════════════════════════════════ */
+  .hero { max-width: 720px; margin: 0 auto; padding: 80px 24px; text-align: center; }
+  .hero h2 { font-size: 36px; font-weight: 600; color: var(--primary); letter-spacing: -0.02em; line-height: 1.2; }
+  .hero p { margin-top: 24px; font-size: 17px; color: #475569; max-width: 560px; margin-left: auto; margin-right: auto; line-height: 1.6; }
+  .hero-buttons { margin-top: 32px; display: flex; justify-content: center; gap: 12px; }
+  .hero-buttons .btn-primary,
+  .hero-buttons .btn-outline { padding: 12px 24px; font-size: 14px; }
+
+  .how-section { background: white; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 64px 24px; }
+  .how-section h3 { text-align: center; font-size: 20px; font-weight: 600; color: var(--primary); margin-bottom: 48px; }
+  .how-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; max-width: 800px; margin: 0 auto; }
+  .step { text-align: center; }
+  .step-num {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: var(--primary); color: white;
+    font-size: 14px; font-weight: 600;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 12px;
+  }
+  .step h4 { font-size: 14px; font-weight: 600; color: var(--primary); margin-bottom: 8px; }
+  .step p { font-size: 13px; color: #475569; line-height: 1.5; }
+
+  .problem { max-width: 720px; margin: 0 auto; padding: 64px 24px; text-align: center; }
+  .problem h3 { font-size: 20px; font-weight: 600; color: var(--primary); margin-bottom: 16px; }
+  .problem > p { font-size: 15px; color: #475569; max-width: 600px; margin: 0 auto; line-height: 1.6; }
+  .stat-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+    max-width: 400px; margin: 32px auto 0; text-align: left;
+  }
+  .stat-card { background: #F1F5F9; border-radius: 8px; padding: 16px 20px; }
+  .stat-card .val { font-size: 24px; font-weight: 600; color: var(--primary); }
+  .stat-card .label { font-size: 11px; color: var(--muted); margin-top: 4px; }
+
+  .footer { border-top: 1px solid var(--border); padding: 32px; text-align: center; font-size: 12px; color: #94A3B8; }
+
+  /* ════════════════════════════════════════════════════ */
+  /* PAGE 2: LOGIN                                       */
+  /* ════════════════════════════════════════════════════ */
+  .auth-center {
+    min-height: 700px;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--background); padding: 24px;
+  }
+  .auth-wrapper { width: 100%; max-width: 400px; }
+  .auth-brand { text-align: center; margin-bottom: 32px; }
+  .auth-brand h1 { font-size: 24px; font-weight: 600; color: var(--primary); letter-spacing: -0.02em; }
+  .auth-brand p { font-size: 13px; color: var(--muted); margin-top: 8px; }
+  .auth-card { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 32px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+  .auth-card h2 { font-size: 18px; font-weight: 500; color: var(--primary); margin-bottom: 24px; }
+  .form-group { margin-bottom: 16px; }
+  .form-label { display: block; font-size: 13px; font-weight: 500; color: #334155; margin-bottom: 4px; }
+  .form-input {
+    width: 100%; padding: 8px 12px;
+    border: 1px solid #CBD5E1; border-radius: 6px;
+    font-size: 13px; font-family: 'IBM Plex Sans', sans-serif;
+    color: var(--foreground); background: white;
+    outline: none; transition: border-color 0.15s;
+  }
+  .form-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(5,150,105,0.1); }
+  .form-input::placeholder { color: #94A3B8; }
+  .form-btn {
+    width: 100%; padding: 10px; margin-top: 4px;
+    background: var(--primary); color: white;
+    border: none; border-radius: 6px;
+    font-size: 13px; font-weight: 500;
+    font-family: 'IBM Plex Sans', sans-serif;
+    cursor: pointer;
+  }
+  .form-btn:hover { background: var(--primary-hover); }
+  .auth-footer { text-align: center; margin-top: 24px; font-size: 13px; color: var(--muted); }
+  .auth-footer a { color: var(--accent); font-weight: 500; text-decoration: none; }
+
+  /* ════════════════════════════════════════════════════ */
+  /* PAGE 3: DASHBOARD                                   */
+  /* ════════════════════════════════════════════════════ */
+  .dash-header {
+    background: white; border-bottom: 1px solid var(--border);
+    padding: 16px 24px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .dash-brand { display: flex; align-items: center; gap: 12px; }
+  .dash-org { font-size: 13px; color: var(--muted); border-left: 1px solid var(--border); padding-left: 12px; }
+  .dash-user { display: flex; align-items: center; gap: 16px; }
+  .dash-user span { font-size: 13px; color: var(--muted); }
+  .dash-user button {
+    font-size: 13px; color: var(--muted); background: none; border: none;
+    cursor: pointer; font-family: 'IBM Plex Sans', sans-serif;
+  }
+
+  .dash-main { max-width: 1152px; margin: 0 auto; padding: 32px 24px; }
+
+  .sub-banner {
+    background: #FFFBEB; border: 1px solid #FDE68A; border-radius: 8px;
+    padding: 16px 24px; margin-bottom: 32px;
+  }
+  .sub-banner p { font-size: 13px; color: #92400E; }
+  .sub-banner strong { font-weight: 600; }
+  .sub-banner a { color: var(--accent); font-weight: 500; text-decoration: none; }
+
+  .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 32px; }
+  .stat-box { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 16px 24px; }
+  .stat-box .stat-label { font-size: 13px; color: var(--muted); margin-bottom: 4px; }
+  .stat-box .stat-value { font-size: 24px; font-weight: 600; color: var(--primary); }
+
+  .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+  .section-header h2 { font-size: 15px; font-weight: 500; color: var(--primary); }
+
+  .project-form { display: flex; align-items: center; gap: 8px; }
+  .project-input {
+    padding: 6px 12px; border: 1px solid #CBD5E1; border-radius: 6px;
+    font-size: 13px; font-family: 'IBM Plex Sans', sans-serif;
+  }
+  .project-input::placeholder { color: #94A3B8; }
+
+  .project-card {
+    background: white; border: 1px solid var(--border); border-radius: 8px;
+    padding: 16px 24px; margin-bottom: 8px;
+    display: flex; align-items: center; justify-content: space-between;
+    cursor: pointer; transition: border-color 0.15s;
+  }
+  .project-card:hover { border-color: var(--border-accent); }
+  .project-name { font-size: 13px; font-weight: 500; color: var(--primary); }
+  .project-date { font-size: 11px; color: var(--muted); margin-top: 4px; }
+  .project-meta { display: flex; align-items: center; gap: 16px; }
+  .item-count { font-size: 11px; color: var(--muted); font-family: 'IBM Plex Mono', monospace; }
+  .status-badge {
+    font-size: 11px; padding: 2px 8px; border-radius: 999px;
+  }
+  .status-active { background: #ECFDF5; color: #047857; }
+  .status-closed { background: #F1F5F9; color: #475569; }
+
+  /* ════════════════════════════════════════════════════ */
+  /* PAGE 4: PROJECT DETAIL                              */
+  /* ════════════════════════════════════════════════════ */
+  .proj-header {
+    background: white; border-bottom: 1px solid var(--border);
+    padding: 16px 24px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .proj-nav { display: flex; align-items: center; gap: 12px; }
+  .proj-back { font-size: 13px; color: var(--muted); text-decoration: none; }
+  .proj-sep { color: #CBD5E1; }
+  .proj-title { font-size: 18px; font-weight: 600; color: var(--primary); letter-spacing: -0.02em; }
+  .proj-actions { display: flex; align-items: center; gap: 12px; }
+
+  .verified-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 12px; font-weight: 500;
+    background: #ECFDF5; color: #047857;
+    padding: 4px 12px; border-radius: 999px;
+    border: 1px solid #A7F3D0;
+  }
+  .verified-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--verified); }
+
+  .proj-main { max-width: 1152px; margin: 0 auto; padding: 32px 24px; }
+
+  .upload-zone {
+    background: white; border: 2px dashed #CBD5E1; border-radius: 8px;
+    padding: 32px; text-align: center; cursor: pointer;
+    transition: all 0.15s;
+  }
+  .upload-zone:hover { border-color: #94A3B8; }
+  .upload-zone p { font-size: 13px; color: #475569; font-weight: 500; }
+  .upload-zone .sub { font-size: 11px; color: #94A3B8; margin-top: 4px; }
+
+  .upload-success {
+    margin-top: 12px; background: #ECFDF5; border: 1px solid #A7F3D0;
+    border-radius: 6px; padding: 12px 16px;
+  }
+  .upload-success .msg { font-size: 13px; color: #065F46; font-weight: 500; }
+  .upload-success .hash { font-size: 11px; font-family: 'IBM Plex Mono', monospace; color: #059669; margin-top: 4px; }
+
+  .section-title { font-size: 15px; font-weight: 500; color: var(--primary); margin-bottom: 16px; }
+
+  .evidence-item {
+    background: white; border: 1px solid var(--border); border-radius: 8px;
+    padding: 16px 24px; margin-bottom: 8px;
+    display: flex; align-items: flex-start; justify-content: space-between;
+  }
+  .ev-info { flex: 1; min-width: 0; }
+  .ev-top { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+  .ev-pos {
+    font-size: 11px; font-family: 'IBM Plex Mono', monospace;
+    background: #F1F5F9; color: #475569;
+    padding: 2px 8px; border-radius: 4px;
+  }
+  .ev-name { font-size: 13px; font-weight: 500; color: var(--primary); }
+  .ev-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 24px; }
+  .ev-field { font-size: 11px; color: var(--muted); }
+  .ev-field .lbl { color: #94A3B8; }
+  .ev-field .val-mono { font-family: 'IBM Plex Mono', monospace; }
+
+  .chain-dots { display: flex; flex-direction: column; align-items: center; margin-left: 16px; }
+  .chain-line { width: 1px; height: 12px; background: #A7F3D0; }
+  .chain-dot { width: 12px; height: 12px; border-radius: 50%; background: var(--verified); border: 2px solid #A7F3D0; }
+
+  .custody-log { background: white; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+  .custody-event {
+    padding: 12px 24px; display: flex; align-items: center; justify-content: space-between;
+    border-bottom: 1px solid #F1F5F9;
+  }
+  .custody-event:last-child { border-bottom: none; }
+  .ce-left { display: flex; align-items: center; gap: 12px; }
+  .ce-type {
+    font-size: 11px; font-weight: 500; padding: 2px 8px; border-radius: 999px;
+  }
+  .ce-ingested { background: #ECFDF5; color: #047857; }
+  .ce-exported { background: #EFF6FF; color: #1D4ED8; }
+  .ce-verified { background: #F5F3FF; color: #7C3AED; }
+  .ce-file { font-size: 11px; color: var(--muted); }
+  .ce-time { font-size: 11px; color: #94A3B8; }
+
+  /* ════════════════════════════════════════════════════ */
+  /* PAGE 5: VERIFY                                      */
+  /* ════════════════════════════════════════════════════ */
+  .verify-center {
+    min-height: 700px; display: flex; align-items: center; justify-content: center;
+    background: var(--background); padding: 24px;
+  }
+  .verify-wrapper { width: 100%; max-width: 640px; }
+  .verify-brand { text-align: center; margin-bottom: 32px; }
+  .verify-brand h1 { font-size: 24px; font-weight: 600; color: var(--primary); }
+  .verify-brand p { font-size: 13px; color: var(--muted); margin-top: 4px; }
+
+  .verify-result {
+    border-radius: 8px; padding: 32px;
+  }
+  .verify-valid { background: rgba(236,253,245,0.6); border: 1px solid #A7F3D0; }
+  .verify-icon { text-align: center; font-size: 48px; margin-bottom: 8px; }
+  .verify-title { text-align: center; font-size: 18px; font-weight: 600; }
+  .verify-sub { text-align: center; font-size: 13px; margin-top: 4px; }
+
+  .verify-details {
+    background: white; border: 1px solid var(--border); border-radius: 8px;
+    margin-top: 24px; overflow: hidden;
+  }
+  .detail-row {
+    padding: 12px 16px; display: flex; justify-content: space-between;
+    align-items: flex-start; gap: 16px;
+    border-bottom: 1px solid #F8FAFC;
+  }
+  .detail-row:last-child { border-bottom: none; }
+  .detail-label { font-size: 11px; color: var(--muted); white-space: nowrap; }
+  .detail-value { font-size: 11px; color: var(--primary); text-align: right; word-break: break-all; }
+  .detail-mono { font-family: 'IBM Plex Mono', monospace; }
+
+  .verify-explain {
+    margin-top: 24px; background: white; border: 1px solid var(--border);
+    border-radius: 8px; padding: 24px;
+  }
+  .verify-explain h3 { font-size: 13px; font-weight: 500; color: var(--primary); margin-bottom: 8px; }
+  .verify-explain p { font-size: 11px; color: #475569; line-height: 1.6; }
+
+  .verify-footer { text-align: center; font-size: 11px; color: #94A3B8; margin-top: 24px; }
+
+  /* ════════════════════════════════════════════════════ */
+  /* PAGE 6: PRICING                                     */
+  /* ════════════════════════════════════════════════════ */
+  .pricing-hero { text-align: center; padding: 64px 24px; }
+  .pricing-hero h1 { font-size: 30px; font-weight: 600; color: var(--primary); letter-spacing: -0.02em; }
+  .pricing-hero p { font-size: 15px; color: #475569; max-width: 480px; margin: 12px auto 0; line-height: 1.6; }
+
+  .pricing-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; max-width: 720px; margin: 0 auto; padding: 0 24px; }
+
+  .price-card { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 32px; }
+  .price-card.featured { border: 2px solid var(--accent); position: relative; }
+  .price-badge {
+    position: absolute; top: -12px; right: 24px;
+    background: var(--accent); color: white;
+    font-size: 11px; font-weight: 500;
+    padding: 4px 12px; border-radius: 999px;
+  }
+  .price-card h2 { font-size: 18px; font-weight: 600; color: var(--primary); }
+  .price-card .tier-desc { font-size: 13px; color: var(--muted); margin-top: 4px; }
+  .price-amount { margin-top: 24px; }
+  .price-amount .num { font-size: 36px; font-weight: 600; color: var(--primary); }
+  .price-amount .per { color: var(--muted); }
+
+  .price-features { margin-top: 24px; list-style: none; }
+  .price-features li {
+    font-size: 13px; color: #475569; padding: 6px 0;
+    display: flex; align-items: flex-start; gap: 8px;
+  }
+  .price-check { color: var(--accent); flex-shrink: 0; margin-top: 2px; }
+
+  .price-cta {
+    display: block; width: 100%; text-align: center; margin-top: 32px;
+    padding: 12px; border-radius: 6px;
+    font-size: 13px; font-weight: 500;
+    text-decoration: none; cursor: pointer;
+  }
+  .price-cta-primary { background: var(--primary); color: white; border: none; }
+  .price-cta-accent { background: var(--accent); color: white; border: none; }
+
+  .roi-section {
+    margin-top: 64px; background: white; border: 1px solid var(--border);
+    border-radius: 8px; padding: 32px;
+    max-width: 720px; margin-left: auto; margin-right: auto;
+  }
+  .roi-section h3 { font-size: 15px; font-weight: 600; color: var(--primary); margin-bottom: 16px; }
+  .roi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; text-align: center; }
+  .roi-val { font-size: 24px; font-weight: 600; color: var(--primary); }
+  .roi-val.accent { color: var(--accent); }
+  .roi-label { font-size: 11px; color: var(--muted); margin-top: 4px; }
+</style>
+</head>
+<body>
+<div class="preview-shell">
+  <!-- Preview Header -->
+  <div class="preview-header">
+    <h1>AetherTrace MVP — Visual Preview</h1>
+    <p>Trust Fortress Design System &middot; Vault Steel Palette &middot; IBM Plex Sans + Mono</p>
+  </div>
+
+  <!-- Tab Navigation -->
+  <div class="page-tabs">
+    <button class="page-tab active" onclick="showPage('landing')">Landing Page</button>
+    <button class="page-tab" onclick="showPage('login')">Login</button>
+    <button class="page-tab" onclick="showPage('signup')">Signup</button>
+    <button class="page-tab" onclick="showPage('dashboard')">Dashboard</button>
+    <button class="page-tab" onclick="showPage('project')">Project Detail</button>
+    <button class="page-tab" onclick="showPage('verify')">Verification</button>
+    <button class="page-tab" onclick="showPage('pricing')">Pricing</button>
+  </div>
+
+  <!-- Browser Frame -->
+  <div class="browser-frame">
+    <div class="browser-bar">
+      <div class="browser-dots">
+        <div class="browser-dot dot-red"></div>
+        <div class="browser-dot dot-yellow"></div>
+        <div class="browser-dot dot-green"></div>
+      </div>
+      <div class="browser-url" id="urlBar">https://aethertrace.com/</div>
+    </div>
+
+    <div class="page-content">
+
+      <!-- ═══════════════════════════════════════ -->
+      <!-- PAGE: LANDING                           -->
+      <!-- ═══════════════════════════════════════ -->
+      <div class="page-view active" id="page-landing">
+        <div class="nav-bar">
+          <div class="nav-brand">AetherTrace</div>
+          <div class="nav-links">
+            <a class="nav-link" href="#" onclick="showPage('pricing');return false">Pricing</a>
+            <a class="nav-link" href="#" onclick="showPage('login');return false">Sign in</a>
+            <a class="btn-primary" href="#" onclick="showPage('signup');return false">Get started</a>
+          </div>
+        </div>
+
+        <div class="hero">
+          <h2>Prove what happened.<br>When it happened.<br>Whether the record was altered.</h2>
+          <p>AetherTrace is cryptographically enforced evidence custody. Every file gets a SHA-256 hash, an immutable timestamp, and a tamper-evident chain. No one — including us — can modify your evidence.</p>
+          <div class="hero-buttons">
+            <a class="btn-primary" href="#" onclick="showPage('signup');return false">Start capturing evidence</a>
+            <a class="btn-outline" href="#" onclick="showPage('pricing');return false">View pricing</a>
+          </div>
+        </div>
+
+        <div class="how-section">
+          <h3>How AetherTrace works</h3>
+          <div class="how-grid">
+            <div class="step">
+              <div class="step-num">1</div>
+              <h4>Upload evidence</h4>
+              <p>Documents, photos, logs, notes — any file becomes cryptographically sealed the moment you upload it.</p>
+            </div>
+            <div class="step">
+              <div class="step-num">2</div>
+              <h4>Chain is built</h4>
+              <p>SHA-256 content hash, immutable timestamp, and a chain link to every previous item. Tamper with one, and the entire chain breaks.</p>
+            </div>
+            <div class="step">
+              <div class="step-num">3</div>
+              <h4>Verify independently</h4>
+              <p>Anyone with a chain hash can verify integrity. No account needed. Court-ready evidence packages export in one click.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="problem">
+          <h3>The structural flaw in construction</h3>
+          <p>The party that performs the work controls the evidence of that work's quality. When disputes arise — and they always do — the subcontractor has no independent proof. AetherTrace fixes this by making custody independent of accountability.</p>
+          <div class="stat-grid">
+            <div class="stat-card">
+              <div class="val">$5-12B</div>
+              <div class="label">Annual US construction dispute costs</div>
+            </div>
+            <div class="stat-card">
+              <div class="val">$30K</div>
+              <div class="label">Average claim a sub loses without proof</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="footer">AetherTrace — Cryptographically enforced evidence custody</div>
+      </div>
+
+      <!-- ═══════════════════════════════════════ -->
+      <!-- PAGE: LOGIN                             -->
+      <!-- ═══════════════════════════════════════ -->
+      <div class="page-view" id="page-login">
+        <div class="auth-center">
+          <div class="auth-wrapper">
+            <div class="auth-brand">
+              <h1>AetherTrace</h1>
+              <p>Evidence custody. Cryptographically enforced.</p>
+            </div>
+            <div class="auth-card">
+              <h2>Sign in</h2>
+              <div class="form-group">
+                <label class="form-label">Email</label>
+                <input type="email" class="form-input" placeholder="you@company.com">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Password</label>
+                <input type="password" class="form-input" placeholder="••••••••">
+              </div>
+              <button class="form-btn">Sign in</button>
+            </div>
+            <div class="auth-footer">
+              No account? <a href="#" onclick="showPage('signup');return false">Create one</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════ -->
+      <!-- PAGE: SIGNUP                            -->
+      <!-- ═══════════════════════════════════════ -->
+      <div class="page-view" id="page-signup">
+        <div class="auth-center">
+          <div class="auth-wrapper">
+            <div class="auth-brand">
+              <h1>AetherTrace</h1>
+              <p>Evidence custody. Cryptographically enforced.</p>
+            </div>
+            <div class="auth-card">
+              <h2>Create account</h2>
+              <div class="form-group">
+                <label class="form-label">Company name</label>
+                <input type="text" class="form-input" placeholder="Acme Construction LLC">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Email</label>
+                <input type="email" class="form-input" placeholder="you@company.com">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Password</label>
+                <input type="password" class="form-input" placeholder="Minimum 8 characters">
+              </div>
+              <button class="form-btn">Create account</button>
+            </div>
+            <div class="auth-footer">
+              Already have an account? <a href="#" onclick="showPage('login');return false">Sign in</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════ -->
+      <!-- PAGE: DASHBOARD                         -->
+      <!-- ═══════════════════════════════════════ -->
+      <div class="page-view" id="page-dashboard">
+        <div class="dash-header">
+          <div class="dash-brand">
+            <span class="nav-brand">AetherTrace</span>
+            <span class="dash-org">Hall Mechanical Services</span>
+          </div>
+          <div class="dash-user">
+            <span>hall324@gmail.com</span>
+            <button>Sign out</button>
+          </div>
+        </div>
+
+        <div class="dash-main">
+          <div class="stats-row">
+            <div class="stat-box">
+              <div class="stat-label">Projects</div>
+              <div class="stat-value">3</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-label">Evidence Items</div>
+              <div class="stat-value">47</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-label">Subscription</div>
+              <div class="stat-value">Active</div>
+            </div>
+          </div>
+
+          <div class="section-header">
+            <h2>Projects</h2>
+            <div class="project-form">
+              <input type="text" class="project-input" placeholder="Project name">
+              <button class="btn-primary">Create project</button>
+            </div>
+          </div>
+
+          <div class="project-card" onclick="showPage('project')">
+            <div>
+              <div class="project-name">Fort Hood HVAC Retrofit — Bldg 4127</div>
+              <div class="project-date">Created 3/15/2026</div>
+            </div>
+            <div class="project-meta">
+              <span class="item-count mono">24 items</span>
+              <span class="status-badge status-active">active</span>
+            </div>
+          </div>
+
+          <div class="project-card">
+            <div>
+              <div class="project-name">Grafenwöhr Range Facility Upgrade</div>
+              <div class="project-date">Created 3/8/2026</div>
+            </div>
+            <div class="project-meta">
+              <span class="item-count mono">18 items</span>
+              <span class="status-badge status-active">active</span>
+            </div>
+          </div>
+
+          <div class="project-card">
+            <div>
+              <div class="project-name">Base Housing Electrical — Phase 1</div>
+              <div class="project-date">Created 2/22/2026</div>
+            </div>
+            <div class="project-meta">
+              <span class="item-count mono">5 items</span>
+              <span class="status-badge status-closed">closed</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════ -->
+      <!-- PAGE: PROJECT DETAIL                    -->
+      <!-- ═══════════════════════════════════════ -->
+      <div class="page-view" id="page-project">
+        <div class="proj-header">
+          <div class="proj-nav">
+            <a class="proj-back" href="#" onclick="showPage('dashboard');return false">&larr; Dashboard</a>
+            <span class="proj-sep">/</span>
+            <span class="proj-title">Fort Hood HVAC Retrofit — Bldg 4127</span>
+          </div>
+          <div class="proj-actions">
+            <div class="verified-badge">
+              <div class="verified-dot"></div>
+              Chain Verified
+            </div>
+            <a class="btn-outline" href="#">Export package</a>
+          </div>
+        </div>
+
+        <div class="proj-main">
+          <!-- Upload -->
+          <div style="margin-bottom: 32px;">
+            <div class="section-title">Capture evidence</div>
+            <div class="upload-zone">
+              <p>Drop evidence file here, or click to select</p>
+              <div class="sub">PDF, images, text, CSV, JSON, ZIP — up to 50MB</div>
+            </div>
+            <div class="upload-success">
+              <div class="msg">Evidence captured: daily_inspection_report_0322.pdf</div>
+              <div class="hash">Chain position #24 &middot; Hash: a7c3e9f21b4d8a6e5c90...</div>
+            </div>
+          </div>
+
+          <!-- Evidence Chain -->
+          <div style="margin-bottom: 32px;">
+            <div class="section-title">Evidence chain (24 items)</div>
+
+            <div class="evidence-item">
+              <div class="ev-info">
+                <div class="ev-top">
+                  <span class="ev-pos">#24</span>
+                  <span class="ev-name">daily_inspection_report_0322.pdf</span>
+                </div>
+                <div class="ev-grid">
+                  <div class="ev-field"><span class="lbl">Content hash: </span><span class="val-mono">a7c3e9f21b4d8a6e...</span></div>
+                  <div class="ev-field"><span class="lbl">Chain hash: </span><span class="val-mono">f92d1a7b3c5e0842...</span></div>
+                  <div class="ev-field"><span class="lbl">Ingested: </span>3/22/2026, 4:15 PM</div>
+                  <div class="ev-field"><span class="lbl">Size: </span>2.4 MB</div>
+                </div>
+              </div>
+              <div class="chain-dots">
+                <div class="chain-dot"></div>
+                <div class="chain-line"></div>
+              </div>
+            </div>
+
+            <div class="evidence-item">
+              <div class="ev-info">
+                <div class="ev-top">
+                  <span class="ev-pos">#23</span>
+                  <span class="ev-name">duct_photo_section_B_east.jpg</span>
+                </div>
+                <div class="ev-grid">
+                  <div class="ev-field"><span class="lbl">Content hash: </span><span class="val-mono">3b8f2d1c6a9e7045...</span></div>
+                  <div class="ev-field"><span class="lbl">Chain hash: </span><span class="val-mono">c4e81f3a9d2b5670...</span></div>
+                  <div class="ev-field"><span class="lbl">Ingested: </span>3/21/2026, 2:30 PM</div>
+                  <div class="ev-field"><span class="lbl">Size: </span>4.7 MB</div>
+                </div>
+              </div>
+              <div class="chain-dots">
+                <div class="chain-line"></div>
+                <div class="chain-dot"></div>
+                <div class="chain-line"></div>
+              </div>
+            </div>
+
+            <div class="evidence-item">
+              <div class="ev-info">
+                <div class="ev-top">
+                  <span class="ev-pos">#22</span>
+                  <span class="ev-name">material_receipt_carrier_freight.pdf</span>
+                </div>
+                <div class="ev-grid">
+                  <div class="ev-field"><span class="lbl">Content hash: </span><span class="val-mono">9e4d7a2f1c8b3056...</span></div>
+                  <div class="ev-field"><span class="lbl">Chain hash: </span><span class="val-mono">d5f29a8c1b4e7063...</span></div>
+                  <div class="ev-field"><span class="lbl">Ingested: </span>3/20/2026, 9:12 AM</div>
+                  <div class="ev-field"><span class="lbl">Size: </span>856 KB</div>
+                </div>
+              </div>
+              <div class="chain-dots">
+                <div class="chain-line"></div>
+                <div class="chain-dot"></div>
+                <div class="chain-line"></div>
+              </div>
+            </div>
+
+            <div style="text-align: center; padding: 8px; font-size: 12px; color: #94A3B8;">
+              ... 19 more items in chain
+            </div>
+          </div>
+
+          <!-- Custody Log -->
+          <div>
+            <div class="section-title">Custody log (28 events)</div>
+            <div class="custody-log">
+              <div class="custody-event">
+                <div class="ce-left">
+                  <span class="ce-type ce-ingested">ingested</span>
+                  <span class="ce-file">daily_inspection_report_0322.pdf</span>
+                </div>
+                <span class="ce-time">3/22/2026, 4:15 PM</span>
+              </div>
+              <div class="custody-event">
+                <div class="ce-left">
+                  <span class="ce-type ce-ingested">ingested</span>
+                  <span class="ce-file">duct_photo_section_B_east.jpg</span>
+                </div>
+                <span class="ce-time">3/21/2026, 2:30 PM</span>
+              </div>
+              <div class="custody-event">
+                <div class="ce-left">
+                  <span class="ce-type ce-exported">exported</span>
+                  <span class="ce-file">Evidence package — 22 items</span>
+                </div>
+                <span class="ce-time">3/20/2026, 5:00 PM</span>
+              </div>
+              <div class="custody-event">
+                <div class="ce-left">
+                  <span class="ce-type ce-verified">verified</span>
+                  <span class="ce-file">Full chain verification — valid</span>
+                </div>
+                <span class="ce-time">3/20/2026, 4:58 PM</span>
+              </div>
+              <div class="custody-event">
+                <div class="ce-left">
+                  <span class="ce-type ce-ingested">ingested</span>
+                  <span class="ce-file">material_receipt_carrier_freight.pdf</span>
+                </div>
+                <span class="ce-time">3/20/2026, 9:12 AM</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════ -->
+      <!-- PAGE: VERIFICATION                      -->
+      <!-- ═══════════════════════════════════════ -->
+      <div class="page-view" id="page-verify">
+        <div class="verify-center">
+          <div class="verify-wrapper">
+            <div class="verify-brand">
+              <h1>AetherTrace</h1>
+              <p>Independent Evidence Verification</p>
+            </div>
+
+            <div class="verify-result verify-valid">
+              <div class="verify-icon" style="color: var(--verified);">&#10003;</div>
+              <div class="verify-title" style="color: #065F46;">Evidence Integrity Verified</div>
+              <div class="verify-sub" style="color: #059669;">This evidence item has not been altered since ingestion.</div>
+
+              <div class="verify-details">
+                <div class="detail-row">
+                  <span class="detail-label">File</span>
+                  <span class="detail-value">daily_inspection_report_0322.pdf</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">Type</span>
+                  <span class="detail-value">application/pdf</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">Size</span>
+                  <span class="detail-value">2.4 MB</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">Chain position</span>
+                  <span class="detail-value">#24</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">Captured</span>
+                  <span class="detail-value">3/22/2026, 4:15:00 PM</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">Time confidence</span>
+                  <span class="detail-value">system-generated</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">Ingested</span>
+                  <span class="detail-value">3/22/2026, 4:15:03 PM</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">Content hash</span>
+                  <span class="detail-value detail-mono">a7c3e9f21b4d8a6e5c90b3f42d817e6a9c0d5f281b4e7a3c6d9f2e5b8a1c4d70</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">Chain hash</span>
+                  <span class="detail-value detail-mono">f92d1a7b3c5e08429d6f4a8e1b3c7d2a5f0e9b4c6d8a1e3f5b7c2d9a4e6f0182</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">Previous hash</span>
+                  <span class="detail-value detail-mono">c4e81f3a9d2b56703e8d1a4f7c9b2e5d0a6f3c8b1e4d7a2f5c9e0b3d6a8f1c42</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">Recomputed hash</span>
+                  <span class="detail-value detail-mono">f92d1a7b3c5e08429d6f4a8e1b3c7d2a5f0e9b4c6d8a1e3f5b7c2d9a4e6f0182</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="verify-explain">
+              <h3>How verification works</h3>
+              <p>Each evidence item's chain hash is computed as SHA-256(content_hash + ingested_at + previous_hash). The first item in any chain uses "GENESIS" as its previous hash. This creates a tamper-evident chain where altering any single item invalidates all subsequent hashes. AetherTrace cannot modify evidence after ingestion.</p>
+            </div>
+
+            <div class="verify-footer">Verified at 3/23/2026, 10:30 AM &middot; AetherTrace Evidence Custody</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════ -->
+      <!-- PAGE: PRICING                           -->
+      <!-- ═══════════════════════════════════════ -->
+      <div class="page-view" id="page-pricing">
+        <div class="nav-bar">
+          <a class="nav-brand" href="#" onclick="showPage('landing');return false">AetherTrace</a>
+          <a class="nav-link" href="#" onclick="showPage('login');return false">Sign in</a>
+        </div>
+
+        <div class="pricing-hero">
+          <h1>Evidence custody pricing</h1>
+          <p>One lost $30K claim pays for 12+ years of AetherTrace at the Standard tier. The question isn't cost — it's how much you lose without proof.</p>
+        </div>
+
+        <div class="pricing-grid">
+          <div class="price-card">
+            <h2>Standard</h2>
+            <div class="tier-desc">For subcontractors protecting their work</div>
+            <div class="price-amount">
+              <span class="num">$199</span><span class="per">/mo</span>
+            </div>
+            <ul class="price-features">
+              <li><span class="price-check">&#10003;</span> Up to 5 active projects</li>
+              <li><span class="price-check">&#10003;</span> SHA-256 hash chain on every file</li>
+              <li><span class="price-check">&#10003;</span> Immutable chain-of-custody ledger</li>
+              <li><span class="price-check">&#10003;</span> Court-ready evidence packages</li>
+              <li><span class="price-check">&#10003;</span> Public verification URLs</li>
+              <li><span class="price-check">&#10003;</span> 50MB per evidence file</li>
+            </ul>
+            <button class="price-cta price-cta-primary" onclick="showPage('signup')">Get started</button>
+          </div>
+
+          <div class="price-card featured">
+            <div class="price-badge">Most popular</div>
+            <h2>Professional</h2>
+            <div class="tier-desc">For firms managing multiple projects</div>
+            <div class="price-amount">
+              <span class="num">$499</span><span class="per">/mo</span>
+            </div>
+            <ul class="price-features">
+              <li><span class="price-check">&#10003;</span> Unlimited active projects</li>
+              <li><span class="price-check">&#10003;</span> Everything in Standard</li>
+              <li><span class="price-check">&#10003;</span> Priority evidence processing</li>
+              <li><span class="price-check">&#10003;</span> Team member access</li>
+              <li><span class="price-check">&#10003;</span> Bulk evidence upload</li>
+              <li><span class="price-check">&#10003;</span> Dedicated support</li>
+            </ul>
+            <button class="price-cta price-cta-accent" onclick="showPage('signup')">Get started</button>
+          </div>
+        </div>
+
+        <div class="roi-section">
+          <h3>The math is simple</h3>
+          <div class="roi-grid">
+            <div>
+              <div class="roi-val">$30K</div>
+              <div class="roi-label">Average disputed claim</div>
+            </div>
+            <div>
+              <div class="roi-val">$2,388</div>
+              <div class="roi-label">Annual Standard cost</div>
+            </div>
+            <div>
+              <div class="roi-val accent">12.5x</div>
+              <div class="roi-label">ROI on one prevented claim</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="height: 64px;"></div>
+      </div>
+
+    </div><!-- /page-content -->
+  </div><!-- /browser-frame -->
+
+  <div style="text-align: center; padding: 24px; font-size: 12px; color: #6B7280;">
+    AetherTrace MVP &middot; Built by ANVIL &middot; Trust Fortress Design System &middot; PRISM v2.0.0
+  </div>
+</div>
+
+<script>
+  const pages = {
+    landing: '/',
+    login: '/login',
+    signup: '/signup',
+    dashboard: '/dashboard',
+    project: '/dashboard/projects/fort-hood-hvac-retrofit',
+    verify: '/verify/f92d1a7b3c5e08429d6f4a8e1b3c7d2a5f0e9b4c6d8a1e3f5b7c2d9a4e6f0182',
+    pricing: '/pricing',
+  };
+
+  function showPage(name) {
+    // Hide all pages
+    document.querySelectorAll('.page-view').forEach(p => p.classList.remove('active'));
+    // Deactivate all tabs
+    document.querySelectorAll('.page-tab').forEach(t => t.classList.remove('active'));
+
+    // Show selected page
+    document.getElementById('page-' + name).classList.add('active');
+    // Activate tab
+    document.querySelectorAll('.page-tab').forEach(t => {
+      if (t.textContent.toLowerCase().includes(name.replace('landing', 'landing page'))) {
+        t.classList.add('active');
+      }
+    });
+    // Match tab more reliably
+    const tabMap = {
+      landing: 'Landing Page', login: 'Login', signup: 'Signup',
+      dashboard: 'Dashboard', project: 'Project Detail',
+      verify: 'Verification', pricing: 'Pricing'
+    };
+    document.querySelectorAll('.page-tab').forEach(t => {
+      t.classList.remove('active');
+      if (t.textContent === tabMap[name]) t.classList.add('active');
+    });
+
+    // Update URL bar
+    document.getElementById('urlBar').textContent = 'https://aethertrace.com' + pages[name];
+  }
+</script>
+</body>
+</html>

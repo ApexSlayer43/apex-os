@@ -49,3 +49,20 @@ Windows Environment Notes
 * PowerShell does not support && chaining — run commands sequentially
 * Mullvad VPN may block npm — use --registry https://registry.npmjs.org
 * NODE_OPTIONS="--dns-result-order=ipv4first" if IPv6 connection issues occur
+
+UI/UX Design Intelligence (UI Pro Max Skill)
+Location: Aethertrace/ui-ux-pro-max/ (persists on local machine)
+This is a fully functional design intelligence engine with BM25 search across 16 CSV databases. It contains 161 reasoning rules, 67+ UI styles, 161 color palettes, 57 typography pairings, 25 chart types, and 99 UX guidelines.
+How to Use (Every Session)
+Run from the Aethertrace/ui-ux-pro-max/ directory:
+* Full design system: python3 scripts/search.py "<keywords>" --design-system -p "ProjectName"
+* Domain search: python3 scripts/search.py "<query>" --domain <domain> [-n max_results]
+* Stack search: python3 scripts/search.py "<query>" --stack <stack>
+Available Domains: product, style, typography, color, landing, chart, ux, react, web, prompt
+Available Stacks: html-tailwind (default), react, nextjs, astro, vue, nuxtjs, nuxt-ui, svelte, swiftui, react-native, flutter, shadcn, jetpack-compose
+When to Use
+* Any UI/UX design decision — run --design-system first
+* Choosing styles, colors, fonts — run --domain with relevant domain
+* Before building any page or component — generate design system, then build
+* UX review or accessibility check — run --domain ux
+Standing Order: For any AetherTrace UI work, run the design system search BEFORE writing code. Do not guess at styles, colors, or typography — search first.

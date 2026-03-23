@@ -1,0 +1,1284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Obsidian Sound — Nashville's Premier Recording Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=DM+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --void: #050506;
+    --surface: #0A0A0C;
+    --elevated: #111114;
+    --border: rgba(255,255,255,0.06);
+    --border-hover: rgba(255,255,255,0.12);
+    --text: #EDEDEF;
+    --text-muted: #6B6B76;
+    --amber: #D4A853;
+    --amber-glow: rgba(212,168,83,0.15);
+    --amber-dim: #8B7035;
+    --indigo: #5E6AD2;
+    --indigo-glow: rgba(94,106,210,0.12);
+    --red-vu: #E54D2E;
+    --green-vu: #46A758;
+    --font-display: 'Space Grotesk', sans-serif;
+    --font-body: 'DM Sans', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+    --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--font-body);
+    background: var(--void);
+    color: var(--text);
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── GRAIN OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    pointer-events: none;
+    opacity: 0.035;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    background-repeat: repeat;
+    background-size: 256px 256px;
+  }
+
+  /* ── AMBIENT LIGHT BLOBS ── */
+  .ambient-blob {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(80px);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .blob-1 {
+    width: 500px; height: 500px;
+    background: var(--amber-glow);
+    top: -100px; left: -100px;
+    animation: drift1 20s ease-in-out infinite;
+  }
+  .blob-2 {
+    width: 400px; height: 400px;
+    background: var(--indigo-glow);
+    bottom: -50px; right: -100px;
+    animation: drift2 25s ease-in-out infinite;
+  }
+  @keyframes drift1 {
+    0%, 100% { transform: translate(0, 0); }
+    33% { transform: translate(60px, 40px); }
+    66% { transform: translate(-30px, 80px); }
+  }
+  @keyframes drift2 {
+    0%, 100% { transform: translate(0, 0); }
+    33% { transform: translate(-50px, -30px); }
+    66% { transform: translate(40px, -60px); }
+  }
+
+  /* ── UTILITY ── */
+  .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 1; }
+  .section-label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+  .section-label .amber { color: var(--amber); }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    padding: 20px 0;
+    background: rgba(5,5,6,0.7);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+  }
+  nav .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .nav-logo {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 20px;
+    letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .logo-icon {
+    width: 32px; height: 32px;
+    background: var(--amber);
+    border-radius: 50%;
+    position: relative;
+  }
+  .logo-icon::after {
+    content: '';
+    position: absolute;
+    inset: 6px;
+    border-radius: 50%;
+    border: 2px solid var(--void);
+  }
+  .logo-icon::before {
+    content: '';
+    position: absolute;
+    width: 2px; height: 10px;
+    background: var(--void);
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .nav-links {
+    display: flex;
+    gap: 32px;
+    list-style: none;
+  }
+  .nav-links a {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: color 0.3s var(--ease-out);
+    font-family: var(--font-body);
+  }
+  .nav-links a:hover { color: var(--text); }
+  .nav-cta {
+    font-family: var(--font-display);
+    font-size: 13px;
+    font-weight: 600;
+    padding: 10px 24px;
+    background: transparent;
+    border: 1px solid var(--amber-dim);
+    color: var(--amber);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s var(--ease-out);
+    text-decoration: none;
+  }
+  .nav-cta:hover {
+    background: var(--amber);
+    color: var(--void);
+    border-color: var(--amber);
+    box-shadow: 0 0 30px var(--amber-glow);
+  }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-content {
+    padding-top: 80px;
+    max-width: 800px;
+  }
+  .hero-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 16px;
+    background: var(--elevated);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-bottom: 32px;
+  }
+  .hero-tag .dot {
+    width: 6px; height: 6px;
+    background: var(--green-vu);
+    border-radius: 50%;
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+  .hero h1 {
+    font-family: var(--font-display);
+    font-size: clamp(48px, 7vw, 96px);
+    font-weight: 300;
+    line-height: 1.05;
+    letter-spacing: -3px;
+    margin-bottom: 28px;
+  }
+  .hero h1 strong {
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--amber), #E8C97A);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .hero p {
+    font-size: 18px;
+    color: var(--text-muted);
+    line-height: 1.7;
+    max-width: 540px;
+    margin-bottom: 48px;
+  }
+  .hero-actions {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+  }
+  .btn-primary {
+    font-family: var(--font-display);
+    font-size: 15px;
+    font-weight: 600;
+    padding: 16px 36px;
+    background: var(--amber);
+    color: var(--void);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s var(--ease-out);
+    text-decoration: none;
+  }
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 40px var(--amber-glow), 0 0 80px rgba(212,168,83,0.1);
+  }
+  .btn-ghost {
+    font-family: var(--font-display);
+    font-size: 15px;
+    font-weight: 500;
+    padding: 16px 36px;
+    background: transparent;
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s var(--ease-out);
+    text-decoration: none;
+  }
+  .btn-ghost:hover {
+    color: var(--text);
+    border-color: var(--border-hover);
+    background: rgba(255,255,255,0.03);
+  }
+
+  /* ── WAVEFORM ANIMATION ── */
+  .hero-waveform {
+    position: absolute;
+    right: -40px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    opacity: 0.12;
+  }
+  .wave-bar {
+    width: 3px;
+    background: var(--amber);
+    border-radius: 2px;
+    animation: waveform 1.4s ease-in-out infinite;
+  }
+  @keyframes waveform {
+    0%, 100% { height: 20px; }
+    50% { height: var(--h); }
+  }
+
+  /* ── VU METER ── */
+  .vu-meter-section {
+    padding: 120px 0;
+    border-top: 1px solid var(--border);
+  }
+  .vu-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 64px;
+  }
+  .vu-header h2 {
+    font-family: var(--font-display);
+    font-size: clamp(32px, 4vw, 52px);
+    font-weight: 300;
+    letter-spacing: -2px;
+    line-height: 1.1;
+  }
+  .vu-header h2 strong { font-weight: 700; }
+  .vu-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+  }
+  .vu-card {
+    background: var(--surface);
+    padding: 48px 36px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.5s var(--ease-out);
+    cursor: default;
+  }
+  .vu-card:hover {
+    background: var(--elevated);
+  }
+  .vu-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 2px;
+    background: var(--amber);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.6s var(--ease-out);
+  }
+  .vu-card:hover::before { transform: scaleX(1); }
+  .vu-card-number {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--amber-dim);
+    letter-spacing: 2px;
+    margin-bottom: 24px;
+  }
+  .vu-card h3 {
+    font-family: var(--font-display);
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    letter-spacing: -0.5px;
+  }
+  .vu-card p {
+    font-size: 14px;
+    color: var(--text-muted);
+    line-height: 1.7;
+  }
+  .vu-card-meter {
+    display: flex;
+    gap: 3px;
+    margin-top: 24px;
+    align-items: flex-end;
+    height: 24px;
+  }
+  .meter-seg {
+    width: 4px;
+    border-radius: 1px;
+    transition: height 0.5s var(--ease-out);
+  }
+  .vu-card:hover .meter-seg { animation: meter-bounce 0.8s var(--ease-out) forwards; }
+  @keyframes meter-bounce {
+    0% { height: 4px; }
+    50% { height: var(--h); }
+    100% { height: calc(var(--h) * 0.8); }
+  }
+
+  /* ── ROOMS SHOWCASE ── */
+  .rooms-section {
+    padding: 120px 0;
+    border-top: 1px solid var(--border);
+  }
+  .rooms-header {
+    margin-bottom: 80px;
+  }
+  .rooms-header h2 {
+    font-family: var(--font-display);
+    font-size: clamp(32px, 4vw, 52px);
+    font-weight: 300;
+    letter-spacing: -2px;
+    margin-top: 16px;
+    line-height: 1.1;
+  }
+  .rooms-header h2 strong { font-weight: 700; }
+  .room-item {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    margin-bottom: 2px;
+    min-height: 420px;
+    background: var(--surface);
+    overflow: hidden;
+    transition: all 0.5s var(--ease-out);
+  }
+  .room-item:hover { background: var(--elevated); }
+  .room-visual {
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .room-visual-inner {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+  /* Waveform visualization for each room */
+  .room-viz {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    height: 120px;
+  }
+  .room-viz .bar {
+    width: 4px;
+    border-radius: 2px;
+    transition: all 0.6s var(--ease-out);
+  }
+  .room-item:hover .room-viz .bar {
+    animation: room-wave 1.2s ease-in-out infinite;
+    animation-delay: var(--d);
+  }
+  @keyframes room-wave {
+    0%, 100% { height: 20px; opacity: 0.3; }
+    50% { height: var(--h); opacity: 1; }
+  }
+  .room-info {
+    padding: 60px 48px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .room-tag {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--amber-dim);
+    margin-bottom: 20px;
+  }
+  .room-info h3 {
+    font-family: var(--font-display);
+    font-size: 32px;
+    font-weight: 600;
+    letter-spacing: -1px;
+    margin-bottom: 16px;
+  }
+  .room-info p {
+    color: var(--text-muted);
+    line-height: 1.7;
+    font-size: 15px;
+    margin-bottom: 32px;
+  }
+  .room-specs {
+    display: flex;
+    gap: 32px;
+  }
+  .room-spec {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .room-spec-val {
+    font-family: var(--font-display);
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--amber);
+  }
+  .room-spec-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+  .room-item:nth-child(even) .room-visual { order: 2; }
+  .room-item:nth-child(even) .room-info { order: 1; }
+
+  /* ── EQUIPMENT TICKER ── */
+  .ticker-section {
+    padding: 40px 0;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    overflow: hidden;
+    position: relative;
+  }
+  .ticker-track {
+    display: flex;
+    gap: 64px;
+    animation: ticker 30s linear infinite;
+    width: max-content;
+  }
+  @keyframes ticker {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+  .ticker-item {
+    font-family: var(--font-display);
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-muted);
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .ticker-item .sep {
+    width: 4px; height: 4px;
+    background: var(--amber-dim);
+    border-radius: 50%;
+  }
+
+  /* ── SIGNAL CHAIN (Process) ── */
+  .signal-section {
+    padding: 120px 0;
+  }
+  .signal-header {
+    text-align: center;
+    margin-bottom: 80px;
+  }
+  .signal-header h2 {
+    font-family: var(--font-display);
+    font-size: clamp(32px, 4vw, 52px);
+    font-weight: 300;
+    letter-spacing: -2px;
+    margin-top: 16px;
+  }
+  .signal-header h2 strong { font-weight: 700; }
+  .signal-chain {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    position: relative;
+  }
+  .signal-chain::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--amber-dim), var(--amber), var(--amber-dim), transparent);
+    z-index: 0;
+  }
+  .signal-node {
+    flex: 1;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+    padding: 0 16px;
+  }
+  .signal-dot {
+    width: 48px; height: 48px;
+    border-radius: 50%;
+    background: var(--surface);
+    border: 2px solid var(--amber-dim);
+    margin: 0 auto 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--amber);
+    transition: all 0.5s var(--ease-out);
+  }
+  .signal-node:hover .signal-dot {
+    background: var(--amber);
+    color: var(--void);
+    box-shadow: 0 0 40px var(--amber-glow);
+    border-color: var(--amber);
+  }
+  .signal-node h4 {
+    font-family: var(--font-display);
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    letter-spacing: -0.3px;
+  }
+  .signal-node p {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
+
+  /* ── TESTIMONIAL ── */
+  .testimonial-section {
+    padding: 120px 0;
+    border-top: 1px solid var(--border);
+  }
+  .testimonial-block {
+    max-width: 700px;
+    margin: 0 auto;
+    text-align: center;
+  }
+  .testimonial-quote {
+    font-family: var(--font-display);
+    font-size: clamp(24px, 3.5vw, 38px);
+    font-weight: 300;
+    line-height: 1.4;
+    letter-spacing: -1px;
+    margin-bottom: 40px;
+    position: relative;
+  }
+  .testimonial-quote::before {
+    content: '"';
+    font-family: var(--font-display);
+    font-size: 120px;
+    font-weight: 700;
+    color: var(--amber);
+    opacity: 0.15;
+    position: absolute;
+    top: -40px;
+    left: 50%;
+    transform: translateX(-50%);
+    line-height: 1;
+  }
+  .testimonial-attr {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+  .testimonial-attr strong {
+    color: var(--amber);
+    font-weight: 500;
+  }
+
+  /* ── RATES ── */
+  .rates-section {
+    padding: 120px 0;
+    border-top: 1px solid var(--border);
+  }
+  .rates-header {
+    margin-bottom: 64px;
+  }
+  .rates-header h2 {
+    font-family: var(--font-display);
+    font-size: clamp(32px, 4vw, 52px);
+    font-weight: 300;
+    letter-spacing: -2px;
+    margin-top: 16px;
+  }
+  .rates-header h2 strong { font-weight: 700; }
+  .rates-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+  }
+  .rate-card {
+    background: var(--surface);
+    padding: 48px 36px;
+    transition: all 0.5s var(--ease-out);
+    position: relative;
+  }
+  .rate-card:hover { background: var(--elevated); }
+  .rate-card.featured {
+    background: var(--elevated);
+    border: 1px solid var(--amber-dim);
+  }
+  .rate-card.featured::before {
+    content: 'MOST BOOKED';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    padding: 8px;
+    text-align: center;
+    background: var(--amber);
+    color: var(--void);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 3px;
+    font-weight: 700;
+  }
+  .rate-card.featured { padding-top: 72px; }
+  .rate-name {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 16px;
+  }
+  .rate-price {
+    font-family: var(--font-display);
+    font-size: 48px;
+    font-weight: 700;
+    letter-spacing: -2px;
+    margin-bottom: 4px;
+  }
+  .rate-price span {
+    font-size: 18px;
+    font-weight: 400;
+    color: var(--text-muted);
+    letter-spacing: 0;
+  }
+  .rate-unit {
+    font-size: 14px;
+    color: var(--text-muted);
+    margin-bottom: 32px;
+  }
+  .rate-features {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 36px;
+  }
+  .rate-features li {
+    font-size: 14px;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .rate-features li::before {
+    content: '';
+    width: 6px; height: 6px;
+    background: var(--amber-dim);
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .rate-btn {
+    display: block;
+    width: 100%;
+    padding: 14px;
+    text-align: center;
+    font-family: var(--font-display);
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s var(--ease-out);
+    text-decoration: none;
+  }
+  .rate-btn-outline {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text);
+  }
+  .rate-btn-outline:hover {
+    border-color: var(--border-hover);
+    background: rgba(255,255,255,0.03);
+  }
+  .rate-btn-fill {
+    background: var(--amber);
+    border: 1px solid var(--amber);
+    color: var(--void);
+  }
+  .rate-btn-fill:hover {
+    box-shadow: 0 8px 40px var(--amber-glow);
+    transform: translateY(-2px);
+  }
+
+  /* ── CTA ── */
+  .cta-section {
+    padding: 160px 0;
+    text-align: center;
+    position: relative;
+  }
+  .cta-section::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at center, var(--amber-glow) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .cta-section h2 {
+    font-family: var(--font-display);
+    font-size: clamp(36px, 5vw, 64px);
+    font-weight: 300;
+    letter-spacing: -2px;
+    margin-bottom: 20px;
+    position: relative;
+  }
+  .cta-section h2 strong { font-weight: 700; }
+  .cta-section p {
+    color: var(--text-muted);
+    font-size: 17px;
+    margin-bottom: 48px;
+    position: relative;
+  }
+  .cta-actions {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    position: relative;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    padding: 48px 0;
+    border-top: 1px solid var(--border);
+  }
+  .footer-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .footer-left {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+  .footer-right {
+    display: flex;
+    gap: 24px;
+  }
+  .footer-right a {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 13px;
+    transition: color 0.3s;
+  }
+  .footer-right a:hover { color: var(--amber); }
+
+  /* ── SCROLL ANIMATIONS ── */
+  .fade-up {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s var(--ease-out), transform 0.8s var(--ease-out);
+  }
+  .fade-up.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    .nav-links { display: none; }
+    .vu-grid { grid-template-columns: 1fr; }
+    .room-item { grid-template-columns: 1fr; min-height: auto; }
+    .room-visual { min-height: 240px; }
+    .room-item:nth-child(even) .room-visual { order: 0; }
+    .room-item:nth-child(even) .room-info { order: 0; }
+    .room-info { padding: 36px 24px; }
+    .signal-chain { flex-direction: column; gap: 48px; }
+    .signal-chain::before { display: none; }
+    .rates-grid { grid-template-columns: 1fr; }
+    .hero-waveform { display: none; }
+    .hero-actions { flex-direction: column; }
+    .btn-primary, .btn-ghost { width: 100%; text-align: center; }
+    .room-specs { flex-wrap: wrap; gap: 20px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+</style>
+</head>
+<body>
+
+<!-- Ambient light -->
+<div class="ambient-blob blob-1"></div>
+<div class="ambient-blob blob-2"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="container">
+    <div class="nav-logo">
+      <div class="logo-icon"></div>
+      Obsidian Sound
+    </div>
+    <ul class="nav-links">
+      <li><a href="#rooms">Rooms</a></li>
+      <li><a href="#process">Process</a></li>
+      <li><a href="#rates">Rates</a></li>
+    </ul>
+    <a href="#book" class="nav-cta">Book a Session</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-content">
+      <div class="hero-tag">
+        <span class="dot"></span>
+        Now accepting bookings for Q2 2026
+      </div>
+      <h1>Where sound<br>becomes <strong>permanent</strong></h1>
+      <p>Nashville's most sonically precise private studio. Three rooms. Analog warmth. Digital precision. No compromise between the two.</p>
+      <div class="hero-actions">
+        <a href="#book" class="btn-primary">Book Your Session</a>
+        <a href="#rooms" class="btn-ghost">Explore the Rooms</a>
+      </div>
+    </div>
+  </div>
+  <!-- Waveform decoration -->
+  <div class="hero-waveform">
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        const wf = document.querySelector('.hero-waveform');
+        for (let i = 0; i < 48; i++) {
+          const bar = document.createElement('div');
+          bar.className = 'wave-bar';
+          const h = 20 + Math.sin(i * 0.3) * 60 + Math.random() * 40;
+          bar.style.setProperty('--h', h + 'px');
+          bar.style.animationDelay = (i * 0.05) + 's';
+          bar.style.height = '20px';
+          wf.appendChild(bar);
+        }
+      });
+    </script>
+  </div>
+</section>
+
+<!-- CAPABILITIES (VU Cards) -->
+<section class="vu-meter-section" id="capabilities">
+  <div class="container">
+    <div class="vu-header fade-up">
+      <div>
+        <div class="section-label"><span class="amber">01</span> — Capabilities</div>
+        <h2>Every frequency.<br><strong>Captured whole.</strong></h2>
+      </div>
+    </div>
+    <div class="vu-grid">
+      <div class="vu-card fade-up">
+        <div class="vu-card-number">001</div>
+        <h3>Tracking</h3>
+        <p>Live drums to solo acoustic. Full isolation between rooms with line-of-sight. Capture the performance, not a simulation of one.</p>
+        <div class="vu-card-meter" id="meter1"></div>
+      </div>
+      <div class="vu-card fade-up">
+        <div class="vu-card-number">002</div>
+        <h3>Mixing</h3>
+        <p>Analog summing through an SSL 4000G+. Every decision printed through transformers. We don't mix inside a screen — we mix through iron.</p>
+        <div class="vu-card-meter" id="meter2"></div>
+      </div>
+      <div class="vu-card fade-up">
+        <div class="vu-card-number">003</div>
+        <h3>Mastering</h3>
+        <p>Calibrated room. Matched monitors. Your master translates to earbuds, vinyl, laptop speakers, and arena PA systems with equal authority.</p>
+        <div class="vu-card-meter" id="meter3"></div>
+      </div>
+      <div class="vu-card fade-up">
+        <div class="vu-card-number">004</div>
+        <h3>Analog Transfer</h3>
+        <p>We run 2-inch tape. Your record can start on tape and finish in digital — or stay analog end to end. Your call.</p>
+        <div class="vu-card-meter" id="meter4"></div>
+      </div>
+      <div class="vu-card fade-up">
+        <div class="vu-card-number">005</div>
+        <h3>Production</h3>
+        <p>Full arrangement and production services. From a sketch on your phone to a finished record. We build the world your song lives in.</p>
+        <div class="vu-card-meter" id="meter5"></div>
+      </div>
+      <div class="vu-card fade-up">
+        <div class="vu-card-number">006</div>
+        <h3>Post-Production</h3>
+        <p>Podcast, film scoring, voice-over, audio restoration. Any sound that needs to exist in the world — we give it a body.</p>
+        <div class="vu-card-meter" id="meter6"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EQUIPMENT TICKER -->
+<section class="ticker-section">
+  <div class="ticker-track" id="ticker"></div>
+</section>
+
+<!-- ROOMS -->
+<section class="rooms-section" id="rooms">
+  <div class="container">
+    <div class="rooms-header fade-up">
+      <div class="section-label"><span class="amber">02</span> — The Rooms</div>
+      <h2>Three rooms.<br><strong>Three personalities.</strong></h2>
+    </div>
+
+    <!-- Room A -->
+    <div class="room-item fade-up">
+      <div class="room-visual">
+        <div class="room-visual-inner" style="background: linear-gradient(135deg, #0A0A0C 0%, #151518 100%);">
+          <div class="room-viz" id="roomVizA"></div>
+        </div>
+      </div>
+      <div class="room-info">
+        <div class="room-tag">Room A — The Foundry</div>
+        <h3>Live Room</h3>
+        <p>1,200 sq ft of variable acoustics. Adjustable panels go from stone-dry to 3.2 second decay. Ceiling height for string sessions. Iso booth with line-of-sight to the drummer.</p>
+        <div class="room-specs">
+          <div class="room-spec">
+            <span class="room-spec-val">1,200</span>
+            <span class="room-spec-label">SQ FT</span>
+          </div>
+          <div class="room-spec">
+            <span class="room-spec-val">3.2s</span>
+            <span class="room-spec-label">MAX DECAY</span>
+          </div>
+          <div class="room-spec">
+            <span class="room-spec-val">18'</span>
+            <span class="room-spec-label">CEILING</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Room B -->
+    <div class="room-item fade-up">
+      <div class="room-visual">
+        <div class="room-visual-inner" style="background: linear-gradient(135deg, #0D0A14 0%, #14111C 100%);">
+          <div class="room-viz" id="roomVizB"></div>
+        </div>
+      </div>
+      <div class="room-info">
+        <div class="room-tag">Room B — The Console</div>
+        <h3>Control Room</h3>
+        <p>SSL 4000G+ with full recall. 72 channels. Augmented with Pro Tools HDX and Universal Audio Apollo. Every knob you need. Nothing you don't.</p>
+        <div class="room-specs">
+          <div class="room-spec">
+            <span class="room-spec-val">72</span>
+            <span class="room-spec-label">CHANNELS</span>
+          </div>
+          <div class="room-spec">
+            <span class="room-spec-val">SSL</span>
+            <span class="room-spec-label">4000G+</span>
+          </div>
+          <div class="room-spec">
+            <span class="room-spec-val">HDX</span>
+            <span class="room-spec-label">PRO TOOLS</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Room C -->
+    <div class="room-item fade-up">
+      <div class="room-visual">
+        <div class="room-visual-inner" style="background: linear-gradient(135deg, #0C0A05 0%, #161208 100%);">
+          <div class="room-viz" id="roomVizC"></div>
+        </div>
+      </div>
+      <div class="room-info">
+        <div class="room-tag">Room C — The Vault</div>
+        <h3>Mastering Suite</h3>
+        <p>Calibrated to ±0.5 dB. Matched Barefoot monitors. Dangerous Music summing. This room tells the truth about your mix — then makes it better.</p>
+        <div class="room-specs">
+          <div class="room-spec">
+            <span class="room-spec-val">±0.5</span>
+            <span class="room-spec-label">dB TOLERANCE</span>
+          </div>
+          <div class="room-spec">
+            <span class="room-spec-val">Barefoot</span>
+            <span class="room-spec-label">MONITORS</span>
+          </div>
+          <div class="room-spec">
+            <span class="room-spec-val">Dangerous</span>
+            <span class="room-spec-label">SUMMING</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- SIGNAL CHAIN (Process) -->
+<section class="signal-section" id="process">
+  <div class="container">
+    <div class="signal-header fade-up">
+      <div class="section-label"><span class="amber">03</span> — Signal Chain</div>
+      <h2>From concept to <strong>master</strong></h2>
+    </div>
+    <div class="signal-chain fade-up">
+      <div class="signal-node">
+        <div class="signal-dot">01</div>
+        <h4>Consultation</h4>
+        <p>We listen to your references, discuss sonic direction, and match you with the right room and engineer.</p>
+      </div>
+      <div class="signal-node">
+        <div class="signal-dot">02</div>
+        <h4>Pre-Production</h4>
+        <p>Arrangement review. Session planning. Gear selection. We walk into day one already knowing the destination.</p>
+      </div>
+      <div class="signal-node">
+        <div class="signal-dot">03</div>
+        <h4>Tracking</h4>
+        <p>Capture. Performance first. We print to tape or digital — or both. Every take archived.</p>
+      </div>
+      <div class="signal-node">
+        <div class="signal-dot">04</div>
+        <h4>Mix</h4>
+        <p>Analog summing. Outboard compression. Hardware reverbs. The mix happens through circuitry, not algorithms.</p>
+      </div>
+      <div class="signal-node">
+        <div class="signal-dot">05</div>
+        <h4>Master</h4>
+        <p>Final calibration. Format delivery. Vinyl-ready, streaming-ready, broadcast-ready. One master, every format.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIAL -->
+<section class="testimonial-section">
+  <div class="container">
+    <div class="testimonial-block fade-up">
+      <div class="section-label" style="margin-bottom: 40px;"><span class="amber">04</span> — From the Artists</div>
+      <div class="testimonial-quote">
+        We've tracked in rooms from LA to London. Obsidian is the only place where the console disappears and you just hear the song.
+      </div>
+      <div class="testimonial-attr">
+        <strong>Marcus Cole</strong> — Grammy-nominated producer
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RATES -->
+<section class="rates-section" id="rates">
+  <div class="container">
+    <div class="rates-header fade-up">
+      <div class="section-label"><span class="amber">05</span> — Rates</div>
+      <h2>Transparent pricing.<br><strong>No hidden fees.</strong></h2>
+    </div>
+    <div class="rates-grid fade-up">
+      <div class="rate-card">
+        <div class="rate-name">HOURLY</div>
+        <div class="rate-price">$150<span>/hr</span></div>
+        <div class="rate-unit">Minimum 4-hour booking</div>
+        <ul class="rate-features">
+          <li>Access to any available room</li>
+          <li>In-house engineer included</li>
+          <li>Pro Tools HDX session files</li>
+          <li>Same-day rough mix delivery</li>
+        </ul>
+        <a href="#book" class="rate-btn rate-btn-outline">Book Hourly</a>
+      </div>
+      <div class="rate-card featured">
+        <div class="rate-name">FULL DAY</div>
+        <div class="rate-price">$1,200<span>/day</span></div>
+        <div class="rate-unit">10 hours — our most booked option</div>
+        <ul class="rate-features">
+          <li>Dedicated room for the full day</li>
+          <li>Senior engineer assigned</li>
+          <li>Analog outboard included</li>
+          <li>2-inch tape available (additional)</li>
+          <li>Rough mixes before you leave</li>
+        </ul>
+        <a href="#book" class="rate-btn rate-btn-fill">Book Full Day</a>
+      </div>
+      <div class="rate-card">
+        <div class="rate-name">PROJECT</div>
+        <div class="rate-price">Custom</div>
+        <div class="rate-unit">Albums, EPs, or ongoing work</div>
+        <ul class="rate-features">
+          <li>Block rate negotiated per project</li>
+          <li>Priority scheduling</li>
+          <li>Full production team available</li>
+          <li>Mixing and mastering bundled</li>
+          <li>Dedicated project manager</li>
+        </ul>
+        <a href="#book" class="rate-btn rate-btn-outline">Get a Quote</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section" id="book">
+  <div class="container">
+    <h2>Your record<br>starts <strong>here</strong></h2>
+    <p>Limited availability. We take one project at a time per room.</p>
+    <div class="cta-actions">
+      <a href="tel:+16155551234" class="btn-primary">Call (615) 555-1234</a>
+      <a href="mailto:book@obsidiansound.studio" class="btn-ghost">book@obsidiansound.studio</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-inner">
+      <div class="footer-left">
+        &copy; 2026 Obsidian Sound — Nashville, TN<br>
+        <span style="opacity: 0.5;">1204 McGavock Pike, Studio Row</span>
+      </div>
+      <div class="footer-right">
+        <a href="#">Instagram</a>
+        <a href="#">SoundCloud</a>
+        <a href="#">Contact</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // ── Scroll animations ──
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+  // ── VU Meters ──
+  function buildMeter(id, count, colors) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    for (let i = 0; i < count; i++) {
+      const seg = document.createElement('div');
+      seg.className = 'meter-seg';
+      const ratio = i / count;
+      let color;
+      if (ratio < 0.6) color = 'var(--green-vu)';
+      else if (ratio < 0.85) color = 'var(--amber)';
+      else color = 'var(--red-vu)';
+      seg.style.background = color;
+      seg.style.height = '4px';
+      seg.style.setProperty('--h', (8 + Math.random() * 16) + 'px');
+      seg.style.animationDelay = (i * 0.05) + 's';
+      el.appendChild(seg);
+    }
+  }
+  for (let i = 1; i <= 6; i++) buildMeter('meter' + i, 16);
+
+  // ── Equipment Ticker ──
+  const equipment = [
+    'SSL 4000G+', 'Neve 1073', 'Fairchild 670', 'LA-2A', 'Studer A800', 'Neumann U87',
+    'AKG C414', 'Manley Vari-Mu', 'Pultec EQP-1A', 'Lexicon 480L', 'EMT 140 Plate',
+    'Pro Tools HDX', 'Universal Audio Apollo', 'Barefoot MM27', 'Dangerous D-BOX',
+    'Empirical Labs Distressor', 'API 2500', 'Shadow Hills Mastering Compressor'
+  ];
+  const ticker = document.getElementById('ticker');
+  if (ticker) {
+    const items = [...equipment, ...equipment];
+    items.forEach(name => {
+      const div = document.createElement('div');
+      div.className = 'ticker-item';
+      div.innerHTML = name + '<span class="sep"></span>';
+      ticker.appendChild(div);
+    });
+  }
+
+  // ── Room Visualizers ──
+  function buildRoomViz(id, color, bars) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    for (let i = 0; i < bars; i++) {
+      const bar = document.createElement('div');
+      bar.className = 'bar';
+      bar.style.background = color;
+      bar.style.height = '20px';
+      bar.style.opacity = '0.3';
+      const h = 30 + Math.sin(i * 0.4) * 50 + Math.random() * 40;
+      bar.style.setProperty('--h', h + 'px');
+      bar.style.setProperty('--d', (i * 0.06) + 's');
+      el.appendChild(bar);
+    }
+  }
+  buildRoomViz('roomVizA', 'var(--amber)', 40);
+  buildRoomViz('roomVizB', 'var(--indigo)', 40);
+  buildRoomViz('roomVizC', '#46A758', 40);
+</script>
+
+</body>
+</html>

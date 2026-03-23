@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AetherTrace — DRILL 04: Chain Ledger</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #09090b;
+      color: #fafafa;
+      font-family: 'Inter', system-ui, sans-serif;
+      min-height: 100vh;
+      padding: 48px 24px 80px;
+    }
+
+    /* ── Page header ────────────────────────────────────────────── */
+    .page-header {
+      max-width: 1100px;
+      margin: 0 auto 36px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .page-title {
+      font-size: 24px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      color: #fafafa;
+    }
+    .page-sub {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      color: #52525b;
+      margin-top: 4px;
+    }
+    .page-sub span { color: rgba(16,185,129,0.7); }
+
+    /* Scroll arrows */
+    .nav-arrows {
+      display: flex;
+      gap: 8px;
+    }
+    .arrow-btn {
+      width: 36px; height: 36px;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.03);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: #71717a;
+      transition: all 0.15s;
+    }
+    .arrow-btn:hover:not(:disabled) {
+      border-color: rgba(16,185,129,0.3);
+      color: #10b981;
+    }
+    .arrow-btn:disabled { opacity: 0.3; cursor: default; }
+
+    /* ── Carousel ───────────────────────────────────────────────── */
+    .carousel-wrapper {
+      max-width: 1100px;
+      margin: 0 auto;
+      overflow: hidden;
+    }
+    .carousel-track {
+      display: flex;
+      gap: 16px;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      padding-bottom: 8px;
+      scroll-behavior: smooth;
+    }
+    .carousel-track::-webkit-scrollbar { display: none; }
+
+    /* ── Package Card ───────────────────────────────────────────── */
+    .pkg-card {
+      flex-shrink: 0;
+      width: 240px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 14px;
+      overflow: hidden;
+      scroll-snap-align: start;
+      cursor: pointer;
+      transition: border-color 0.2s, transform 0.2s;
+      position: relative;
+    }
+    .pkg-card:hover {
+      border-color: rgba(16,185,129,0.25);
+      transform: translateY(-2px);
+    }
+
+    /* Card cover */
+    .pkg-cover {
+      height: 140px;
+      position: relative;
+      overflow: hidden;
+      background: rgba(255,255,255,0.02);
+    }
+    .pkg-cover-bg {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .pkg-badge {
+      position: absolute;
+      top: 10px; right: 10px;
+      padding: 4px 9px;
+      border-radius: 100px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 9px;
+      letter-spacing: 0.06em;
+      font-weight: 500;
+    }
+    .badge-sealed {
+      background: rgba(16,185,129,0.15);
+      border: 1px solid rgba(16,185,129,0.35);
+      color: rgba(16,185,129,0.9);
+    }
+    .badge-verified {
+      background: rgba(34,197,94,0.15);
+      border: 1px solid rgba(34,197,94,0.4);
+      color: rgba(34,197,94,0.9);
+    }
+
+    /* Card body */
+    .pkg-body {
+      padding: 14px;
+    }
+    .pkg-project {
+      font-size: 13px;
+      font-weight: 600;
+      color: #fafafa;
+      margin-bottom: 4px;
+      line-height: 1.3;
+    }
+    .pkg-date {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 9px;
+      color: #52525b;
+      margin-bottom: 12px;
+      letter-spacing: 0.04em;
+    }
+    .pkg-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .pkg-items {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      color: #71717a;
+    }
+    .pkg-size {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      color: #52525b;
+    }
+    .pkg-hash {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 8px;
+      color: rgba(16,185,129,0.4);
+      margin-top: 8px;
+    }
+
+    /* ── Chain Timeline ─────────────────────────────────────────── */
+    .timeline-section {
+      max-width: 1100px;
+      margin: 48px auto 0;
+    }
+    .timeline-title {
+      font-size: 14px;
+      font-weight: 500;
+      color: #71717a;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .timeline-title::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: rgba(255,255,255,0.06);
+    }
+
+    .timeline {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      position: relative;
+    }
+
+    /* Vertical spine */
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 15px;
+      top: 12px; bottom: 12px;
+      width: 1px;
+      background: rgba(255,255,255,0.06);
+    }
+
+    .tl-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      padding: 12px 0;
+      position: relative;
+    }
+
+    .tl-dot {
+      width: 12px; height: 12px;
+      border-radius: 50%;
+      background: rgba(16,185,129,0.8);
+      border: 2px solid #09090b;
+      outline: 1px solid rgba(16,185,129,0.4);
+      flex-shrink: 0;
+      margin-top: 2px;
+      position: relative;
+      z-index: 1;
+      /* 15px left on timeline - 6px (half dot) = 9px offset */
+      margin-left: 9px;
+    }
+    .tl-dot.old { background: rgba(255,255,255,0.15); outline-color: rgba(255,255,255,0.1); }
+
+    .tl-content { flex: 1; }
+    .tl-time {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 9px;
+      color: #52525b;
+      margin-bottom: 4px;
+      letter-spacing: 0.04em;
+    }
+    .tl-label {
+      font-size: 13px;
+      color: #a1a1aa;
+      margin-bottom: 3px;
+    }
+    .tl-label strong { color: #fafafa; }
+    .tl-hash {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 9px;
+      color: rgba(16,185,129,0.4);
+    }
+
+    /* ── Mobile hint ────────────────────────────────────────────── */
+    .mobile-hint {
+      text-align: center;
+      margin-top: 12px;
+      font-size: 11px;
+      color: #52525b;
+    }
+    @media (min-width: 640px) { .mobile-hint { display: none; } }
+  </style>
+</head>
+<body>
+
+  <!-- Page Header -->
+  <div class="page-header">
+    <div>
+      <div class="page-title">Custody Archive</div>
+      <div class="page-sub">Project: <span>Riverside Medical Center — Electrical</span> · <span>47 custody events</span></div>
+    </div>
+    <div class="nav-arrows">
+      <button class="arrow-btn" id="leftBtn" disabled onclick="scrollCarousel(-1)">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+      <button class="arrow-btn" id="rightBtn" onclick="scrollCarousel(1)">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Carousel -->
+  <div class="carousel-wrapper">
+    <div class="carousel-track" id="track">
+
+      <!-- Package 1 — VERIFIED -->
+      <div class="pkg-card">
+        <div class="pkg-cover" style="background: linear-gradient(135deg, rgba(16,185,129,0.08), rgba(16,185,129,0.03))">
+          <div class="pkg-cover-bg">
+            <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="rgba(16,185,129,0.2)" stroke-width="1">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+          </div>
+          <span class="pkg-badge badge-verified">✓ VERIFIED</span>
+        </div>
+        <div class="pkg-body">
+          <div class="pkg-project">Rough-In Complete<br/>Zones 1A–2C</div>
+          <div class="pkg-date">MAR 01 – MAR 08, 2026</div>
+          <div class="pkg-meta">
+            <span class="pkg-items">24 items</span>
+            <span class="pkg-size">8.2 MB</span>
+          </div>
+          <div class="pkg-hash">3a7f2c…e4d1b9</div>
+        </div>
+      </div>
+
+      <!-- Package 2 — SEALED -->
+      <div class="pkg-card">
+        <div class="pkg-cover" style="background: linear-gradient(135deg, rgba(59,130,246,0.06), rgba(9,9,11,0))">
+          <div class="pkg-cover-bg">
+            <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="rgba(59,130,246,0.2)" stroke-width="1">
+              <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            </svg>
+          </div>
+          <span class="pkg-badge badge-sealed">SEALED</span>
+        </div>
+        <div class="pkg-body">
+          <div class="pkg-project">Inspection Sign-Off<br/>Zone 3A–3C</div>
+          <div class="pkg-date">MAR 10 – MAR 15, 2026</div>
+          <div class="pkg-meta">
+            <span class="pkg-items">18 items</span>
+            <span class="pkg-size">5.7 MB</span>
+          </div>
+          <div class="pkg-hash">9b1e5a…cc82f3</div>
+        </div>
+      </div>
+
+      <!-- Package 3 — SEALED -->
+      <div class="pkg-card">
+        <div class="pkg-cover" style="background: linear-gradient(135deg, rgba(251,191,36,0.06), rgba(9,9,11,0))">
+          <div class="pkg-cover-bg">
+            <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="rgba(251,191,36,0.2)" stroke-width="1">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>
+            </svg>
+          </div>
+          <span class="pkg-badge badge-sealed">SEALED</span>
+        </div>
+        <div class="pkg-body">
+          <div class="pkg-project">Daily Logs Week 12<br/>Change Orders COR-017</div>
+          <div class="pkg-date">MAR 16 – MAR 21, 2026</div>
+          <div class="pkg-meta">
+            <span class="pkg-items">31 items</span>
+            <span class="pkg-size">12.1 MB</span>
+          </div>
+          <div class="pkg-hash">f2d8b0…71af22</div>
+        </div>
+      </div>
+
+      <!-- Package 4 — SEALED (new) -->
+      <div class="pkg-card">
+        <div class="pkg-cover" style="background: linear-gradient(135deg, rgba(16,185,129,0.1), rgba(16,185,129,0.03))">
+          <div class="pkg-cover-bg">
+            <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="rgba(16,185,129,0.25)" stroke-width="1">
+              <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+            </svg>
+          </div>
+          <span class="pkg-badge badge-sealed">SEALED</span>
+        </div>
+        <div class="pkg-body">
+          <div class="pkg-project">Final Walk-Through<br/>All Zones Complete</div>
+          <div class="pkg-date">MAR 22 – MAR 24, 2026</div>
+          <div class="pkg-meta">
+            <span class="pkg-items">14 items</span>
+            <span class="pkg-size">3.4 MB</span>
+          </div>
+          <div class="pkg-hash">a4f3b2…d0b3f7</div>
+        </div>
+      </div>
+
+      <!-- Package 5 -->
+      <div class="pkg-card">
+        <div class="pkg-cover" style="background: linear-gradient(135deg, rgba(239,68,68,0.06), rgba(9,9,11,0))">
+          <div class="pkg-cover-bg">
+            <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="rgba(239,68,68,0.15)" stroke-width="1">
+              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+            </svg>
+          </div>
+          <span class="pkg-badge badge-verified">✓ VERIFIED</span>
+        </div>
+        <div class="pkg-body">
+          <div class="pkg-project">Punch List Resolution<br/>Owner Acceptance</div>
+          <div class="pkg-date">FEB 20 – FEB 28, 2026</div>
+          <div class="pkg-meta">
+            <span class="pkg-items">9 items</span>
+            <span class="pkg-size">2.1 MB</span>
+          </div>
+          <div class="pkg-hash">c8e6d0…b1a9f4</div>
+        </div>
+      </div>
+
+    </div><!-- /track -->
+  </div>
+
+  <p class="mobile-hint">Swipe to browse packages →</p>
+
+  <!-- Chain Timeline -->
+  <div class="timeline-section">
+    <div class="timeline-title">Chain Ledger — Last 8 events</div>
+
+    <div class="timeline">
+
+      <div class="tl-row">
+        <div class="tl-dot"></div>
+        <div class="tl-content">
+          <div class="tl-time">2026-03-24 · 14:37:02 UTC</div>
+          <div class="tl-label"><strong>Evidence submitted</strong> — daily-log-mar-24.docx + 2 photos</div>
+          <div class="tl-hash">a4f3b2e9c1d7f084…</div>
+        </div>
+      </div>
+
+      <div class="tl-row">
+        <div class="tl-dot"></div>
+        <div class="tl-content">
+          <div class="tl-time">2026-03-24 · 09:12:44 UTC</div>
+          <div class="tl-label"><strong>Package exported</strong> — Final Walk-Through (14 items)</div>
+          <div class="tl-hash">d0b3f7a1c8e6b2f9…</div>
+        </div>
+      </div>
+
+      <div class="tl-row">
+        <div class="tl-dot"></div>
+        <div class="tl-content">
+          <div class="tl-time">2026-03-23 · 17:04:11 UTC</div>
+          <div class="tl-label"><strong>Evidence submitted</strong> — zone-3c-photo-series.zip (6 files)</div>
+          <div class="tl-hash">f2d8b071af22e9c3…</div>
+        </div>
+      </div>
+
+      <div class="tl-row">
+        <div class="tl-dot old"></div>
+        <div class="tl-content">
+          <div class="tl-time">2026-03-22 · 11:33:59 UTC</div>
+          <div class="tl-label">Evidence submitted — inspection-sign-off.pdf</div>
+          <div class="tl-hash">9b1e5acc82f3a7e1…</div>
+        </div>
+      </div>
+
+      <div class="tl-row">
+        <div class="tl-dot old"></div>
+        <div class="tl-content">
+          <div class="tl-time">2026-03-21 · 08:15:30 UTC</div>
+          <div class="tl-label">Package exported — Daily Logs Week 12 (31 items)</div>
+          <div class="tl-hash">c8e6d0b3f7a1b9f4…</div>
+        </div>
+      </div>
+
+      <div class="tl-row">
+        <div class="tl-dot old"></div>
+        <div class="tl-content">
+          <div class="tl-time">2026-03-18 · 14:00:02 UTC</div>
+          <div class="tl-label">Independent verification — hash confirmed by third party</div>
+          <div class="tl-hash">3a7f2ce4d1b9f082…</div>
+        </div>
+      </div>
+
+      <div class="tl-row">
+        <div class="tl-dot old"></div>
+        <div class="tl-content">
+          <div class="tl-time">2026-03-15 · 16:48:07 UTC</div>
+          <div class="tl-label">Evidence submitted — change-order-COR-017.pdf</div>
+          <div class="tl-hash">b2a9f1c3e7d5b091…</div>
+        </div>
+      </div>
+
+      <div class="tl-row">
+        <div class="tl-dot old"></div>
+        <div class="tl-content">
+          <div class="tl-time">2026-03-08 · 10:22:41 UTC</div>
+          <div class="tl-label">Package exported — Rough-In Complete Zones 1A–2C (24 items)</div>
+          <div class="tl-hash">e4d1b9f0823a7f2c…</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    const track = document.getElementById('track');
+    const leftBtn = document.getElementById('leftBtn');
+    const rightBtn = document.getElementById('rightBtn');
+
+    function updateArrows() {
+      leftBtn.disabled = track.scrollLeft <= 0;
+      rightBtn.disabled = track.scrollLeft + track.clientWidth >= track.scrollWidth - 1;
+    }
+
+    function scrollCarousel(dir) {
+      track.scrollBy({ left: dir * track.clientWidth * 0.8, behavior: 'smooth' });
+    }
+
+    track.addEventListener('scroll', updateArrows, { passive: true });
+    updateArrows();
+  </script>
+
+</body>
+</html>

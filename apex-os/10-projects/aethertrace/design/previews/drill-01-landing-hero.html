@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AetherTrace — DRILL 01: Landing Hero</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #09090b;
+      color: #fafafa;
+      font-family: 'Inter', system-ui, sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── WebGL Canvas Placeholder ─────────────────────────────────── */
+    #shader-canvas {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: 0;
+    }
+
+    /* ── Emerald radial glow overlay ──────────────────────────────── */
+    .glow-overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: radial-gradient(ellipse 80% 50% at 50% -10%, rgba(16,185,129,0.12) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* ── Page content ─────────────────────────────────────────────── */
+    .page {
+      position: relative;
+      z-index: 2;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── Nav ──────────────────────────────────────────────────────── */
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 40px;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      backdrop-filter: blur(12px);
+      background: rgba(9,9,11,0.6);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 600;
+      font-size: 15px;
+      letter-spacing: -0.01em;
+      color: #fafafa;
+      text-decoration: none;
+    }
+
+    .logo-diamond {
+      width: 20px; height: 20px;
+      background: linear-gradient(135deg, #10b981, #059669);
+      clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+    }
+
+    .nav-links a {
+      font-size: 13px;
+      color: #71717a;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: #fafafa; }
+
+    .nav-cta {
+      padding: 8px 18px;
+      background: rgba(16,185,129,0.12);
+      border: 1px solid rgba(16,185,129,0.3);
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 500;
+      color: #10b981 !important;
+      cursor: pointer;
+      transition: background 0.2s, border-color 0.2s;
+    }
+    .nav-cta:hover {
+      background: rgba(16,185,129,0.2) !important;
+      border-color: rgba(16,185,129,0.5) !important;
+    }
+
+    /* ── Hero ─────────────────────────────────────────────────────── */
+    .hero {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 80px 40px;
+    }
+
+    /* Chain intact indicator */
+    .chain-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      background: rgba(16,185,129,0.08);
+      border: 1px solid rgba(16,185,129,0.2);
+      border-radius: 100px;
+      margin-bottom: 32px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      color: rgba(16,185,129,0.9);
+      letter-spacing: 0.05em;
+    }
+
+    .chain-badge-dot {
+      position: relative;
+      width: 8px; height: 8px;
+      background: #10b981;
+      border-radius: 50%;
+    }
+    .chain-badge-dot::after {
+      content: '';
+      position: absolute;
+      inset: -3px;
+      border-radius: 50%;
+      background: rgba(16,185,129,0.3);
+      animation: ping 2s ease-in-out infinite;
+    }
+    @keyframes ping {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0; transform: scale(2); }
+    }
+
+    /* Headline */
+    h1 {
+      font-size: clamp(2.2rem, 5vw, 3.75rem);
+      font-weight: 600;
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+      color: #fafafa;
+      max-width: 800px;
+      margin-bottom: 24px;
+    }
+
+    h1 .dim { color: #52525b; }
+
+    /* Subheadline */
+    .sub {
+      font-size: 17px;
+      color: #71717a;
+      max-width: 520px;
+      line-height: 1.65;
+      margin-bottom: 40px;
+    }
+
+    /* CTA buttons */
+    .cta-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 72px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .btn-primary {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 28px;
+      background: rgba(16,185,129,0.15);
+      border: 1px solid rgba(16,185,129,0.4);
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 500;
+      color: #10b981;
+      cursor: pointer;
+      text-decoration: none;
+      backdrop-filter: blur(8px);
+      transition: all 0.2s;
+      overflow: hidden;
+    }
+    .btn-primary::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(16,185,129,0.08);
+      filter: blur(20px);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .btn-primary:hover::before { opacity: 1; }
+    .btn-primary:hover {
+      background: rgba(16,185,129,0.22);
+      border-color: rgba(16,185,129,0.6);
+    }
+
+    .btn-outline {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 28px;
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 500;
+      color: #a1a1aa;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .btn-outline:hover {
+      border-color: rgba(255,255,255,0.2);
+      color: #fafafa;
+    }
+
+    /* Stats row */
+    .stats {
+      display: flex;
+      align-items: center;
+      gap: 40px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .stat-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .stat-value {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 22px;
+      font-weight: 500;
+      color: #fafafa;
+    }
+
+    .stat-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      color: #52525b;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .stat-divider {
+      width: 1px;
+      height: 32px;
+      background: rgba(255,255,255,0.08);
+    }
+
+    /* Pain quote card */
+    .pain-card {
+      margin-top: 80px;
+      padding: 24px 32px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 16px;
+      backdrop-filter: blur(12px);
+      max-width: 580px;
+      text-align: left;
+      position: relative;
+    }
+
+    .pain-card::before {
+      content: '"';
+      position: absolute;
+      top: -10px;
+      left: 24px;
+      font-size: 64px;
+      color: rgba(16,185,129,0.2);
+      font-family: Georgia, serif;
+      line-height: 1;
+    }
+
+    .pain-card p {
+      font-size: 15px;
+      line-height: 1.7;
+      color: #a1a1aa;
+      font-style: italic;
+    }
+
+    .pain-card .attribution {
+      margin-top: 12px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      color: #52525b;
+      letter-spacing: 0.06em;
+      font-style: normal;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- WebGL Chromatic Aberration Shader -->
+  <canvas id="shader-canvas"></canvas>
+  <div class="glow-overlay"></div>
+
+  <div class="page">
+    <!-- Nav -->
+    <nav>
+      <a href="#" class="logo">
+        <div class="logo-diamond"></div>
+        AetherTrace
+      </a>
+      <div class="nav-links">
+        <a href="#">Pricing</a>
+        <a href="#">Sign in</a>
+        <a href="#" class="nav-cta">Protect your work →</a>
+      </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero">
+      <div class="chain-badge">
+        <div class="chain-badge-dot"></div>
+        CHAIN INTACT · SHA-256 · 0 ALTERATIONS DETECTED
+      </div>
+
+      <h1>
+        You did the work.<br />
+        You took the photos.<br />
+        <span class="dim">You still lost the claim.</span>
+      </h1>
+
+      <p class="sub">
+        AetherTrace seals your evidence the moment you upload it.
+        Cryptographically. Independently. In a chain the GC can't revoke,
+        alter, or touch.
+      </p>
+
+      <div class="cta-row">
+        <a href="#" class="btn-primary">
+          Lock down your evidence
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M5 12h14m-7-7 7 7-7 7"/>
+          </svg>
+        </a>
+        <a href="#" class="btn-outline">
+          See the math
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M5 12h14m-7-7 7 7-7 7"/>
+          </svg>
+        </a>
+      </div>
+
+      <div class="stats">
+        <div class="stat-item">
+          <span class="stat-value">SHA-256</span>
+          <span class="stat-label">Hash Algorithm</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <span class="stat-value">&lt; 3ms</span>
+          <span class="stat-label">Seal Time</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <span class="stat-value">100%</span>
+          <span class="stat-label">Independently Verifiable</span>
+        </div>
+      </div>
+
+      <div class="pain-card">
+        <p>
+          "The GC locked me out of Procore two days after the dispute started.
+          Every photo I uploaded, every daily log, every RFI — gone.
+          I had nothing to show the arbitrator."
+        </p>
+        <p class="attribution">— Electrical sub, $340K dispute, Dallas TX, 2024</p>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    // ── WebGL Chromatic Aberration Shader ──────────────────────────
+    const canvas = document.getElementById('shader-canvas');
+    const gl = canvas.getContext('webgl');
+
+    function resize() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      if (gl) gl.viewport(0, 0, canvas.width, canvas.height);
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    if (gl) {
+      const vsSource = `
+        attribute vec2 a_position;
+        void main() { gl_Position = vec4(a_position, 0.0, 1.0); }
+      `;
+
+      const fsSource = `
+        precision mediump float;
+        uniform float u_time;
+        uniform vec2 u_resolution;
+        uniform float u_distortion;
+        uniform float u_speed;
+
+        void main() {
+          vec2 uv = gl_FragCoord.xy / u_resolution;
+          float t = u_time * u_speed;
+
+          vec2 center = uv - 0.5;
+          float dist = length(center);
+
+          float rOff = u_distortion * sin(t + dist * 8.0);
+          float gOff = u_distortion * sin(t + 2.094 + dist * 8.0);
+          float bOff = u_distortion * sin(t + 4.189 + dist * 8.0);
+
+          float r = 0.02 + 0.015 * sin(uv.y * 3.0 + t);
+          float g = 0.01 + 0.01  * sin(uv.y * 3.0 + t + 2.094);
+          float b = 0.04 + 0.025 * sin(uv.y * 3.0 + t + 4.189);
+
+          r += rOff * 0.05;
+          b += bOff * 0.03;
+
+          // Vignette
+          float vignette = 1.0 - smoothstep(0.3, 1.2, dist * 1.8);
+          r *= vignette;
+          g *= vignette;
+          b *= vignette;
+
+          gl_FragColor = vec4(r, g, b, 1.0);
+        }
+      `;
+
+      function compileShader(type, src) {
+        const s = gl.createShader(type);
+        gl.shaderSource(s, src);
+        gl.compileShader(s);
+        return s;
+      }
+
+      const prog = gl.createProgram();
+      gl.attachShader(prog, compileShader(gl.VERTEX_SHADER, vsSource));
+      gl.attachShader(prog, compileShader(gl.FRAGMENT_SHADER, fsSource));
+      gl.linkProgram(prog);
+      gl.useProgram(prog);
+
+      const buf = gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, 1,1]), gl.STATIC_DRAW);
+
+      const pos = gl.getAttribLocation(prog, 'a_position');
+      gl.enableVertexAttribArray(pos);
+      gl.vertexAttribPointer(pos, 2, gl.FLOAT, false, 0, 0);
+
+      const uTime = gl.getUniformLocation(prog, 'u_time');
+      const uRes  = gl.getUniformLocation(prog, 'u_resolution');
+      const uDist = gl.getUniformLocation(prog, 'u_distortion');
+      const uSpd  = gl.getUniformLocation(prog, 'u_speed');
+
+      gl.uniform1f(uDist, 0.035);
+      gl.uniform1f(uSpd,  0.008);
+
+      let start = null;
+      function frame(ts) {
+        if (!start) start = ts;
+        const t = (ts - start) / 1000;
+        gl.uniform1f(uTime, t);
+        gl.uniform2f(uRes, canvas.width, canvas.height);
+        gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+        requestAnimationFrame(frame);
+      }
+      requestAnimationFrame(frame);
+    }
+  </script>
+</body>
+</html>

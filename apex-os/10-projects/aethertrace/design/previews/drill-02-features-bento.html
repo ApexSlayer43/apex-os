@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AetherTrace — DRILL 02: Features Bento Grid</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #09090b;
+      color: #fafafa;
+      font-family: 'Inter', system-ui, sans-serif;
+      min-height: 100vh;
+      padding: 80px 24px;
+    }
+
+    .mono { font-family: 'IBM Plex Mono', monospace; }
+
+    /* ── Section header ─────────────────────────────────────────── */
+    .section-header {
+      text-align: center;
+      margin-bottom: 56px;
+      max-width: 1200px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .eyebrow {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: #10b981;
+      margin-bottom: 16px;
+    }
+
+    .section-title {
+      font-size: clamp(1.75rem, 4vw, 2.5rem);
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      color: #fafafa;
+      margin-bottom: 16px;
+    }
+
+    .section-sub {
+      font-size: 16px;
+      color: #71717a;
+      max-width: 540px;
+      margin: 0 auto;
+      line-height: 1.65;
+    }
+
+    /* ── Bento Grid ─────────────────────────────────────────────── */
+    .bento {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 12px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    /* ── Card base ──────────────────────────────────────────────── */
+    .card {
+      background: rgba(9, 9, 11, 0.9);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: 28px;
+      overflow: hidden;
+      position: relative;
+      transition: border-color 0.2s;
+    }
+    .card:hover { border-color: rgba(16,185,129,0.2); }
+
+    /* Grid spanning */
+    .span-full   { grid-column: span 6; }
+    .span-2      { grid-column: span 6; }
+    .span-3      { grid-column: span 6; }
+
+    @media (min-width: 640px) {
+      .span-half { grid-column: span 3; }
+    }
+    @media (min-width: 1024px) {
+      .span-2  { grid-column: span 2; }
+      .span-3  { grid-column: span 3; }
+    }
+
+    /* ── Double-ring icon container ─────────────────────────────── */
+    .icon-ring {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 48px; height: 48px;
+      border-radius: 50%;
+      border: 1px solid rgba(16,185,129,0.25);
+      margin-bottom: 20px;
+      flex-shrink: 0;
+    }
+    .icon-ring::before {
+      content: '';
+      position: absolute;
+      inset: -8px;
+      border-radius: 50%;
+      border: 1px solid rgba(16,185,129,0.10);
+    }
+
+    .card-title {
+      font-size: 17px;
+      font-weight: 600;
+      color: #fafafa;
+      margin-bottom: 10px;
+      letter-spacing: -0.01em;
+    }
+
+    .card-body {
+      font-size: 14px;
+      color: #71717a;
+      line-height: 1.7;
+    }
+
+    /* ── Bottom accent line ─────────────────────────────────────── */
+    .card-accent-line {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(16,185,129,0.35), transparent);
+    }
+
+    /* ── Card 1: Immutable stat ─────────────────────────────────── */
+    .stat-big {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 2.75rem;
+      font-weight: 500;
+      color: #fafafa;
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+    .stat-sub {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #52525b;
+      margin-bottom: 20px;
+    }
+
+    /* ── Card 2: Chain hash preview ─────────────────────────────── */
+    .chain-visual {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    .chain-block {
+      border-radius: 4px;
+      border: 1px solid rgba(16,185,129,0.4);
+    }
+    .chain-connector {
+      height: 1px;
+      background: rgba(16,185,129,0.4);
+    }
+    .chain-break {
+      width: 14px; height: 14px;
+      color: rgba(239,68,68,0.7);
+    }
+    .hash-stack {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 8px;
+      padding: 10px 12px;
+      margin-top: 16px;
+    }
+    .hash-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+    .hash-row:last-child { margin-bottom: 0; }
+    .hash-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: rgba(16,185,129,0.7);
+      flex-shrink: 0;
+    }
+    .hash-text {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 9px;
+      color: #52525b;
+    }
+
+    /* ── Card 3: Sparkline chart ────────────────────────────────── */
+    .chart-panel {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 12px;
+      overflow: hidden;
+      margin-top: 16px;
+      position: relative;
+    }
+    .terminal-dots {
+      position: absolute;
+      top: 8px; left: 10px;
+      display: flex;
+      gap: 4px;
+    }
+    .terminal-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    .chart-header {
+      padding: 8px 12px 4px;
+      padding-top: 28px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      color: rgba(113,113,122,0.7);
+    }
+    .chart-header span { color: rgba(16,185,129,0.8); }
+    .chart-footer {
+      padding: 4px 12px 8px;
+      display: flex;
+      justify-content: space-between;
+    }
+    .chart-footer span {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 9px;
+      color: rgba(113,113,122,0.5);
+    }
+    .chart-footer .green { color: rgba(16,185,129,0.7); }
+
+    /* ── Card 4: Defense grade ──────────────────────────────────── */
+    .card-inner-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 24px;
+    }
+    .spec-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 20px;
+    }
+    .pill {
+      padding: 5px 10px;
+      border-radius: 6px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      background: rgba(16,185,129,0.08);
+      border: 1px solid rgba(16,185,129,0.2);
+      color: rgba(16,185,129,0.8);
+    }
+
+    /* ── Card 5: Multi-party custody ────────────────────────────── */
+    .party-column {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      margin-top: 8px;
+    }
+    .center-line {
+      position: absolute;
+      left: 50%;
+      top: 0; bottom: 0;
+      width: 1px;
+      background: rgba(255,255,255,0.08);
+      transform: translateX(-50%);
+    }
+    .party-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      position: relative;
+      z-index: 1;
+    }
+    .party-row.right {
+      flex-direction: row-reverse;
+      margin-left: auto;
+    }
+    .party-row.left { margin-right: auto; }
+    .party-avatar {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: rgba(16,185,129,0.12);
+      border: 3px solid #09090b;
+      outline: 1px solid rgba(16,185,129,0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      font-weight: 500;
+      color: rgba(16,185,129,0.9);
+      flex-shrink: 0;
+    }
+    .party-name {
+      font-size: 12px;
+      font-weight: 500;
+      color: #fafafa;
+    }
+    .party-role {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 9px;
+      color: #52525b;
+    }
+    .verify-url {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 20px;
+      padding: 8px 12px;
+      background: rgba(16,185,129,0.06);
+      border: 1px solid rgba(16,185,129,0.15);
+      border-radius: 8px;
+    }
+    .verify-url-base {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      color: rgba(113,113,122,0.7);
+    }
+    .verify-url-hash {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      color: rgba(16,185,129,0.7);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Section Header -->
+  <div class="section-header">
+    <p class="eyebrow">Protocol Architecture</p>
+    <h2 class="section-title">One function. Absolute integrity.</h2>
+    <p class="section-sub">
+      AetherTrace performs one operation: prove that an event happened,
+      when it happened, who produced it, and whether the record has been altered.
+    </p>
+  </div>
+
+  <!-- Bento Grid -->
+  <div class="bento">
+
+    <!-- Card 1: 100% Immutable -->
+    <div class="card span-2">
+      <div class="icon-ring">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(16,185,129,0.9)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="11" width="18" height="11" rx="2"/>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+        </svg>
+      </div>
+      <div class="stat-big">0</div>
+      <div class="stat-sub">Undetected Alterations</div>
+      <div class="card-title">100% Immutable</div>
+      <p class="card-body">
+        SHA-256 sealed on ingestion. The hash is the record.
+        Any alteration — even a single bit — produces a different hash
+        and breaks every chain link that follows.
+      </p>
+      <div class="card-accent-line"></div>
+    </div>
+
+    <!-- Card 2: Tamper-Evident -->
+    <div class="card span-2 span-half">
+      <div class="chain-visual">
+        <div class="chain-block" style="width:28px;height:18px;background:rgba(16,185,129,0.15)"></div>
+        <div class="chain-connector" style="width:10px"></div>
+        <div class="chain-block" style="width:28px;height:18px;background:rgba(16,185,129,0.27)"></div>
+        <div class="chain-connector" style="width:10px"></div>
+        <div class="chain-block" style="width:28px;height:18px;background:rgba(16,185,129,0.39)"></div>
+        <div class="chain-connector" style="width:10px;background:rgba(255,255,255,0.15)"></div>
+        <div class="chain-block" style="width:20px;height:18px;background:rgba(255,255,255,0.05);border-color:rgba(255,255,255,0.1)"></div>
+        <svg class="chain-break" viewBox="0 0 24 24" fill="none" stroke="rgba(239,68,68,0.7)" stroke-width="2.5">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </div>
+      <div class="card-title">Tamper-Evident by Design</div>
+      <p class="card-body">
+        Every record is hashed with its predecessor. Alter anything
+        and the break propagates forward through every subsequent link.
+      </p>
+      <div class="hash-stack">
+        <div class="hash-row">
+          <div class="hash-dot"></div>
+          <span class="hash-text">3a7f2c…e4d1</span>
+          <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="rgba(82,82,91,0.5)" stroke-width="2"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>
+        </div>
+        <div class="hash-row">
+          <div class="hash-dot"></div>
+          <span class="hash-text">9b1e5a…cc82</span>
+          <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="rgba(82,82,91,0.5)" stroke-width="2"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>
+        </div>
+        <div class="hash-row">
+          <div class="hash-dot"></div>
+          <span class="hash-text">f2d8b0…71af</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 3: Sub-second Sealing -->
+    <div class="card span-2 span-half">
+      <div class="card-title">Sub-second Sealing</div>
+      <p class="card-body">&lt; 3ms from upload to sealed. No queue. No wait.</p>
+      <div class="chart-panel">
+        <div class="terminal-dots">
+          <div class="terminal-dot"></div>
+          <div class="terminal-dot"></div>
+          <div class="terminal-dot"></div>
+        </div>
+        <div class="chart-header"><span>AetherTrace Protocol</span>&nbsp;&nbsp;v1.0</div>
+        <svg width="100%" viewBox="0 0 320 72" preserveAspectRatio="none" style="display:block">
+          <defs>
+            <linearGradient id="fill1" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="rgba(16,185,129,0.35)"/>
+              <stop offset="100%" stop-color="rgba(16,185,129,0)"/>
+            </linearGradient>
+          </defs>
+          <path d="M0 62 C20 57 40 44 60 48 C80 52 100 34 120 28 C140 22 160 38 180 24 C200 10 220 18 240 14 C260 10 280 18 320 12 L320 72 L0 72 Z" fill="url(#fill1)"/>
+          <path d="M0 62 C20 57 40 44 60 48 C80 52 100 34 120 28 C140 22 160 38 180 24 C200 10 220 18 240 14 C260 10 280 18 320 12" fill="none" stroke="rgba(16,185,129,0.8)" stroke-width="1.5"/>
+          <circle cx="60" cy="48" r="3" fill="rgba(16,185,129,0.9)"/>
+          <circle cx="120" cy="28" r="3" fill="rgba(16,185,129,0.9)"/>
+          <circle cx="180" cy="24" r="3" fill="rgba(16,185,129,0.9)"/>
+          <circle cx="240" cy="14" r="3" fill="rgba(16,185,129,0.9)"/>
+          <circle cx="320" cy="12" r="3" fill="rgba(16,185,129,0.9)"/>
+        </svg>
+        <div class="chart-footer">
+          <span>Last sealed: 4 min ago</span>
+          <span class="green">&lt; 3ms</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 4: Defense-Grade Evidence Chain -->
+    <div class="card span-3">
+      <div class="card-inner-row">
+        <div style="flex:1">
+          <div class="icon-ring">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(16,185,129,0.9)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+              <polyline points="9 12 11 14 15 10"/>
+            </svg>
+          </div>
+          <div class="card-title">Defense-Grade Evidence Chain</div>
+          <p class="card-body" style="max-width:300px">
+            Cryptographic architecture at every layer. Built for DoD audit standards,
+            construction disputes, and every high-stakes custody scenario in between.
+          </p>
+          <div class="spec-pills">
+            <span class="pill">SHA-256</span>
+            <span class="pill">Append-Only</span>
+            <span class="pill">Independently Verifiable</span>
+            <span class="pill">CMMC-Ready</span>
+          </div>
+        </div>
+
+        <!-- Waveform -->
+        <div style="flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:8px;opacity:0.45">
+          <svg width="110" height="72" viewBox="0 0 110 72">
+            <!-- bars with varying heights -->
+            <rect x="1"  y="26" width="3" height="20" rx="1.5" fill="rgba(16,185,129,0.6)"/>
+            <rect x="6"  y="16" width="3" height="40" rx="1.5" fill="rgba(16,185,129,0.8)"/>
+            <rect x="11" y="32" width="3" height="12" rx="1.5" fill="rgba(16,185,129,0.5)"/>
+            <rect x="16" y="10" width="3" height="52" rx="1.5" fill="rgba(16,185,129,1.0)"/>
+            <rect x="21" y="24" width="3" height="24" rx="1.5" fill="rgba(16,185,129,0.6)"/>
+            <rect x="26" y="18" width="3" height="36" rx="1.5" fill="rgba(16,185,129,0.8)"/>
+            <rect x="31" y="30" width="3" height="14" rx="1.5" fill="rgba(16,185,129,0.5)"/>
+            <rect x="36" y="8"  width="3" height="56" rx="1.5" fill="rgba(16,185,129,1.0)"/>
+            <rect x="41" y="22" width="3" height="28" rx="1.5" fill="rgba(16,185,129,0.7)"/>
+            <rect x="46" y="14" width="3" height="44" rx="1.5" fill="rgba(16,185,129,0.8)"/>
+            <rect x="51" y="28" width="3" height="16" rx="1.5" fill="rgba(16,185,129,0.5)"/>
+            <rect x="56" y="12" width="3" height="48" rx="1.5" fill="rgba(16,185,129,0.9)"/>
+            <rect x="61" y="20" width="3" height="32" rx="1.5" fill="rgba(16,185,129,0.7)"/>
+            <rect x="66" y="26" width="3" height="20" rx="1.5" fill="rgba(16,185,129,0.6)"/>
+            <rect x="71" y="16" width="3" height="40" rx="1.5" fill="rgba(16,185,129,0.8)"/>
+            <rect x="76" y="6"  width="3" height="60" rx="1.5" fill="rgba(16,185,129,1.0)"/>
+            <rect x="81" y="24" width="3" height="24" rx="1.5" fill="rgba(16,185,129,0.6)"/>
+            <rect x="86" y="18" width="3" height="36" rx="1.5" fill="rgba(16,185,129,0.8)"/>
+            <rect x="91" y="30" width="3" height="12" rx="1.5" fill="rgba(16,185,129,0.5)"/>
+            <rect x="96" y="10" width="3" height="52" rx="1.5" fill="rgba(16,185,129,0.9)"/>
+            <rect x="101" y="22" width="3" height="28" rx="1.5" fill="rgba(16,185,129,0.7)"/>
+            <rect x="106" y="14" width="3" height="44" rx="1.5" fill="rgba(16,185,129,0.8)"/>
+          </svg>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:8px;color:rgba(113,113,122,0.5)">Chain Activity</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 5: Independent Verification / Multi-Party Custody -->
+    <div class="card span-3">
+      <div class="card-title">Independent Verification</div>
+      <p class="card-body" style="margin-bottom:20px">
+        Public verification URL — no login, no account, no trust required.
+        Any attorney. Any auditor. Any third party. Any time.
+      </p>
+
+      <div class="party-column">
+        <div class="center-line"></div>
+
+        <!-- Sub (left) -->
+        <div class="party-row left" style="width:calc(50% + 24px)">
+          <div class="party-avatar">SC</div>
+          <div>
+            <div class="party-name">Subcontractor</div>
+            <div class="party-role">Submits Evidence</div>
+          </div>
+        </div>
+
+        <!-- GC (right) -->
+        <div class="party-row right" style="width:calc(50% + 24px)">
+          <div class="party-avatar">GC</div>
+          <div style="text-align:right">
+            <div class="party-name">Prime Contractor</div>
+            <div class="party-role">Cannot Alter</div>
+          </div>
+        </div>
+
+        <!-- Auditor (left) -->
+        <div class="party-row left" style="width:calc(50% + 24px)">
+          <div class="party-avatar">AU</div>
+          <div>
+            <div class="party-name">Third-Party Auditor</div>
+            <div class="party-role">Independently Verifies</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="verify-url">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(16,185,129,0.7)" stroke-width="2">
+          <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+          <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+        </svg>
+        <span class="verify-url-base">aethertrace.io/verify/</span>
+        <span class="verify-url-hash">3a7f2c9e…</span>
+      </div>
+    </div>
+
+  </div><!-- /bento -->
+
+</body>
+</html>

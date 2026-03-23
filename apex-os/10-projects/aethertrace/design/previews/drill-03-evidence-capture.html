@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AetherTrace — DRILL 03: Evidence Capture</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #09090b;
+      color: #fafafa;
+      font-family: 'Inter', system-ui, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 24px;
+    }
+
+    .mono { font-family: 'IBM Plex Mono', monospace; }
+
+    /* ── Main panel ─────────────────────────────────────────────── */
+    .panel {
+      width: 100%;
+      max-width: 720px;
+    }
+
+    /* ── Page header ────────────────────────────────────────────── */
+    .page-header {
+      margin-bottom: 32px;
+    }
+    .page-title {
+      font-size: 22px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      color: #fafafa;
+      margin-bottom: 4px;
+    }
+    .page-sub {
+      font-size: 13px;
+      color: #52525b;
+      font-family: 'IBM Plex Mono', monospace;
+    }
+    .page-sub span { color: rgba(16,185,129,0.8); }
+
+    /* ── Input container ────────────────────────────────────────── */
+    .input-box {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 16px;
+      overflow: hidden;
+      transition: border-color 0.2s;
+    }
+    .input-box:focus-within {
+      border-color: rgba(16,185,129,0.35);
+    }
+
+    /* ── Chain type selector ────────────────────────────────────── */
+    .chain-selector {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 16px 12px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .chain-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      color: #52525b;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .chain-chips {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .chip {
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      border: 1px solid rgba(255,255,255,0.1);
+      color: #71717a;
+      cursor: pointer;
+      transition: all 0.15s;
+      user-select: none;
+    }
+    .chip:hover { border-color: rgba(255,255,255,0.2); color: #a1a1aa; }
+    .chip.active {
+      background: rgba(16,185,129,0.1);
+      border-color: rgba(16,185,129,0.35);
+      color: rgba(16,185,129,0.9);
+    }
+
+    /* ── Text area ──────────────────────────────────────────────── */
+    .evidence-textarea {
+      width: 100%;
+      background: transparent;
+      border: none;
+      outline: none;
+      padding: 16px;
+      font-size: 15px;
+      font-family: 'Inter', system-ui, sans-serif;
+      color: #fafafa;
+      resize: none;
+      min-height: 80px;
+      line-height: 1.6;
+    }
+    .evidence-textarea::placeholder { color: #3f3f46; }
+
+    /* ── Upload tray ────────────────────────────────────────────── */
+    .upload-tray {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 0 16px 12px;
+    }
+
+    .upload-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 10px;
+      font-size: 12px;
+      color: #a1a1aa;
+      position: relative;
+      transition: border-color 0.2s;
+    }
+    .upload-item.sealing {
+      border-color: rgba(16,185,129,0.3);
+    }
+    .upload-item.sealed {
+      border-color: rgba(16,185,129,0.4);
+      background: rgba(16,185,129,0.06);
+    }
+
+    .upload-icon {
+      width: 28px; height: 28px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .upload-icon.pdf { background: rgba(239,68,68,0.15); }
+    .upload-icon.img { background: rgba(59,130,246,0.15); }
+    .upload-icon.doc { background: rgba(16,185,129,0.15); }
+
+    .upload-name { font-size: 12px; color: #a1a1aa; max-width: 120px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .upload-size { font-family: 'IBM Plex Mono', monospace; font-size: 9px; color: #52525b; }
+
+    .upload-status {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 9px;
+      letter-spacing: 0.06em;
+    }
+    .status-sealing { color: rgba(251,191,36,0.8); }
+    .status-sealed  { color: rgba(16,185,129,0.8); }
+
+    /* Sealing animation bar */
+    .seal-progress {
+      position: absolute;
+      bottom: 0; left: 0;
+      height: 1px;
+      background: rgba(16,185,129,0.7);
+      border-radius: 0 0 10px 10px;
+      animation: sealBar 2s ease-out forwards;
+    }
+    @keyframes sealBar {
+      from { width: 0%; }
+      to   { width: 100%; }
+    }
+
+    /* Hash preview on sealed item */
+    .hash-preview {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 8px;
+      color: rgba(16,185,129,0.5);
+    }
+
+    /* ── Bottom bar ─────────────────────────────────────────────── */
+    .bottom-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .bottom-tools {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .tool-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: #52525b;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px 0;
+      transition: color 0.15s;
+      font-family: 'Inter', sans-serif;
+    }
+    .tool-btn:hover { color: #a1a1aa; }
+
+    .submit-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      background: rgba(16,185,129,0.15);
+      border: 1px solid rgba(16,185,129,0.4);
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 500;
+      color: #10b981;
+      cursor: pointer;
+      font-family: 'IBM Plex Mono', monospace;
+      transition: all 0.2s;
+    }
+    .submit-btn:hover {
+      background: rgba(16,185,129,0.22);
+      border-color: rgba(16,185,129,0.6);
+    }
+
+    /* ── EVIDENCE SEALED confirmation card ──────────────────────── */
+    .sealed-card {
+      margin-top: 24px;
+      padding: 24px;
+      background: rgba(16,185,129,0.06);
+      border: 1px solid rgba(16,185,129,0.2);
+      border-radius: 16px;
+      display: none;
+    }
+    .sealed-card.visible { display: block; }
+
+    .sealed-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    .sealed-check {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      background: rgba(16,185,129,0.15);
+      border: 1px solid rgba(16,185,129,0.35);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .sealed-title {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(16,185,129,0.9);
+    }
+    .sealed-time {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      color: #52525b;
+      margin-left: auto;
+    }
+
+    .hash-display {
+      background: rgba(0,0,0,0.3);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 8px;
+      padding: 12px 14px;
+      margin-bottom: 12px;
+    }
+    .hash-display-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 9px;
+      color: #52525b;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .hash-display-value {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+      color: rgba(16,185,129,0.8);
+      word-break: break-all;
+      line-height: 1.5;
+    }
+
+    .sealed-meta {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .meta-item {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .meta-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 9px;
+      color: #52525b;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .meta-value {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      color: #a1a1aa;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="panel">
+
+    <div class="page-header">
+      <div class="page-title">Submit to Chain</div>
+      <div class="page-sub">PROJECT: <span>Riverside Medical Center — Electrical Rough-In</span></div>
+    </div>
+
+    <!-- Input Box -->
+    <div class="input-box">
+
+      <!-- Chain type selector (like Claude's model selector) -->
+      <div class="chain-selector">
+        <span class="chain-label">Evidence Type</span>
+        <div class="chain-chips">
+          <span class="chip active" onclick="selectChip(this)">Daily Log</span>
+          <span class="chip" onclick="selectChip(this)">Photo Evidence</span>
+          <span class="chip" onclick="selectChip(this)">Inspection Record</span>
+          <span class="chip" onclick="selectChip(this)">Change Order</span>
+          <span class="chip" onclick="selectChip(this)">RFI</span>
+        </div>
+      </div>
+
+      <!-- Text input -->
+      <textarea
+        class="evidence-textarea"
+        placeholder="Describe what happened, what was completed, or what was observed…"
+        rows="3"
+      >Completed conduit installation in zones 3A through 3C. All work performed to spec per drawing E-204 rev 2. Inspector on site confirmed rough-in clearances. GC rep John Tanner was present.</textarea>
+
+      <!-- Uploaded files tray -->
+      <div class="upload-tray">
+
+        <div class="upload-item sealed">
+          <div class="upload-icon pdf">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(239,68,68,0.8)" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          </div>
+          <div>
+            <div class="upload-name">inspection-sign-off.pdf</div>
+            <div class="upload-size">214 KB</div>
+          </div>
+          <div>
+            <div class="upload-status status-sealed">✓ SEALED</div>
+            <div class="hash-preview">a4f3b2…</div>
+          </div>
+        </div>
+
+        <div class="upload-item sealing">
+          <div class="upload-icon img">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(59,130,246,0.8)" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          </div>
+          <div>
+            <div class="upload-name">zone-3c-photo-01.jpg</div>
+            <div class="upload-size">1.8 MB</div>
+          </div>
+          <div>
+            <div class="upload-status status-sealing">⧗ SEALING</div>
+          </div>
+          <div class="seal-progress"></div>
+        </div>
+
+        <div class="upload-item">
+          <div class="upload-icon doc">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(16,185,129,0.8)" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+          </div>
+          <div>
+            <div class="upload-name">daily-log-mar-24.docx</div>
+            <div class="upload-size">88 KB</div>
+          </div>
+          <div>
+            <div class="upload-status" style="color:#52525b">PENDING</div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Bottom bar -->
+      <div class="bottom-bar">
+        <div class="bottom-tools">
+          <button class="tool-btn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
+            Attach files
+          </button>
+          <button class="tool-btn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            Photo
+          </button>
+          <button class="tool-btn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            Timestamp
+          </button>
+        </div>
+        <button class="submit-btn" onclick="sealEvidence()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          SEAL TO CHAIN →
+        </button>
+      </div>
+
+    </div>
+
+    <!-- EVIDENCE SEALED confirmation card (hidden until submit) -->
+    <div class="sealed-card" id="sealedCard">
+      <div class="sealed-header">
+        <div class="sealed-check">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(16,185,129,0.9)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+        </div>
+        <div>
+          <div class="sealed-title">Evidence Sealed</div>
+        </div>
+        <div class="sealed-time">2026-03-24 · 14:37:02 UTC</div>
+      </div>
+
+      <div class="hash-display">
+        <div class="hash-display-label">Chain Hash (SHA-256)</div>
+        <div class="hash-display-value">a4f3b2e9c1d7f084b3e5a291c6f4d8e0b2a9f1c3e7d5b091f4a2c8e6d0b3f7a1</div>
+      </div>
+
+      <div class="sealed-meta">
+        <div class="meta-item">
+          <span class="meta-label">Chain Position</span>
+          <span class="meta-value">#1,204</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Seal Time</span>
+          <span class="meta-value">2.1ms</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Evidence Items</span>
+          <span class="meta-value">3 files + note</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Verify URL</span>
+          <span class="meta-value" style="color:rgba(16,185,129,0.7)">aethertrace.io/verify/a4f3b2…</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    function selectChip(el) {
+      document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+      el.classList.add('active');
+    }
+
+    function sealEvidence() {
+      const card = document.getElementById('sealedCard');
+      card.classList.add('visible');
+      card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+  </script>
+
+</body>
+</html>

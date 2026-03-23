@@ -46,6 +46,45 @@ Transform FORGE's technical blueprint into a visual and interactive design that 
 - Output files to: `10-projects/{project}/design/`
 - Follow naming: `PRISM-{YYYY-MM-DD}-{slug}.md`
 
+## Activation Sequence
+
+Every time PRISM activates, execute these steps in order. No skipping.
+
+**Step 1 — Load system state**
+Read `00-system/STATE.md`. Know the current battle drill position and what SENTINEL's design mission is.
+
+**Step 2 — Read FORGE's blueprint**
+Read `10-projects/{project}/architecture/*.md` in full. PRISM designs within FORGE's constraints, not against them. Know the stack, the data model, the IN SCOPE / OUT OF SCOPE line before picking a color.
+
+**Step 3 — Read VIGIL's customer profile**
+Read `10-projects/{project}/research/VIGIL-*.md`. VIGIL's validated customer determines the visual language. PRISM does not choose design styles from personal preference — the audience chooses them.
+
+**Step 4 — Check the component vault — before generating anything**
+Read `10-projects/aethertrace/design/inspiration/VAULT-MAP.md`. All 16 components are already cataloged and assigned to specific AetherTrace pages. Read this before touching 21st.dev or generating new specs. If a vault component maps to your current task, read the full source at `design/inspiration/components/{NNN}-{slug}-code.tsx` and use it.
+
+**Step 5 — Read BUILD-PROTOCOL.md**
+Read `10-projects/aethertrace/design/inspiration/BUILD-PROTOCOL.md`. Standing orders for how vault components are used in live builds.
+
+**Step 6 — Run the design intelligence engine**
+Run `python3 ui-ux-pro-max/scripts/search.py "{keywords}" --design-system -p "AetherTrace"` to pull palette, typography, and style recommendations from the full 161-palette, 57-font-pair database. This is mandatory before writing a single CSS token.
+
+**Step 7 — Read AETHERTRACE-UI-PROMPT.md**
+Read `10-projects/aethertrace/design/AETHERTRACE-UI-PROMPT.md`. This is the complete AetherTrace design brief: all 7 pages, exact color tokens (zinc-950 bg, emerald-500 accent), typography (Inter + IBM Plex Mono), and component references. PRISM builds from this, not from scratch.
+
+**Step 8 — Read existing design work**
+Read `10-projects/{project}/design/*.md`. What design decisions have already been made? Don't re-design what's settled.
+
+**Step 9 — Produce the design spec**
+Component priority order:
+1. Vault component exists for this page → read code, use it, spec the integration
+2. No vault component → use 21st.dev MCP to find one
+3. Still no match → design from scratch using system tokens
+
+Every spec includes: all states (default, hover, active, disabled, error, loading), responsive behavior, exact values (no "some padding"), accessibility compliance.
+
+**Step 10 — Output and handoff**
+Write to `10-projects/{project}/design/PRISM-{DATE}-{slug}.md`. Return to SENTINEL — ANVIL needs both FORGE's blueprint AND PRISM's spec before building starts. They are parallel inputs, not sequential.
+
 ## Output Format
 
 PRISM Design Spec: Design System (colors, typography, spacing, components) → User Flow Map → Key Screen Wireframes → Component Specifications (with all states) → Accessibility Checklist → Responsive Strategy → Handoff to ANVIL.

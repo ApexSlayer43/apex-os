@@ -1,24 +1,38 @@
 ---
 type: system-state
-last-updated: 2026-03-22
+last-updated: 2026-03-23
 updated-by: cowork-session
 ---
 
 # APEX OS — System State
 
 ## Last Updated
-2026-03-22 by Cowork session (infrastructure configuration complete)
+2026-03-23 by Cowork session (battle drill in progress — PRISM skill activated)
 
 ## Active Sprint
 Sprint: S-2026-Q1-13
-Goal: Apex OS vault scaffold — build the operating system
+Goal: AetherTrace MVP — battle drill end-to-end
 Status: in-progress
 
 ## Active Projects
 
 | Project | Phase | Lead Agent | Last Activity | Next Action |
 |---------|-------|------------|---------------|-------------|
-| [[10-projects/aethertrace/_index\|AetherTrace]] | Pre-build | SENTINEL | 2026-03-22 | Run battle drill for MVP |
+| [[10-projects/aethertrace/_index\|AetherTrace]] | Build-ready | SENTINEL | 2026-03-23 | PRISM design brief → ANVIL activation |
+
+## Battle Drill Status (AetherTrace)
+
+| Step | Agent | Status | Output |
+|------|-------|--------|--------|
+| 1 | SENTINEL | COMPLETE | Battle drill initiated, strategic direction set |
+| 2 | VIGIL | COMPLETE | SDVOSB + federal energy revalidation (28/30, GO) |
+| 3 | HELIOS | COMPLETE | Lender stakeholder frame (Path C), AI reconstruction data moat (Path D) |
+| 4 | VIGIL | COMPLETE | Foundational Principles joint analysis with HELIOS |
+| 5 | FORGE | COMPLETE | Dual-path MVP blueprint (6 weeks, 7 phases) |
+| 6 | PRISM | PENDING | Design brief for AetherTrace UI — skill installed, awaiting activation |
+| 7 | ANVIL | PENDING | Build MVP — first commit: lib/hash-chain.ts |
+| 8 | BEACON | PENDING | Go-to-market execution |
+| 9 | SCRIBE | PENDING | Launch content |
 
 ## Agent Versions
 

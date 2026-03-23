@@ -25,9 +25,14 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { computeContentHash, computeChainHash, computeEventHash, computeEventChainHash, GENESIS } from '@/lib/hash-chain'
 import { uploadEvidenceFile, StorageError } from '@/lib/storage'
+import { rateLimit } from '@/lib/rate-limit'
 
 export async function POST(request: NextRequest) {
   try {
+    // --- Rate limit (strict: 10 req/min) ---
+    const limited = rateLimit(request, 'strict')
+    if (limited) return limited
+
     // --- Auth check ---
     const supabase = await createClient()
     const { data: { user }, error: authError } = await supabase.auth.getUser()
@@ -77,7 +82,9 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // --- Verify project exists and user has access ---
+    // --- Verify project exists AND user belongs to the project's org ---
+    // Defense: RLS handles basic access, but we explicitly verify org membership
+    // to prevent UUID guessing attacks where RLS might pass if misconfigured.
     const { data: project, error: projectError } = await supabase
       .from('projects')
       .select('id, org_id')
@@ -88,6 +95,21 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         { error: 'Project not found or access denied' },
         { status: 404 }
+      )
+    }
+
+    // Explicit org membership check (belt + suspenders with RLS)
+    const { data: membership } = await supabase
+      .from('org_members')
+      .select('role')
+      .eq('org_id', project.org_id)
+      .eq('user_id', user.id)
+      .single()
+
+    if (!membership) {
+      return NextResponse.json(
+        { error: 'Access denied to this project' },
+        { status: 403 }
       )
     }
 

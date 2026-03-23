@@ -14,11 +14,16 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createAdminClient } from '@/lib/supabase/server'
 import { computeChainHash, GENESIS } from '@/lib/hash-chain'
+import { rateLimit } from '@/lib/rate-limit'
 
 export async function GET(
   _request: NextRequest,
   { params }: { params: Promise<{ hash: string }> }
 ) {
+  // Rate limit public endpoint (120 req/min per IP)
+  const limited = rateLimit(_request, 'public')
+  if (limited) return limited
+
   const { hash } = await params
 
   if (!hash || hash.length !== 64) {

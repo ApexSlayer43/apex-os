@@ -6,8 +6,11 @@
 
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
+import { validateEnvironment } from '@/lib/env'
 
 export async function updateSession(request: NextRequest) {
+  // Validate env vars on first request
+  validateEnvironment()
   let supabaseResponse = NextResponse.next({ request })
 
   const supabase = createServerClient(

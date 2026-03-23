@@ -81,10 +81,22 @@ export async function uploadEvidenceFile(
     )
   }
 
-  // --- Pre-check: MIME type ---
+  // --- Pre-check: MIME type (label check) ---
   if (!ALLOWED_MIME_TYPES.has(mimeType)) {
     throw new StorageError(
       `MIME type "${mimeType}" is not allowed`,
+      'INVALID_TYPE'
+    )
+  }
+
+  // --- Pre-check: File magic bytes (content check) ---
+  // Don't trust the client-reported MIME type alone. Verify the actual
+  // file header matches an allowed format. This prevents uploading
+  // executables disguised as PDFs, etc.
+  const fileBuffer = file instanceof File ? Buffer.from(await file.arrayBuffer()) : file
+  if (!verifyFileMagicBytes(fileBuffer, mimeType)) {
+    throw new StorageError(
+      `File content does not match declared MIME type "${mimeType}"`,
       'INVALID_TYPE'
     )
   }
@@ -148,4 +160,52 @@ export async function getSignedUrl(
   }
 
   return data.signedUrl
+}
+
+// ─── File Magic Byte Verification ─────────────────────────────────────────────
+
+/**
+ * Known file signatures (magic bytes).
+ * We check the first few bytes of the file to verify the content
+ * matches the declared MIME type. This prevents disguised uploads.
+ */
+const MAGIC_BYTES: Record<string, number[][]> = {
+  'image/jpeg': [[0xFF, 0xD8, 0xFF]],
+  'image/png': [[0x89, 0x50, 0x4E, 0x47]],
+  'image/webp': [[0x52, 0x49, 0x46, 0x46]], // RIFF header (WebP starts with RIFF)
+  'image/tiff': [[0x49, 0x49, 0x2A, 0x00], [0x4D, 0x4D, 0x00, 0x2A]], // Little-endian or Big-endian
+  'application/pdf': [[0x25, 0x50, 0x44, 0x46]], // %PDF
+  'application/zip': [[0x50, 0x4B, 0x03, 0x04], [0x50, 0x4B, 0x05, 0x06]], // PK headers
+}
+
+// Types where we can't easily verify magic bytes (text-based formats)
+const SKIP_MAGIC_CHECK = new Set([
+  'text/plain',
+  'text/csv',
+  'application/json',
+  'application/octet-stream', // Generic binary — can't verify
+])
+
+/**
+ * Verify that a file's actual content matches its declared MIME type
+ * by checking magic bytes (file header signatures).
+ *
+ * Returns true if:
+ *  - The MIME type is in the skip list (text formats, generic binary)
+ *  - The file header matches a known signature for the declared type
+ *
+ * Returns false if:
+ *  - The file claims to be a known binary type but the header doesn't match
+ */
+function verifyFileMagicBytes(buffer: Buffer, declaredMime: string): boolean {
+  // Skip check for text-based formats
+  if (SKIP_MAGIC_CHECK.has(declaredMime)) return true
+
+  const signatures = MAGIC_BYTES[declaredMime]
+  if (!signatures) return true // Unknown type — allow (already passed MIME whitelist)
+
+  // Check if any known signature matches the file header
+  return signatures.some(sig =>
+    sig.every((byte, i) => i < buffer.length && buffer[i] === byte)
+  )
 }

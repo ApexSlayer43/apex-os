@@ -7,7 +7,7 @@ updated-by: cowork-session
 # APEX OS — System State
 
 ## Last Updated
-2026-03-23 by Cowork session (battle drill in progress — PRISM skill activated)
+2026-03-23 by SENTINEL status update — all agents upgraded to v2.0.0 (Step 0 + plugin wiring)
 
 ## Active Sprint
 Sprint: S-2026-Q1-13
@@ -38,22 +38,22 @@ Status: in-progress
 
 | Agent | Version | Last Updated | Success Rate | Notes |
 |-------|---------|-------------|-------------|-------|
-| SENTINEL | 1.0.0 | 2026-03-22 | — | Initial persona |
-| VIGIL | 1.0.0 | 2026-03-22 | — | Initial persona |
-| HELIOS | 1.0.0 | 2026-03-22 | — | Initial persona |
-| FORGE | 1.0.0 | 2026-03-22 | — | Initial persona |
-| PRISM | 1.0.0 | 2026-03-22 | — | Initial persona |
-| ANVIL | 1.0.0 | 2026-03-22 | — | Initial persona |
-| BEACON | 1.0.0 | 2026-03-22 | — | Initial persona |
-| SCRIBE | 1.0.0 | 2026-03-22 | — | Initial persona |
-| LEDGER | 1.0.0 | 2026-03-22 | — | Initial persona |
+| SENTINEL | 2.0.0 | 2026-03-23 | — | Step 0 + 2 MCPs + 15 plugin skills |
+| VIGIL | 2.0.0 | 2026-03-23 | — | Step 0 + 3 MCPs + 16 plugin skills |
+| HELIOS | 2.0.0 | 2026-03-23 | — | Step 0 + 2 MCPs + 5 plugin skills |
+| FORGE | 2.0.0 | 2026-03-23 | — | Step 0 + 3 MCPs + 5 plugin skills |
+| PRISM | 2.0.0 | 2026-03-23 | — | Step 0 + 2 MCPs + 8 plugins + inline design data |
+| ANVIL | 2.0.0 | 2026-03-23 | — | Step 0 + 3 MCPs + 11 plugin skills |
+| BEACON | 2.0.0 | 2026-03-23 | — | Step 0 + 3 MCPs + 18 plugin skills |
+| SCRIBE | 2.0.0 | 2026-03-23 | — | Step 0 + 1 MCP + 3 plugin skills |
+| LEDGER | 1.0.0 | 2026-03-22 | — | Initial persona (not yet upgraded) |
 
 ## Evolution State
-- Current instruction versions: All agents at v1.0.0
+- Current instruction versions: 8 agents at v2.0.0, LEDGER at v1.0.0
+- Last evolution: 2026-03-23 — Major upgrade (Step 0 + plugin wiring + MCP connections)
 - Performance baseline: Not yet established (requires 10+ tasks per agent)
 - Active experiments: None
 - Rollback triggers: Any metric drop >10% triggers revert to previous version
-- Last evolution cycle: N/A
 - Pending proposals: 0
 - Cumulative approval rate: N/A
 
@@ -87,15 +87,7 @@ None. All infrastructure operational.
 ## Decision Queue
 No decisions pending.
 
-## Skill Capability Audit (2026-03-23)
-- **Finding:** All skills list reference files but none have mandatory read steps in their protocols
-- **Impact:** Reference files (build patterns, scope patterns, story banks, etc.) may not be loaded at runtime
-- **PRISM-specific:** Data/script pointer files don't resolve on OS filesystem — design data inaccessible
-- **Fix:** Add Step 0 (Load References) to every skill's operating protocol
+## Skill Capability Audit (2026-03-23) — RESOLVED
+- **Status:** COMPLETE — all 8 agent skills upgraded and verified
+- **Decisions made:** Step 0 approved, PRISM data inlined, all skills upgraded same session, 15 personal plugins mapped
 - **Details:** See `00-system/skill-capability-audit-2026-03-23.md`
-- **Status:** Awaiting decision on fix approach
-
-## Updated Decision Queue
-- **DECIDE:** Approve Step 0 pattern for all skills? (Y/N)
-- **DECIDE:** PRISM data access — inline critical data into SKILL.md vs. convert pointers to real files vs. accept current state?
-- **DECIDE:** Fix timing — upgrade all skills now vs. fix each skill just-in-time before activation?

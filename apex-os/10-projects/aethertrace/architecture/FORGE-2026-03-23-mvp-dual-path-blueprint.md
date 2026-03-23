@@ -239,6 +239,7 @@ CREATE TABLE evidence_items (
   chain_position INTEGER NOT NULL,  -- sequential position in chain
   previous_hash TEXT,               -- explicit reference to previous item's chain_hash (NULL for first)
   captured_at TIMESTAMPTZ NOT NULL, -- when the evidence was captured (user-reported)
+  time_confidence TEXT DEFAULT 'user-reported', -- L3 compliance: 'user-reported', 'device-generated', 'system-generated'
   ingested_at TIMESTAMPTZ DEFAULT now(), -- when AetherTrace received it (system-generated)
   UNIQUE(project_id, chain_position)
 );
@@ -250,7 +251,7 @@ CREATE TABLE custody_events (
   evidence_item_id UUID NOT NULL REFERENCES evidence_items(id),
   project_id UUID NOT NULL REFERENCES projects(id),
   actor_id UUID NOT NULL REFERENCES auth.users(id),
-  event_type TEXT NOT NULL,         -- ingested, viewed, exported, verified
+  event_type TEXT NOT NULL,         -- ingested, viewed, exported, verified, ingestion_failed (G2: failure is evidence)
   event_hash TEXT NOT NULL,         -- SHA-256 of event data
   chain_hash TEXT NOT NULL,         -- hash linking to previous custody event
   chain_position INTEGER NOT NULL,  -- sequential position in custody chain
@@ -517,6 +518,23 @@ ANVIL executes in this order. Each phase has a clear "done" gate.
 - Test framework (Vitest recommended)
 
 **Definition of done:** A person who has never seen AetherTrace can visit the production URL, pay $199, create a project, define a custody plan with 5 evidence requirements, upload evidence against those requirements, see a completeness dashboard showing 3 of 5 fulfilled, view the custody chain, export an evidence package that includes the plan + completeness report + hash chain, and send a verification URL to someone who confirms the evidence is intact. That person does not need to understand cryptography. They need to understand: "This is what was supposed to be custodied. This is what was custodied. The chain is intact."
+
+## Foundational Principles Compliance
+
+This blueprint has been reviewed against the AetherTrace Foundational Design Rules document (Locked, Phase I + enduring). All 27 rules checked. 24 fully aligned. 3 addressed via schema additions:
+
+- **L3 (Time Is Metadata)** — Added `time_confidence` field to evidence_items. Captured time is metadata with stated confidence, never absolute truth.
+- **G2 (Failure Is Evidence)** — Added `ingestion_failed` event type to custody_events. System failures are logged as evidence, not hidden.
+- **T3 (Explicit Errors)** — ANVIL directive: every API endpoint must return explicit error responses. No silent 200s on partial failure. Silence is a failure mode.
+
+**ANVIL Builder Directives (from Foundational Principles):**
+1. No code may be written without referencing which invariant it preserves (L1). Comments must cite rule IDs.
+2. When ordering ambiguity exists, surface uncertainty — do not resolve silently (L2).
+3. Fail closed. If hash computation fails, ingestion stops. No partial acceptance (G1).
+4. Log failed ingestion attempts as custody events with type `ingestion_failed` (G2).
+5. No component may infer intent or meaning from data (T2). This applies to ALL code, including helper functions.
+6. Explicit errors over silent success (T3). Every API response must be unambiguous about success or failure.
+7. Storage is untrusted (C5). Integrity is verified from hashes, not assumed from infrastructure.
 
 ## Handoff to SENTINEL
 

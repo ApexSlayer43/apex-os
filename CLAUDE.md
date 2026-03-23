@@ -1,4 +1,13 @@
 Aethertrace Vault — Persistent Context
+
+## SESSION START PROTOCOL — MANDATORY
+This vault runs on Apex OS. Every session, before any work begins, read these files using the Obsidian MCP:
+1. `apex-os/00-system/STATE.md` — current battle drill position, active sprint, blockers, next action
+2. `apex-os/CONSTITUTION.md` — immutable rules that govern all agent behavior
+When activating an agent role, read `apex-os/00-system/agents/{agent-name}/PERSONA.md` before adopting that role.
+After significant work, update `apex-os/00-system/STATE.md` with what changed and what's next.
+This is the standing order. The vault is the control tower. Read before touching anything.
+
 What AetherTrace Is
 AetherTrace is a neutral, cryptographically enforced custody system that transforms raw events into immutable, verifiable evidence with preserved time, identity, and lineage. It performs ONE function: prove that an event happened, when it happened, who produced it, and whether the record has been altered. It is NOT: analytics, AI, a dashboard, a scoring system, a decision engine, or a blockchain product.
 Strategic Position

@@ -1,7 +1,7 @@
 ---
 type: system-state
 last-updated: 2026-03-23
-updated-by: cowork-session
+updated-by: cowork-session — design-inspiration vault cataloged, apex-os wiring complete
 ---
 
 # APEX OS — System State
@@ -91,3 +91,23 @@ No decisions pending.
 - **Status:** COMPLETE — all 8 agent skills upgraded and verified
 - **Decisions made:** Step 0 approved, PRISM data inlined, all skills upgraded same session, 15 personal plugins mapped
 - **Details:** See `00-system/skill-capability-audit-2026-03-23.md`
+
+## PRISM Pre-Work Complete (2026-03-23)
+
+Design inspiration vault fully cataloged and ready for PRISM activation.
+
+| Asset | Location | Status |
+|-------|----------|--------|
+| Component vault (16 components × 2 files) | `design-inspiration/components/` | COMPLETE — 32 files |
+| Component-to-page map | `design-inspiration/VAULT-MAP.md` | COMPLETE |
+| Build standing orders | `design-inspiration/BUILD-PROTOCOL.md` | COMPLETE |
+| Design intelligence engine | `ui-ux-pro-max/` | LIVE — BM25 search, 16 CSVs, 161 palettes, 57 font pairs |
+| PRISM engine override config | `ui-ux-pro-max/PRISM-OVERRIDE.md` | LIVE |
+
+**Next action for PRISM:** Read `design-inspiration/VAULT-MAP.md` + `design-inspiration/BUILD-PROTOCOL.md`, then run `python3 ui-ux-pro-max/scripts/search.py "cryptographic evidence custody" --design-system -p "AetherTrace"` before producing the design spec.
+
+## Session Wiring Updates (2026-03-23)
+
+- `CLAUDE.md` (vault root) updated with SESSION START PROTOCOL — every session now has standing order to read apex-os STATE.md + CONSTITUTION.md before any work
+- ops-check skill is read-only (system restriction) — CLAUDE.md update covers this gap
+- apex-os fully explored and mapped — vault structure understood end-to-end

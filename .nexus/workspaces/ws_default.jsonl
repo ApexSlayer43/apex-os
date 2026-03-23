@@ -1,3 +1,15 @@
 {"type":"workspace_created","data":{"id":"default","name":"Default Workspace","description":"Default workspace for tool calls without explicit workspace context","rootFolder":"/","created":1774205929759,"isActive":true},"id":"642a83de-11cf-4a1a-b438-3ef10fbafd61","deviceId":"2e8c5d3e-a1d7-4d3a-a9f4-292ff6e9a96d","timestamp":1774205930136}
 
 {"type":"workspace_updated","workspaceId":"default","data":{"lastAccessed":1774209088816,"name":"apex-os","description":"Default workspace for tool calls without explicit workspace context","rootFolder":"/","isActive":true,"isArchived":false,"contextJson":"{\"purpose\":\"Multi-agent AI operating system for building and shipping online businesses. Contains 9 specialized agents (SENTINEL, VIGIL, HELIOS, FORGE, PRISM, ANVIL, BEACON, SCRIBE, LEDGER), project files, decision records, and sprint tracking.\",\"workflows\":[],\"keyFiles\":[],\"preferences\":\"Always read STATE.md before acting. Follow agent chain of command: SENTINEL → VIGIL → HELIOS → FORGE → ANVIL → BEACON → SCRIBE. Never skip FORGE before ANVIL. Respect CONSTITUTION.md as immutable. Use YAML frontmatter on all new notes. Direct, military-brevity communication style.\"}"},"id":"53f7a8a3-79ff-452b-a64e-cb3826d4f134","deviceId":"2e8c5d3e-a1d7-4d3a-a9f4-292ff6e9a96d","timestamp":1774209088817}
+
+{"type":"session_created","workspaceId":"default","data":{"id":"327c51db-a391-4ee5-8d14-5225a4fd2311","name":"Chat Session 3/23/2026, 5:50:02 PM","description":"Session for conversation 2d3c5c5d-7ff3-478b-a40e-615430086f86","startTime":1774284602939},"id":"e4564cfd-5df9-4151-bd76-80a1fafcc71e","deviceId":"2e8c5d3e-a1d7-4d3a-a9f4-292ff6e9a96d","timestamp":1774284602943}
+
+{"type":"workspace_updated","workspaceId":"default","data":{"lastAccessed":1774284602946},"id":"777d1985-3091-4ce6-ad3d-7f39332c495c","deviceId":"2e8c5d3e-a1d7-4d3a-a9f4-292ff6e9a96d","timestamp":1774284602946}
+
+{"type":"session_created","workspaceId":"default","data":{"id":"735b2411-a920-40e3-b809-4d278ad79e6e","name":"Session 3/23/2026, 5:50:02 PM","description":"Auto-created session for trace storage","startTime":1774284602952},"id":"e6e4ae2f-3bf6-44d8-96b9-360957657c65","deviceId":"2e8c5d3e-a1d7-4d3a-a9f4-292ff6e9a96d","timestamp":1774284602952}
+
+{"type":"workspace_updated","workspaceId":"default","data":{"lastAccessed":1774284602959},"id":"5afd1e78-d523-41b0-80a1-111d7e5dd4cb","deviceId":"2e8c5d3e-a1d7-4d3a-a9f4-292ff6e9a96d","timestamp":1774284602959}
+
+{"type":"trace_added","workspaceId":"default","sessionId":"s-20260323165002","data":{"id":"56f27714-1275-415b-a7b7-de2db8ec3b30","content":"started: help me understand the vault","traceType":"conversation_event","metadataJson":"{\"eventType\":\"started\",\"conversationId\":\"2d3c5c5d-7ff3-478b-a40e-615430086f86\"}"},"id":"81386c55-c5b1-4451-a627-71f8658dbd40","deviceId":"2e8c5d3e-a1d7-4d3a-a9f4-292ff6e9a96d","timestamp":1774284602962}
+
+{"type":"workspace_updated","workspaceId":"default","data":{"lastAccessed":1774284602964},"id":"4aaff8e1-318d-4a47-a00e-a99f846d21a4","deviceId":"2e8c5d3e-a1d7-4d3a-a9f4-292ff6e9a96d","timestamp":1774284602964}

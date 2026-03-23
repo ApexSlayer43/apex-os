@@ -1,0 +1,9 @@
+{"type":"metadata","data":{"id":"2d3c5c5d-7ff3-478b-a40e-615430086f86","title":"help me understand the vault","created":1774284602896,"vault":"Aethertrace","settings":{"chatSettings":{"sessionId":"s-20260323165002"}}},"id":"72453d4d-9ad5-4f39-9b1c-f64eb59622f8","deviceId":"2e8c5d3e-a1d7-4d3a-a9f4-292ff6e9a96d","timestamp":1774284602898}
+
+{"type":"message","conversationId":"2d3c5c5d-7ff3-478b-a40e-615430086f86","data":{"id":"msg_1774284613705_user","role":"user","content":"okay could you help me understand this vault","state":"complete","sequenceNumber":0,"activeAlternativeIndex":0},"id":"6e2a7c0f-bb2d-4466-ba44-ca84263d4f61","deviceId":"2e8c5d3e-a1d7-4d3a-a9f4-292ff6e9a96d","timestamp":1774284613719}
+
+{"type":"message","conversationId":"2d3c5c5d-7ff3-478b-a40e-615430086f86","data":{"id":"msg_1774284613724_ai","role":"assistant","content":"","state":"draft","sequenceNumber":1,"activeAlternativeIndex":0},"id":"7159428e-59cc-40fe-b5e7-2272e069927e","deviceId":"2e8c5d3e-a1d7-4d3a-a9f4-292ff6e9a96d","timestamp":1774284613730}
+
+{"type":"message","conversationId":"2d3c5c5d-7ff3-478b-a40e-615430086f86","data":{"id":"msg_1774284682141_user","role":"user","content":"@sentinel","state":"complete","sequenceNumber":2,"activeAlternativeIndex":0},"id":"cd096998-4d66-4742-b82d-622291bc66ea","deviceId":"2e8c5d3e-a1d7-4d3a-a9f4-292ff6e9a96d","timestamp":1774284682143}
+
+{"type":"message","conversationId":"2d3c5c5d-7ff3-478b-a40e-615430086f86","data":{"id":"msg_1774284682156_ai","role":"assistant","content":"","state":"draft","sequenceNumber":3,"activeAlternativeIndex":0},"id":"ae96066e-88ae-4466-99b1-aa02c344bb15","deviceId":"2e8c5d3e-a1d7-4d3a-a9f4-292ff6e9a96d","timestamp":1774284682158}

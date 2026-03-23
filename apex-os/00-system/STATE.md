@@ -86,3 +86,16 @@ None. All infrastructure operational.
 
 ## Decision Queue
 No decisions pending.
+
+## Skill Capability Audit (2026-03-23)
+- **Finding:** All skills list reference files but none have mandatory read steps in their protocols
+- **Impact:** Reference files (build patterns, scope patterns, story banks, etc.) may not be loaded at runtime
+- **PRISM-specific:** Data/script pointer files don't resolve on OS filesystem — design data inaccessible
+- **Fix:** Add Step 0 (Load References) to every skill's operating protocol
+- **Details:** See `00-system/skill-capability-audit-2026-03-23.md`
+- **Status:** Awaiting decision on fix approach
+
+## Updated Decision Queue
+- **DECIDE:** Approve Step 0 pattern for all skills? (Y/N)
+- **DECIDE:** PRISM data access — inline critical data into SKILL.md vs. convert pointers to real files vs. accept current state?
+- **DECIDE:** Fix timing — upgrade all skills now vs. fix each skill just-in-time before activation?

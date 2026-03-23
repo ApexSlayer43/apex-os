@@ -1,0 +1,73 @@
+@import "tailwindcss";
+
+/*
+ * AetherTrace Design System — PRISM v2.0.0 Brief
+ * Style: Trust Fortress
+ * Palette: Vault Steel
+ * Typography: IBM Plex Sans + IBM Plex Mono
+ */
+
+@theme inline {
+  /* ─── Vault Steel Palette ─────────────────────────────── */
+  --color-primary: #1E293B;        /* slate-800 */
+  --color-primary-hover: #334155;  /* slate-700 */
+  --color-secondary: #334155;      /* slate-700 */
+  --color-accent: #059669;         /* emerald-600 */
+  --color-accent-light: #10B981;   /* emerald-500 (dark mode) */
+
+  --color-background: #F8FAFC;     /* slate-50 */
+  --color-surface: #FFFFFF;
+  --color-foreground: #0F172A;     /* slate-900 */
+  --color-muted: #64748B;          /* slate-500 */
+  --color-muted-foreground: #475569; /* slate-600 */
+
+  --color-border: #E2E8F0;         /* slate-200 */
+  --color-border-accent: #CBD5E1;  /* slate-300 */
+
+  /* Semantic states */
+  --color-verified: #059669;       /* emerald-600 */
+  --color-warning: #F59E0B;        /* amber-500 */
+  --color-error: #DC2626;          /* red-600 */
+  --color-pending: #94A3B8;        /* slate-400 */
+  --color-sealed: #1E293B;         /* slate-800 */
+
+  /* ─── Typography ──────────────────────────────────────── */
+  --font-sans: 'IBM Plex Sans', system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', monospace;
+}
+
+/* ─── Google Fonts Import ────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+/* ─── Base Styles ────────────────────────────────────────── */
+body {
+  background: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ─── Dark Mode (secondary — build light first) ──────────── */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-background: #030712;     /* gray-950 */
+    --color-surface: #111827;        /* gray-900 */
+    --color-foreground: #F3F4F6;     /* gray-100 */
+    --color-muted: #9CA3AF;          /* gray-400 */
+    --color-muted-foreground: #9CA3AF;
+    --color-border: #374151;         /* gray-700 */
+    --color-border-accent: #4B5563;  /* gray-600 */
+    --color-accent: #10B981;         /* emerald-500 (brighter for dark) */
+  }
+}
+
+/* ─── Reduced Motion (PRISM non-negotiable) ──────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

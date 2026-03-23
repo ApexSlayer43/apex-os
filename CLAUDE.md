@@ -66,3 +66,6 @@ When to Use
 * Before building any page or component — generate design system, then build
 * UX review or accessibility check — run --domain ux
 Standing Order: For any AetherTrace UI work, run the design system search BEFORE writing code. Do not guess at styles, colors, or typography — search first.
+
+PRISM Override
+When PRISM activates, read Aethertrace/ui-ux-pro-max/PRISM-OVERRIDE.md BEFORE using PRISM's built-in inline data. The override file connects PRISM to the full search engine (161 reasoning rules, 67+ styles, 161 palettes, 57 font pairings) and changes PRISM's output format to include implementation-ready specs (CSS variables, design tokens, component specs) that ANVIL can build from directly without guessing. PRISM's inline data (20 palettes, 20 fonts, 12 styles) is the fallback only.

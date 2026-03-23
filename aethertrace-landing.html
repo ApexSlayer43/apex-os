@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AetherTrace — Integrity Infrastructure for Evidence Custody</title>
+
+  <!-- PRISM Brief: EB Garamond (heading) + Lato (body) + JetBrains Mono (data) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500;600;700&family=Lato:wght@300;400;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <!-- Lucide Icons (PRISM: no emoji icons, SVG only) -->
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+
+  <style>
+    /* ═══════════════════════════════════════════════
+       DESIGN TOKENS — from PRISM brief (UI Pro Max)
+       Every value sourced from search results.
+       ═══════════════════════════════════════════════ */
+    :root {
+      --primary:       #1E3A8A;
+      --secondary:     #1E40AF;
+      --accent:        #B45309;
+      --background:    #F8FAFC;
+      --surface:       #FFFFFF;
+      --text:          #0F172A;
+      --muted:         #64748B;
+      --border:        #CBD5E1;
+      --error:         #DC2626;
+      --success:       #059669;
+      --ring:          #1E3A8A;
+      --badge-height:  48px;
+      --trust-color:   #1E40AF;
+      --security-green:#059669;
+      --card-shadow:   0 4px 6px rgba(0,0,0,0.1);
+      --metric-highlight: #F59E0B;
+      --focus-ring:    3px solid #1E3A8A;
+      --input-height:  48px;
+      --transition:    200ms ease;
+
+      /* Typography */
+      --font-heading:  'EB Garamond', serif;
+      --font-body:     'Lato', sans-serif;
+      --font-mono:     'JetBrains Mono', monospace;
+    }
+
+    /* ═══════════════════════════════════════════════
+       RESET + BASE
+       ═══════════════════════════════════════════════ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body);
+      color: var(--text);
+      background: var(--background);
+      line-height: 1.6;
+      font-size: 16px; /* PRISM: minimum 16px body */
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* PRISM: prefers-reduced-motion respected */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    /* PRISM: Focus states visible for keyboard nav */
+    :focus-visible {
+      outline: var(--focus-ring);
+      outline-offset: 2px;
+    }
+
+    a { color: var(--primary); text-decoration: none; }
+    a:hover { color: var(--secondary); }
+
+    /* PRISM: cursor-pointer on all clickables */
+    button, a, [role="button"] { cursor: pointer; }
+
+    img { max-width: 100%; height: auto; }
+
+    /* ═══════════════════════════════════════════════
+       LAYOUT
+       ═══════════════════════════════════════════════ */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* ═══════════════════════════════════════════════
+       NAVIGATION
+       ═══════════════════════════════════════════════ */
+    .nav {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 16px 0;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .nav .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .nav-brand {
+      font-family: var(--font-heading);
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary);
+      letter-spacing: -0.02em;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 32px;
+      align-items: center;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 0.95rem;
+      font-weight: 400;
+      color: var(--muted);
+      transition: color var(--transition);
+    }
+
+    .nav-links a:hover { color: var(--text); }
+
+    .nav-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--primary);
+      color: #FFFFFF !important;
+      padding: 10px 24px;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      border: none;
+      transition: background var(--transition);
+      /* PRISM: touch target 44x44px minimum */
+      min-height: 44px;
+    }
+
+    .nav-cta:hover { background: var(--secondary); }
+
+    /* ═══════════════════════════════════════════════
+       HERO — Section 1: Mission / Credibility
+       Landing pattern: Trust & Authority + Conversion
+       ═══════════════════════════════════════════════ */
+    .hero {
+      padding: 80px 0 64px;
+      text-align: center;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #EFF6FF;
+      color: var(--primary);
+      padding: 6px 16px;
+      border-radius: 100px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      margin-bottom: 24px;
+      border: 1px solid #BFDBFE;
+    }
+
+    .hero h1 {
+      font-family: var(--font-heading);
+      font-size: clamp(2.25rem, 5vw, 3.5rem);
+      font-weight: 700;
+      line-height: 1.15;
+      color: var(--text);
+      max-width: 800px;
+      margin: 0 auto 20px;
+      letter-spacing: -0.02em;
+    }
+
+    .hero p {
+      font-size: 1.2rem;
+      color: var(--muted);
+      max-width: 600px;
+      margin: 0 auto 40px;
+      line-height: 1.7;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--primary);
+      color: #FFFFFF;
+      padding: 14px 32px;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 1rem;
+      border: none;
+      transition: background var(--transition);
+      min-height: 48px;
+    }
+
+    .btn-primary:hover { background: var(--secondary); color: #FFFFFF; }
+
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: transparent;
+      color: var(--primary);
+      padding: 14px 32px;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 1rem;
+      border: 2px solid var(--border);
+      transition: border-color var(--transition), color var(--transition);
+      min-height: 48px;
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--primary);
+      color: var(--secondary);
+    }
+
+    /* ═══════════════════════════════════════════════
+       PROOF BAR — Section 2: Logos, Certs, Stats
+       ═══════════════════════════════════════════════ */
+    .proof {
+      padding: 48px 0;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+    }
+
+    .proof-label {
+      text-align: center;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      margin-bottom: 24px;
+      font-weight: 700;
+    }
+
+    .proof-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 32px;
+      text-align: center;
+    }
+
+    .stat {
+      padding: 16px;
+    }
+
+    .stat-number {
+      font-family: var(--font-heading);
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--primary);
+      line-height: 1.1;
+    }
+
+    .stat-label {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    /* ═══════════════════════════════════════════════
+       THE PROBLEM — Structural Flaw
+       ═══════════════════════════════════════════════ */
+    .problem {
+      padding: 80px 0;
+    }
+
+    .problem-header {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+
+    .problem-header h2 {
+      font-family: var(--font-heading);
+      font-size: clamp(1.75rem, 3.5vw, 2.5rem);
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 16px;
+    }
+
+    .problem-header p {
+      font-size: 1.1rem;
+      color: var(--muted);
+      max-width: 640px;
+      margin: 0 auto;
+    }
+
+    .problem-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+    }
+
+    .problem-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 32px;
+      box-shadow: var(--card-shadow);
+      transition: box-shadow var(--transition);
+    }
+
+    .problem-card:hover {
+      box-shadow: 0 8px 16px rgba(0,0,0,0.12);
+    }
+
+    .problem-card .icon-wrap {
+      width: 48px;
+      height: 48px;
+      background: #FEF2F2;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 16px;
+    }
+
+    .problem-card .icon-wrap svg {
+      color: var(--error);
+    }
+
+    .problem-card h3 {
+      font-family: var(--font-heading);
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: var(--text);
+    }
+
+    .problem-card p {
+      font-size: 0.95rem;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    .problem-card .stat-highlight {
+      font-family: var(--font-mono);
+      font-size: 1.5rem;
+      font-weight: 500;
+      color: var(--error);
+      display: block;
+      margin-top: 12px;
+    }
+
+    /* ═══════════════════════════════════════════════
+       SOLUTION — How AetherTrace Works
+       ═══════════════════════════════════════════════ */
+    .solution {
+      padding: 80px 0;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+    }
+
+    .solution-header {
+      text-align: center;
+      margin-bottom: 56px;
+    }
+
+    .solution-header h2 {
+      font-family: var(--font-heading);
+      font-size: clamp(1.75rem, 3.5vw, 2.5rem);
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 16px;
+    }
+
+    .solution-header p {
+      font-size: 1.1rem;
+      color: var(--muted);
+      max-width: 580px;
+      margin: 0 auto;
+    }
+
+    .solution-steps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 32px;
+    }
+
+    .step {
+      text-align: center;
+      padding: 32px 24px;
+    }
+
+    .step-number {
+      width: 56px;
+      height: 56px;
+      background: #EFF6FF;
+      border: 2px solid var(--primary);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      font-family: var(--font-heading);
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .step h3 {
+      font-family: var(--font-heading);
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 12px;
+    }
+
+    .step p {
+      font-size: 0.95rem;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    .step .hash-example {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--primary);
+      background: #F1F5F9;
+      padding: 8px 12px;
+      border-radius: 4px;
+      margin-top: 12px;
+      display: inline-block;
+      word-break: break-all;
+      border: 1px solid var(--border);
+    }
+
+    /* ═══════════════════════════════════════════════
+       TRUST SIGNALS — Badges & Verification
+       ═══════════════════════════════════════════════ */
+    .trust {
+      padding: 64px 0;
+      border-top: 1px solid var(--border);
+    }
+
+    .trust-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 24px;
+    }
+
+    .trust-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      padding: 20px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+    }
+
+    .trust-item .icon-wrap {
+      width: 40px;
+      height: 40px;
+      min-width: 40px;
+      background: #ECFDF5;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .trust-item .icon-wrap svg {
+      color: var(--security-green);
+    }
+
+    .trust-item h4 {
+      font-family: var(--font-heading);
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+
+    .trust-item p {
+      font-size: 0.85rem;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    /* ═══════════════════════════════════════════════
+       PRICING — Transparent, above fold per pattern
+       ═══════════════════════════════════════════════ */
+    .pricing {
+      padding: 80px 0;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+    }
+
+    .pricing-header {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+
+    .pricing-header h2 {
+      font-family: var(--font-heading);
+      font-size: clamp(1.75rem, 3.5vw, 2.5rem);
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 12px;
+    }
+
+    .pricing-header p {
+      font-size: 1.05rem;
+      color: var(--muted);
+    }
+
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 24px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .price-card {
+      background: var(--background);
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      padding: 40px 32px;
+      text-align: center;
+      transition: border-color var(--transition), box-shadow var(--transition);
+    }
+
+    .price-card:hover {
+      border-color: var(--primary);
+      box-shadow: 0 8px 24px rgba(30, 58, 138, 0.1);
+    }
+
+    .price-card.featured {
+      border-color: var(--primary);
+      position: relative;
+    }
+
+    .price-card.featured::before {
+      content: 'Most Popular';
+      position: absolute;
+      top: -14px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--primary);
+      color: #FFFFFF;
+      padding: 4px 16px;
+      border-radius: 100px;
+      font-size: 0.8rem;
+      font-weight: 700;
+    }
+
+    .price-card h3 {
+      font-family: var(--font-heading);
+      font-size: 1.35rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+
+    .price-amount {
+      font-family: var(--font-heading);
+      font-size: 3rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .price-amount span {
+      font-size: 1rem;
+      color: var(--muted);
+      font-weight: 400;
+    }
+
+    .price-desc {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin: 8px 0 24px;
+    }
+
+    .price-features {
+      list-style: none;
+      text-align: left;
+      margin-bottom: 32px;
+    }
+
+    .price-features li {
+      padding: 8px 0;
+      font-size: 0.95rem;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .price-features li svg {
+      color: var(--security-green);
+      min-width: 20px;
+    }
+
+    .price-card .btn-primary {
+      width: 100%;
+      justify-content: center;
+    }
+
+    /* ═══════════════════════════════════════════════
+       ROI CALLOUT
+       ═══════════════════════════════════════════════ */
+    .roi {
+      padding: 48px 0;
+      text-align: center;
+    }
+
+    .roi-box {
+      background: #EFF6FF;
+      border: 1px solid #BFDBFE;
+      border-radius: 12px;
+      padding: 32px;
+      max-width: 640px;
+      margin: 0 auto;
+    }
+
+    .roi-box p {
+      font-family: var(--font-heading);
+      font-size: 1.2rem;
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    .roi-box .highlight {
+      font-family: var(--font-mono);
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    /* ═══════════════════════════════════════════════
+       CTA — Clear path (pattern requirement)
+       ═══════════════════════════════════════════════ */
+    .cta {
+      padding: 80px 0;
+      background: var(--primary);
+      text-align: center;
+    }
+
+    .cta h2 {
+      font-family: var(--font-heading);
+      font-size: clamp(1.75rem, 3.5vw, 2.5rem);
+      font-weight: 700;
+      color: #FFFFFF;
+      margin-bottom: 16px;
+    }
+
+    .cta p {
+      font-size: 1.1rem;
+      color: #BFDBFE;
+      max-width: 520px;
+      margin: 0 auto 32px;
+    }
+
+    .cta .btn-primary {
+      background: #FFFFFF;
+      color: var(--primary);
+      font-size: 1.1rem;
+      padding: 16px 40px;
+    }
+
+    .cta .btn-primary:hover {
+      background: #F1F5F9;
+    }
+
+    /* ═══════════════════════════════════════════════
+       FOOTER
+       ═══════════════════════════════════════════════ */
+    .footer {
+      padding: 32px 0;
+      border-top: 1px solid var(--border);
+      text-align: center;
+    }
+
+    .footer p {
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    /* ═══════════════════════════════════════════════
+       RESPONSIVE — 375px, 768px, 1024px, 1440px
+       ═══════════════════════════════════════════════ */
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .hero { padding: 48px 0 40px; }
+      .hero h1 { font-size: 2rem; }
+      .hero-actions { flex-direction: column; align-items: center; }
+      .proof-stats { grid-template-columns: repeat(2, 1fr); }
+      .problem-grid { grid-template-columns: 1fr; }
+      .solution-steps { grid-template-columns: 1fr; }
+      .pricing-grid { grid-template-columns: 1fr; max-width: 400px; }
+      .trust-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══ NAVIGATION ═══ -->
+  <nav class="nav" role="navigation" aria-label="Main navigation">
+    <div class="container">
+      <a href="/" class="nav-brand" aria-label="AetherTrace home">AetherTrace</a>
+      <ul class="nav-links">
+        <li><a href="#how-it-works">How It Works</a></li>
+        <li><a href="#pricing">Pricing</a></li>
+        <li><a href="#trust">Security</a></li>
+        <li><a href="#cta" class="nav-cta">Start Protecting Evidence</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- ═══ HERO — Mission / Credibility ═══ -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-badge">
+        <i data-lucide="shield-check" style="width:16px;height:16px;"></i>
+        Integrity Infrastructure
+      </div>
+      <h1>The Evidence Was There.<br>Now Prove It.</h1>
+      <p>AetherTrace is cryptographically enforced evidence custody. Every document, photo, and log is hashed, timestamped, and chained the moment it enters the system. Tamper-evident. Court-ready. Verifiable by anyone.</p>
+      <div class="hero-actions">
+        <a href="#pricing" class="btn-primary">
+          <i data-lucide="lock" style="width:20px;height:20px;"></i>
+          Start Protecting Evidence
+        </a>
+        <a href="#how-it-works" class="btn-secondary">
+          <i data-lucide="play-circle" style="width:20px;height:20px;"></i>
+          See How It Works
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ PROOF BAR — Stats ═══ -->
+  <section class="proof" aria-label="Industry statistics">
+    <div class="container">
+      <p class="proof-label">The structural flaw AetherTrace eliminates</p>
+      <div class="proof-stats">
+        <div class="stat">
+          <div class="stat-number">$5–12B</div>
+          <div class="stat-label">Annual U.S. construction dispute costs</div>
+        </div>
+        <div class="stat">
+          <div class="stat-number">$4.1T</div>
+          <div class="stat-label">DoD assets with disclaimer audit opinions</div>
+        </div>
+        <div class="stat">
+          <div class="stat-number">70%</div>
+          <div class="stat-label">ESPC savings overstatement rate (GAO)</div>
+        </div>
+        <div class="stat">
+          <div class="stat-number">7 Years</div>
+          <div class="stat-label">Consecutive DoD audit failures</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ THE PROBLEM ═══ -->
+  <section class="problem">
+    <div class="container">
+      <div class="problem-header">
+        <h2>The Party That Does the Work Controls the Evidence</h2>
+        <p>When the same entity performs the work and controls the records of that work's quality, disputes become unprovable and accountability collapses.</p>
+      </div>
+      <div class="problem-grid">
+        <div class="problem-card">
+          <div class="icon-wrap">
+            <i data-lucide="file-warning" style="width:24px;height:24px;"></i>
+          </div>
+          <h3>Unverifiable Records</h3>
+          <p>Photos timestamped by the camera they came from. Documents saved on the same server they describe. No independent proof anything happened when claimed.</p>
+          <span class="stat-highlight">0 independent verification</span>
+        </div>
+        <div class="problem-card">
+          <div class="icon-wrap">
+            <i data-lucide="scale" style="width:24px;height:24px;"></i>
+          </div>
+          <h3>Disputes Without Evidence</h3>
+          <p>When a $30K claim goes to arbitration, the subcontractor with timestamped, hashed evidence wins. The one who "had the photos somewhere" loses.</p>
+          <span class="stat-highlight">$5–12B annual dispute costs</span>
+        </div>
+        <div class="problem-card">
+          <div class="icon-wrap">
+            <i data-lucide="building-2" style="width:24px;height:24px;"></i>
+          </div>
+          <h3>Audit Failure Cascade</h3>
+          <p>Seven consecutive years of DoD disclaimer opinions. $1B/year in remediation spending. The evidence trail is broken at the source — not the audit.</p>
+          <span class="stat-highlight">$1B/yr remediation</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ SOLUTION — How AetherTrace Works ═══ -->
+  <section class="solution" id="how-it-works">
+    <div class="container">
+      <div class="solution-header">
+        <h2>Custody Independent of Accountability</h2>
+        <p>Three steps. Cryptographic proof. No one — including AetherTrace — can alter your evidence after ingestion.</p>
+      </div>
+      <div class="solution-steps">
+        <div class="step">
+          <div class="step-number">1</div>
+          <h3>Capture</h3>
+          <p>Upload documents, photos, logs, or notes. Every file is SHA-256 hashed and immutably timestamped the instant it enters the system.</p>
+          <span class="hash-example">sha256:e3b0c44298fc1c14...</span>
+        </div>
+        <div class="step">
+          <div class="step-number">2</div>
+          <h3>Chain</h3>
+          <p>Each piece of evidence is cryptographically chained to the one before it. An append-only ledger that makes tampering mathematically detectable.</p>
+          <span class="hash-example">prev:a1b2c3 → curr:d4e5f6</span>
+        </div>
+        <div class="step">
+          <div class="step-number">3</div>
+          <h3>Verify</h3>
+          <p>Export a court-ready evidence package. Any third party can verify integrity through a public URL — no account required, no trust needed.</p>
+          <span class="hash-example">verify.aethertrace.io/pkg/abc123</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ TRUST SIGNALS ═══ -->
+  <section class="trust" id="trust">
+    <div class="container">
+      <div class="trust-grid">
+        <div class="trust-item">
+          <div class="icon-wrap">
+            <i data-lucide="hash" style="width:20px;height:20px;"></i>
+          </div>
+          <div>
+            <h4>SHA-256 Hashing</h4>
+            <p>Military-grade cryptographic hashing on every file at ingestion.</p>
+          </div>
+        </div>
+        <div class="trust-item">
+          <div class="icon-wrap">
+            <i data-lucide="link" style="width:20px;height:20px;"></i>
+          </div>
+          <div>
+            <h4>Append-Only Ledger</h4>
+            <p>Evidence chain cannot be rewritten. Every entry links to the previous hash.</p>
+          </div>
+        </div>
+        <div class="trust-item">
+          <div class="icon-wrap">
+            <i data-lucide="hard-drive" style="width:20px;height:20px;"></i>
+          </div>
+          <div>
+            <h4>Write-Once Storage</h4>
+            <p>Files cannot be overwritten or deleted — at the application and bucket level.</p>
+          </div>
+        </div>
+        <div class="trust-item">
+          <div class="icon-wrap">
+            <i data-lucide="globe" style="width:20px;height:20px;"></i>
+          </div>
+          <div>
+            <h4>Public Verification</h4>
+            <p>Anyone can verify evidence integrity without an account or authentication.</p>
+          </div>
+        </div>
+        <div class="trust-item">
+          <div class="icon-wrap">
+            <i data-lucide="file-text" style="width:20px;height:20px;"></i>
+          </div>
+          <div>
+            <h4>Court-Ready Export</h4>
+            <p>PDF + ZIP bundle designed to be understood by a non-technical attorney.</p>
+          </div>
+        </div>
+        <div class="trust-item">
+          <div class="icon-wrap">
+            <i data-lucide="shield" style="width:20px;height:20px;"></i>
+          </div>
+          <div>
+            <h4>Zero-Modify Access</h4>
+            <p>AetherTrace itself cannot alter evidence. Custody is enforced, not promised.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ PRICING ═══ -->
+  <section class="pricing" id="pricing">
+    <div class="container">
+      <div class="pricing-header">
+        <h2>Transparent Pricing. No Trial. No Guessing.</h2>
+        <p>Payment before custody begins. Your evidence deserves commitment, not a free tier.</p>
+      </div>
+      <div class="pricing-grid">
+        <div class="price-card">
+          <h3>Professional</h3>
+          <div class="price-amount">$199<span>/mo</span></div>
+          <p class="price-desc">Up to 5 active projects</p>
+          <ul class="price-features">
+            <li><i data-lucide="check" style="width:20px;height:20px;"></i> SHA-256 hashing on all evidence</li>
+            <li><i data-lucide="check" style="width:20px;height:20px;"></i> Append-only custody ledger</li>
+            <li><i data-lucide="check" style="width:20px;height:20px;"></i> Court-ready evidence export</li>
+            <li><i data-lucide="check" style="width:20px;height:20px;"></i> Public verification URLs</li>
+            <li><i data-lucide="check" style="width:20px;height:20px;"></i> Role-based access controls</li>
+          </ul>
+          <a href="#" class="btn-primary">Start Protecting Evidence</a>
+        </div>
+        <div class="price-card featured">
+          <h3>Enterprise</h3>
+          <div class="price-amount">$499<span>/mo</span></div>
+          <p class="price-desc">Unlimited active projects</p>
+          <ul class="price-features">
+            <li><i data-lucide="check" style="width:20px;height:20px;"></i> Everything in Professional</li>
+            <li><i data-lucide="check" style="width:20px;height:20px;"></i> Unlimited projects</li>
+            <li><i data-lucide="check" style="width:20px;height:20px;"></i> Priority support</li>
+            <li><i data-lucide="check" style="width:20px;height:20px;"></i> Team member accounts</li>
+            <li><i data-lucide="check" style="width:20px;height:20px;"></i> Custom export templates</li>
+          </ul>
+          <a href="#" class="btn-primary">Start Protecting Evidence</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ ROI CALLOUT ═══ -->
+  <section class="roi">
+    <div class="container">
+      <div class="roi-box">
+        <p>One lost <span class="highlight">$30,000</span> claim pays for <span class="highlight">12+ years</span> of AetherTrace at $199/mo.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ FINAL CTA ═══ -->
+  <section class="cta" id="cta">
+    <div class="container">
+      <h2>Evidence Doesn't Protect Itself</h2>
+      <p>Start capturing cryptographically verifiable evidence today. Setup takes minutes. Protection lasts forever.</p>
+      <a href="#" class="btn-primary">
+        <i data-lucide="shield-check" style="width:20px;height:20px;"></i>
+        Begin Evidence Custody
+      </a>
+    </div>
+  </section>
+
+  <!-- ═══ FOOTER ═══ -->
+  <footer class="footer">
+    <div class="container">
+      <p>&copy; 2026 AetherTrace. Integrity Infrastructure.</p>
+    </div>
+  </footer>
+
+  <!-- Initialize Lucide icons -->
+  <script>lucide.createIcons();</script>
+
+</body>
+</html>

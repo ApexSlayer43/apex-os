@@ -69,3 +69,36 @@ Standing Order: For any AetherTrace UI work, run the design system search BEFORE
 
 PRISM Override
 When PRISM activates, read Aethertrace/ui-ux-pro-max/PRISM-OVERRIDE.md BEFORE using PRISM's built-in inline data. The override file connects PRISM to the full search engine (161 reasoning rules, 67+ styles, 161 palettes, 57 font pairings) and changes PRISM's output format to include implementation-ready specs (CSS variables, design tokens, component specs) that ANVIL can build from directly without guessing. PRISM's inline data (20 palettes, 20 fonts, 12 styles) is the fallback only.
+
+
+## CRITICAL UPDATE — March 23, 2026: AetherTrace is Truth Infrastructure, Not SaaS
+All previous references to AetherTrace as a SaaS product are superseded. AetherTrace is a protocol layer — like TCP/IP or HTTPS — that makes verifiable reality possible. "Customers" is SaaS language. "Adopters" is infrastructure language. All copy, GTM, build decisions, and positioning must reflect this.
+
+## Business Architecture — One Engine, Three Paths
+One core engine (SHA-256 hashing, cryptographic chaining, immutable timestamps, public verification). Three revenue paths. Diagram: Aethertrace/AetherTrace-Architecture-v2.html
+
+Path A: Write Access (Commercial)
+Commercial subcontractors pay $199/mo to write evidence to the chain. Output: court-ready evidence packages (PDF + ZIP + public verification URL). Entry point: subs who've been burned by GCs controlling documentation. Construction is the first domain the protocol runs in — not the product itself. Construction is to AetherTrace what email was to ARPANET.
+
+Path B: Write Access (Federal)
+Casey as SDVOSB Trustee. Federal projects at CMMC/audit compliance standards. $90K–320K per project. Output: audit-ready evidence packages. Entry points: ESPC evidence custody (19 ESCOs on DOE IDIQ), OTA/SBIR pathway, DoD audit deadline Dec 2028. This is the government legitimacy anchor.
+
+Path D: Intelligence Access (AI Reconstruction)
+AI reconstructs reality from the chain on command. Every claim traceable to a hash + timestamp. Consumers: attorneys ($10K–50K per report, months to minutes), expert witnesses, insurers (claim verification), bonding companies (contractor risk profiles), lenders (evidence-backed due diligence). Path D is what makes Paths A and B more valuable — subs aren't just documenting, they're building a dataset an AI can reconstruct into a court-ready narrative at any time. Path C (raw read access) was absorbed into Path D — nobody pays to read raw chain data, they pay for intelligence derived from it.
+
+## Infrastructure Playbook (VIGIL Intel — How Real Infrastructure Gets Shipped)
+Seven patterns extracted from TCP/IP, HTTPS, PDF, Stripe, FICO, and double-entry bookkeeping:
+1. A crisis makes the problem undeniable (AetherTrace: $4.1T unauditable DoD assets, Dec 2028 deadline)
+2. Verification is free, creation is where value flows (public verification URL = free; custody = paid)
+3. Government adoption is the legitimacy anchor (Path B federal pathway)
+4. Target the builders, not the buyers (subs adopt first, GCs follow)
+5. Make the alternative look primitive (self-custodied evidence = letting the evaluated control the evaluation)
+6. Standard gets adopted then formalized, not the other way around (become the standard through adoption)
+7. Simplicity wins every time (one function, one protocol)
+
+## Subcontractor Field Intelligence (VIGIL Dossier — March 2026)
+The Structural Trap: When subs enter documentation into a GC's system (Procore, PlanGrid), the GC owns that data. In a dispute, the GC can and will revoke the sub's access to their own evidence.
+Key stat: Average U.S. construction dispute value $60.1M (Arcadis 2025). Industry bleeds $4–12B/yr in dispute transaction costs. Average resolution: 12.5 months.
+Current workarounds: Excel/paper (no chain of custody), GC's platform (GC owns it), duplicate entry (eSub), or nothing at all.
+AetherTrace entry point: "Your evidence. Your custody. Mathematically unalterable. The GC can't revoke what they never controlled."
+Reach channels: ASA chapter meetings (3,500+ member cos), ABC Convention, World of Concrete, LCI Congress, ContractorTalk.com, Reddit trade subs, construction YouTube influencers.

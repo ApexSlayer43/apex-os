@@ -84,3 +84,48 @@ Priority order based on battle drill position (AetherTrace build):
 
 ## Status
 Findings documented. Awaiting Casey's decision on fix approach before upgrading skills.
+
+
+---
+
+## Resolution — Completed 2026-03-23
+
+All 8 agent skills upgraded with:
+1. **Step 0: Load References** — mandatory read of reference files before any work
+2. **Connected MCP Tools** — Supabase, Vercel, Figma, 21st.dev, Obsidian, Chrome, WebSearch, Scheduled Tasks mapped to relevant skills
+3. **Connected Plugin Skills** — 15 personal plugins mapped to agent skills with specific function-level guidance
+
+### Upgrade Summary
+
+| Skill | References | MCPs | Plugin Skills | Status |
+|-------|-----------|------|---------------|--------|
+| ANVIL | `build-patterns.md` | Supabase, Vercel, 21st.dev | Engineering (6), Design (2), Data (3) | INSTALLED |
+| PRISM | Inline palettes/fonts/styles | Figma, 21st.dev | Design (7), Brand voice (1) | INSTALLED |
+| FORGE | `scope-patterns.md`, `stack-decision-guide.md` | Supabase, Vercel, Figma | Engineering (3), PM (2) | INSTALLED |
+| SCRIBE | `story-bank.md`, `voice-examples.md` | Obsidian | Marketing (2), Brand voice (1) | INSTALLED |
+| SENTINEL | `decision-architecture.md`, `team-protocols.md`, `business-archetypes.md` | Obsidian, Scheduled Tasks | PM (3), Operations (4), Productivity (2), Enterprise Search (2), Legal (2), Sales (1), Common Room (1) | INSTALLED |
+| VIGIL | `research-sources.md`, `validation-frameworks.md` | Chrome, WebSearch, WebFetch | Sales (2), Marketing (2), PM (2), Enterprise Search (2), Apollo (2), Common Room (2), Data (2), Legal (1) | INSTALLED |
+| BEACON | `channel-guide.md`, `copy-templates.md` | Vercel, Chrome, WebSearch | Marketing (7), Sales (4), Brand voice (1), Apollo (2), Common Room (2), Data (2) | INSTALLED |
+| HELIOS | `scamper-guide.md`, `blue-ocean-canvas.md`, `order-of-effects.md` | Chrome, WebSearch | PM (1), Marketing (1), Enterprise Search (2), Common Room (1) | INSTALLED |
+
+### Decisions Made
+- [x] Approved Step 0 pattern for all skills
+- [x] PRISM data access: Inline critical data (20 palettes, 20 font pairings, 12 styles)
+- [x] Fix timing: Upgraded all 8 skills in one session
+- [x] Plugin mapping: All 15 personal plugins mapped to relevant skills with function-level guidance
+
+
+---
+
+## Verification — Completed 2026-03-23
+
+All 8 skills verified via automated grep of installed SKILL.md files:
+
+- Every skill has exactly 1 `Step 0:` section
+- Every skill has exactly 1 `Connected MCP Tools` section
+- Every skill has exactly 1 `Connected Plugin Skills` section
+- PRISM has 6 `INLINE DESIGN DATA` sections (palettes, fonts, styles)
+- Plugin counts match approved mapping
+- MCP assignments match approved mapping
+
+**Status: COMPLETE. All skills upgraded and verified.**

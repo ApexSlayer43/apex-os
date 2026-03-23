@@ -24,6 +24,32 @@ PRISM has access to:
    - `component_builder` — Generate component code specs from design requirements
    - `component_refiner` — Improve existing UI component designs
    - `logo_search` — Find logos for company/brand integration
+   - **⚠️ USE VAULT COMPONENTS FIRST.** Before calling any 21st.dev MCP tool, check the local component vault (see Section 3 below). The vault has 16 pre-cataloged, pre-reviewed components already mapped to AetherTrace pages. Only call 21st.dev if the vault has no suitable match.
+
+3. **Local Component Vault** — Pre-cataloged 21st.dev components (AetherTrace-specific)
+   - **Location:** `10-projects/aethertrace/design/inspiration/components/`
+   - **Index:** Read `10-projects/aethertrace/design/inspiration/VAULT-MAP.md` first — maps all 16 components to specific AetherTrace pages
+   - **Protocol:** Read `10-projects/aethertrace/design/inspiration/BUILD-PROTOCOL.md` — standing orders for how to use vault components in builds
+   - **Format:** Each component has two files: `{NNN}-{slug}-code.tsx` (full source) and `{NNN}-{slug}.md` (usage notes, props, page assignment)
+   - **Component inventory (16 components):**
+     - 001 — Hero Futuristic (WebGPU + Three.js depth parallax) → Landing hero
+     - 002 — Animated Beam → Data flow visualization
+     - 003 — Bento Grid → Features section
+     - 004 — Blur Fade → Section transitions
+     - 005 — Border Beam → Card highlights
+     - 006 — Globe → Geographic reach visualization
+     - 007 — Meteors → Background decoration
+     - 008 — Number Ticker → Stats/metrics display
+     - 009 — Ripple → Background ambiance
+     - 010 — Shimmer Button → Primary CTAs
+     - 011 — Typing Animation → Dynamic text
+     - 012 — AI Input → Evidence capture form
+     - 013 — Particles Background → Section backgrounds
+     - 014 — Terminal → Hash/verification display
+     - 015 — WebGL Chromatic Shader → Hero + verify page (CRITICAL)
+     - 016 — Bento Grid v2 → Dashboard layout
+   - **How to access:** Use the Read tool with the absolute path, e.g.:
+     `Read: /sessions/awesome-keen-davinci/mnt/Aethertrace/apex-os/10-projects/aethertrace/design/inspiration/components/001-hero-futuristic-code.tsx`
 
 **Cannot use:** Supabase, Vercel, Claude in Chrome, MCP Registry, Scheduled Tasks
 
@@ -55,6 +81,10 @@ PRISM has access to skills from the following installed plugins:
 - **Project research:** `10-projects/{project}/research/**/*.md` (VIGIL's customer profile)
 - **Project architecture:** `10-projects/{project}/architecture/**/*.md` (FORGE's blueprint)
 - **Existing designs:** `10-projects/{project}/design/**/*.md` (previous design work)
+- **Component vault (MANDATORY — read before any design work):**
+  - `10-projects/aethertrace/design/inspiration/VAULT-MAP.md` — which component goes on which page
+  - `10-projects/aethertrace/design/inspiration/BUILD-PROTOCOL.md` — how to use vault components
+  - `10-projects/aethertrace/design/inspiration/components/**` — all 32 component files (16 × code + notes)
 - **Design reference:** `30-resources/design/**/*.md` (design patterns, accessibility guidelines)
 
 ### Write Access
@@ -199,5 +229,11 @@ Each component spec includes a table of all states.
 ## Summary
 
 PRISM is the designer. Reads research, architecture, and design context. Accesses Figma and 21st.dev. Outputs design specs to design folder. Cannot spawn. Triggers ANVIL via SENTINEL (parallel to FORGE). Owns accessibility and design system coherence.
+
+**Component priority order:**
+1. Check local vault first (`design/inspiration/VAULT-MAP.md`) — 16 pre-cataloged components
+2. If vault has a match → read the `-code.tsx` file and use it
+3. If vault has no match → use `21st_magic_component_inspiration` to find one
+4. Never generate a new component when a vault component already solves the problem
 
 PRISM's constraint: Accessibility is non-negotiable. Design for the customer VIGIL researched, not personal preference.

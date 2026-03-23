@@ -463,8 +463,8 @@ ANVIL executes in this order. Each phase has a clear "done" gate.
 **Files:** `app/api/plan/`, `app/api/evidence/`, `app/api/custody/`, `app/api/completeness/`, `app/api/verify/`
 
 ### Phase 4: Evidence Package Export (Week 3-4)
-**What:** Generate PDF + ZIP bundle from a project's evidence chain. PDF includes: project summary, evidence inventory, full custody log with timestamps and hashes, chain verification status, instructions for third-party verification.
-**Done gate:** Export produces a ZIP containing: evidence_package.pdf, all original files, chain_verification.json, README.txt explaining how to verify independently.
+**What:** Generate PDF + ZIP bundle from a project's evidence chain. PDF includes: custody plan (what was supposed to be custodied), completeness report (X of Y requirements fulfilled with status of each), evidence inventory, full custody log with timestamps and hashes, chain verification status, instructions for third-party verification.
+**Done gate:** Export produces a ZIP containing: evidence_package.pdf (with custody plan + completeness report), all original files, chain_verification.json, custody_plan.json, README.txt explaining how to verify independently. An attorney or auditor can see: "22 items were planned. 22 items were custodied. Chain is intact."
 **Files:** `app/api/export/`, `lib/package-generator.ts`
 
 ### Phase 5: Stripe Integration (Week 4)
@@ -513,14 +513,15 @@ ANVIL executes in this order. Each phase has a clear "done" gate.
 - Loading state design
 - Test framework (Vitest recommended)
 
-**Definition of done:** A person who has never seen AetherTrace can visit the production URL, pay $199, create a project, upload 3 pieces of evidence, view the custody chain, export an evidence package, and send a verification URL to someone who confirms the evidence is intact. That person does not need to understand cryptography. They need to understand the output.
+**Definition of done:** A person who has never seen AetherTrace can visit the production URL, pay $199, create a project, define a custody plan with 5 evidence requirements, upload evidence against those requirements, see a completeness dashboard showing 3 of 5 fulfilled, view the custody chain, export an evidence package that includes the plan + completeness report + hash chain, and send a verification URL to someone who confirms the evidence is intact. That person does not need to understand cryptography. They need to understand: "This is what was supposed to be custodied. This is what was custodied. The chain is intact."
 
 ## Handoff to SENTINEL
 
-Blueprint complete. Stack decided. Scope locked.
+Blueprint complete. Stack decided. Scope locked. Trustee function integrated.
 MVP build time: 6 weeks, solo.
 Architecturally significant decisions: 5 — all resolved.
 Biggest build risk: evidence package export (PDF generation in serverless).
 Domain-agnostic engine confirmed — zero backend changes needed for Path B.
+Key addition: Custody Plan + Evidence Requirements — transforms AetherTrace from a filing cabinet into a custody service. The plan defines what gets custodied BEFORE work begins. This is what Casey sells on Path B.
 
 Sentinel — ANVIL can activate with this brief attached. The first commit is `lib/hash-chain.ts`.

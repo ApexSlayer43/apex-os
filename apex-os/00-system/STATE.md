@@ -111,3 +111,27 @@ Design inspiration vault fully cataloged and ready for PRISM activation.
 - `CLAUDE.md` (vault root) updated with SESSION START PROTOCOL — every session now has standing order to read apex-os STATE.md + CONSTITUTION.md before any work
 - ops-check skill is read-only (system restriction) — CLAUDE.md update covers this gap
 - apex-os fully explored and mapped — vault structure understood end-to-end
+
+## Vault Reorganization Complete (2026-03-23)
+
+AetherTrace is now a proper project inside Apex OS. All planning files moved into `apex-os/10-projects/aethertrace/`. Vault root is clean.
+
+**Moves executed:**
+- `design-inspiration/` → `apex-os/10-projects/aethertrace/design/inspiration/`
+- `battle-drill-1 through 15` (HTML + JSX) → `apex-os/10-projects/aethertrace/research/battle-drills/`
+- `AETHERTRACE-UI-PROMPT.md` → `apex-os/10-projects/aethertrace/design/`
+- `AetherTrace-Architecture-v2.html` → `apex-os/10-projects/aethertrace/architecture/`
+- `AetherTrace-Team-Presentation.pptx` → `apex-os/10-projects/aethertrace/`
+- Design previews (v1–v5) → `apex-os/10-projects/aethertrace/design/previews/`
+
+**Stays at vault root (code — not moved):**
+- `aethertrace-mvp/` — live Next.js build
+- `aethertrace/` — early scaffold archive
+- `ui-ux-pro-max/` — PRISM engine (Python scripts, path-sensitive)
+
+**New files created:**
+- `apex-os/10-projects/aethertrace/_index.md` — full project hub with battle drill status, PRISM checklist, Dataview queries
+- `apex-os/10-projects/aethertrace/build/_index.md` — stack reference, codebase map, MVP scope
+- `CLAUDE.md` updated with vault structure map and session protocol
+
+**Vault root now contains only:** CLAUDE.md, Welcome.md, setup script, skill files, and the three code directories.

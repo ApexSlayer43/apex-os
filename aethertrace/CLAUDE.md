@@ -26,3 +26,13 @@ Design Engine Override Log:
 - Fuego Crate: Overrode engine palettes → custom fire reds (too safe for hot sauce).
 - Ironclad: Accepted Trust & Authority (correct for legal services under duress).
 - Obsidian Sound: Overrode Vibrant & Block-based → Modern Dark Cinema (startup energy ≠ premium studio). Overrode Inter/Inter → Space Grotesk + DM Sans + JetBrains Mono (too flat for creative business).
+
+
+### Round 2 — Expert Level (Completed March 23, 2026)
+| # | File | Business | Style | Font Stack | Palette | Key Craft |
+|---|------|----------|-------|-----------|---------|-----------|
+| 6 | battle-drill-6-obsidian.html | Obsidian Sound — recording studio, Nashville | Modern Dark Cinema | Space Grotesk + DM Sans + JetBrains Mono | Void #050506 + Amber #D4A853 + Indigo #5E6AD2 | Film grain, ambient light blobs, waveform animations, VU meters, glassmorphic nav, equipment ticker |
+| 7 | battle-drill-7-noctis.html | Noctis — stargazing, New Mexico | Cosmic Editorial | Bodoni Moda (italic) + Outfit | Void #020210 + Indigo #6366F1 + Violet #7C3AED + Gold #C9A84C | 200-star procedural field, triple nebula system, animated orrery, constellation SVG, CTA fill animation |
+| 8 | battle-drill-8-koen.html | Kōen — botanical wellness spa | Radical Ma (間) Minimalism | Fraunces + Libre Franklin + native kanji | Washi #FAF8F3 + Sumi #1A1814 + Matcha #6B7F5E | Fixed vertical Japanese text, ghost kanji, SVG botanical art, CSS zen garden with ripples, ink brush dividers |
+| 9 | battle-drill-9-volt.html | VOLT — boxing gym, Brooklyn | Neo-Brutalist Industrial | Barlow Condensed + Space Mono | Concrete #1A1A1A + Caution #FACC15 + Blood #DC2626 | Zero border-radius, grain texture, diagonal clip-path, caution ticker, industrial nav, schedule grid, fight records |
+| 10 | battle-drill-10-terroir.html | Terroir & Thread — farm-to-table + textile | Broken Editorial Magazine | DM Serif Display + Source Serif 4 + IBM Plex Mono | Cream #FAF7F2 + Terracotta #9A3412 + Sage #5F6F52 + Earth #2C1810 | Drop cap, full-bleed pull quote, woven CSS texture, overlap bridging block, staggered offset cards, all-serif body, extreme type scale |

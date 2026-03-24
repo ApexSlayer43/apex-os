@@ -1,0 +1,1022 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AetherTrace — Neutral Evidence Trustee</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Instrument+Serif:ital@0;1&family=IBM+Plex+Mono:wght@300;400;500&family=Inter:wght@300;400&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --void:   #02050B;
+  --navy:   #06101E;
+  --navy2:  #081422;
+  --rim:    #163058;
+  --dim:    #284870;
+  --slo:    #486080;
+  --smid:   #7AAAC8;
+  --shi:    #B8D4EE;
+  --pure:   #DCF0FF;
+  --white:  #FFFFFF;
+  --glow:   #7EB8F7;
+  --glowc:  #B8D4FF;
+
+  --f-display:  'Bebas Neue', sans-serif;
+  --f-serif:    'Instrument Serif', Georgia, serif;
+  --f-sans:     'Inter', system-ui, sans-serif;
+  --f-mono:     'IBM Plex Mono', monospace;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--void);
+  color: var(--shi);
+  font-family: var(--f-sans);
+  overflow-x: hidden;
+}
+
+/* Dot grid */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image: radial-gradient(rgba(22,48,88,0.14) 1px, transparent 1px);
+  background-size: 32px 32px;
+  pointer-events: none; z-index: 0;
+}
+
+/* ═══════════════════════════
+   NAV
+═══════════════════════════ */
+nav {
+  position: fixed; top: 0; left: 0; right: 0;
+  z-index: 100;
+  padding: 24px 56px;
+  display: flex; align-items: center; justify-content: space-between;
+  background: linear-gradient(180deg, rgba(2,5,11,0.92) 0%, transparent 100%);
+  backdrop-filter: blur(8px);
+}
+
+.nav-logo {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 22px; letter-spacing: 6px;
+  color: var(--white); text-decoration: none;
+  text-shadow: 0 0 30px rgba(200,220,255,0.15);
+}
+
+.nav-links {
+  display: flex; gap: 40px; list-style: none;
+}
+.nav-links a {
+  font-family: var(--f-sans);
+  font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--slo); text-decoration: none;
+  transition: color 0.2s;
+}
+.nav-links a:hover { color: var(--shi); }
+
+.nav-cta {
+  font-family: var(--f-sans);
+  font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--glowc);
+  border: 1px solid rgba(184,212,255,0.2);
+  padding: 10px 22px; text-decoration: none;
+  transition: all 0.25s;
+}
+.nav-cta:hover {
+  border-color: rgba(184,212,255,0.45);
+  color: var(--white);
+  background: rgba(184,212,255,0.04);
+}
+
+/* ═══════════════════════════
+   HERO
+═══════════════════════════ */
+.hero {
+  min-height: 100vh;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 120px 40px 80px;
+  position: relative; overflow: hidden;
+}
+
+/* Deep ambient glow */
+.hero::after {
+  content: '';
+  position: absolute; top: 30%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80vw; height: 60vh;
+  background: radial-gradient(ellipse, rgba(126,184,247,0.025) 0%, transparent 70%);
+  pointer-events: none; z-index: 0;
+}
+
+.hero-mark {
+  position: relative; z-index: 1;
+  width: 100%; max-width: 1000px;
+  opacity: 0;
+  animation: fadeUp 1s ease forwards 0.2s;
+}
+
+.hero-tagline {
+  position: relative; z-index: 1;
+  margin-top: 52px;
+  text-align: center;
+  opacity: 0;
+  animation: fadeUp 0.8s ease forwards 1s;
+}
+.hero-tagline h1 {
+  font-family: var(--f-serif);
+  font-size: clamp(22px, 3vw, 36px);
+  letter-spacing: -0.01em;
+  color: var(--pure);
+  font-weight: 400;
+  line-height: 1.35;
+  max-width: 640px;
+  margin: 0 auto;
+}
+.hero-tagline h1 em {
+  font-style: italic;
+  color: var(--white);
+}
+
+.hero-body {
+  position: relative; z-index: 1;
+  margin-top: 32px; text-align: center;
+  max-width: 480px;
+  opacity: 0;
+  animation: fadeUp 0.8s ease forwards 1.2s;
+}
+.hero-body p {
+  font-family: var(--f-mono);
+  font-size: 11px; line-height: 2;
+  color: var(--slo); letter-spacing: 0.04em;
+}
+
+.hero-actions {
+  position: relative; z-index: 1;
+  margin-top: 52px;
+  display: flex; align-items: center; gap: 32px;
+  opacity: 0;
+  animation: fadeUp 0.8s ease forwards 1.4s;
+}
+
+.btn-primary {
+  font-family: var(--f-sans);
+  font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--void);
+  background: var(--white);
+  padding: 16px 36px; text-decoration: none;
+  transition: all 0.25s;
+  box-shadow: 0 0 40px rgba(184,212,255,0.12);
+}
+.btn-primary:hover {
+  background: var(--glowc);
+  box-shadow: 0 0 60px rgba(184,212,255,0.25);
+}
+
+.btn-ghost {
+  font-family: var(--f-sans);
+  font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--slo); text-decoration: none;
+  display: flex; align-items: center; gap: 8px;
+  transition: color 0.2s;
+}
+.btn-ghost:hover { color: var(--shi); }
+.btn-ghost::after { content: '→'; transition: transform 0.2s; }
+.btn-ghost:hover::after { transform: translateX(4px); }
+
+/* Scroll hint */
+.hero-scroll {
+  position: absolute; bottom: 40px; left: 50%;
+  transform: translateX(-50%);
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  opacity: 0;
+  animation: fadeIn 1s ease forwards 2s;
+}
+.scroll-line {
+  width: 1px; height: 36px;
+  background: linear-gradient(180deg, transparent, var(--rim));
+  animation: scrollPulse 2s ease-in-out infinite;
+}
+.scroll-text {
+  font-family: var(--f-sans);
+  font-size: 8px; letter-spacing: 0.28em;
+  color: var(--rim); text-transform: uppercase;
+}
+
+/* ═══════════════════════════
+   SECTION SHARED
+═══════════════════════════ */
+section {
+  position: relative; z-index: 1;
+  padding: 140px 56px;
+}
+
+.section-eye {
+  font-family: var(--f-sans);
+  font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase;
+  color: var(--glow); margin-bottom: 56px;
+  display: flex; align-items: center; gap: 14px;
+}
+.section-eye::before {
+  content: '';
+  width: 28px; height: 1px;
+  background: var(--glow);
+  box-shadow: 0 0 6px var(--glow);
+}
+
+/* ═══════════════════════════
+   SECTION: THE PROBLEM
+═══════════════════════════ */
+.problem {
+  border-top: 1px solid rgba(22,48,88,0.2);
+}
+
+.problem-statement {
+  font-family: var(--f-serif);
+  font-size: clamp(32px, 4.5vw, 56px);
+  font-weight: 400; line-height: 1.2;
+  color: var(--pure); letter-spacing: -0.02em;
+  max-width: 800px; margin-bottom: 80px;
+}
+.problem-statement em {
+  font-style: italic; color: var(--white);
+}
+
+.problem-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: rgba(22,48,88,0.2);
+}
+
+.problem-cell {
+  background: var(--void);
+  padding: 48px 40px;
+  position: relative;
+  transition: background 0.3s;
+}
+.problem-cell:hover { background: var(--navy); }
+.problem-cell-num {
+  font-family: var(--f-sans);
+  font-size: 9px; letter-spacing: 0.2em;
+  color: var(--rim); margin-bottom: 24px;
+  text-transform: uppercase;
+}
+.problem-cell h3 {
+  font-family: var(--f-serif);
+  font-size: 18px; font-weight: 400;
+  color: var(--pure); margin-bottom: 16px;
+  line-height: 1.35; letter-spacing: -0.01em;
+}
+.problem-cell p {
+  font-family: var(--f-mono);
+  font-size: 11px; line-height: 1.9;
+  color: var(--slo); letter-spacing: 0.02em;
+}
+.problem-cell p strong { color: var(--smid); font-weight: 400; }
+
+/* ═══════════════════════════
+   SECTION: THE ROLE
+═══════════════════════════ */
+.role {
+  border-top: 1px solid rgba(22,48,88,0.2);
+}
+
+.role-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px; align-items: start;
+}
+
+.role-left h2 {
+  font-family: var(--f-serif);
+  font-size: clamp(32px, 4vw, 52px);
+  font-weight: 400; color: var(--pure);
+  line-height: 1.15; letter-spacing: -0.02em;
+  margin-bottom: 32px;
+}
+.role-left h2 em { font-style: italic; color: var(--white); }
+
+.role-left p {
+  font-family: var(--f-mono);
+  font-size: 11px; line-height: 2;
+  color: var(--slo); letter-spacing: 0.03em;
+  margin-bottom: 16px;
+}
+
+.role-principles {
+  display: flex; flex-direction: column;
+  border-top: 1px solid rgba(22,48,88,0.2);
+  margin-top: 8px;
+}
+.principle {
+  padding: 24px 0;
+  border-bottom: 1px solid rgba(22,48,88,0.2);
+  display: grid; grid-template-columns: 32px 1fr;
+  gap: 18px; align-items: start;
+}
+.principle-num {
+  font-family: var(--f-sans);
+  font-size: 9px; letter-spacing: 0.15em;
+  color: var(--rim); padding-top: 3px;
+}
+.principle h4 {
+  font-family: var(--f-serif);
+  font-size: 16px; font-weight: 400;
+  color: var(--shi); margin-bottom: 8px;
+  letter-spacing: -0.01em;
+}
+.principle p {
+  font-family: var(--f-mono);
+  font-size: 11px; line-height: 1.85;
+  color: var(--slo); letter-spacing: 0.02em;
+}
+
+/* ═══════════════════════════
+   SECTION: EVERY LEVEL
+═══════════════════════════ */
+.levels {
+  border-top: 1px solid rgba(22,48,88,0.2);
+  padding-bottom: 0;
+}
+
+.levels-head {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 80px; align-items: end; margin-bottom: 72px;
+}
+.levels-head h2 {
+  font-family: var(--f-serif);
+  font-size: clamp(32px, 4vw, 52px);
+  font-weight: 400; color: var(--pure);
+  line-height: 1.15; letter-spacing: -0.02em;
+}
+.levels-head h2 em { font-style: italic; color: var(--white); }
+.levels-head p {
+  font-family: var(--f-mono);
+  font-size: 11px; line-height: 2;
+  color: var(--slo); letter-spacing: 0.03em;
+}
+
+.levels-stack {
+  display: flex; flex-direction: column;
+  gap: 1px;
+  background: rgba(22,48,88,0.2);
+}
+
+.level-row {
+  background: var(--void);
+  display: grid;
+  grid-template-columns: 180px 1fr 1fr;
+  transition: background 0.25s;
+  position: relative;
+}
+.level-row::before {
+  content: '';
+  position: absolute; left: 0; top: 0; bottom: 0;
+  width: 2px; background: transparent;
+  transition: background 0.25s, box-shadow 0.25s;
+}
+.level-row:hover { background: var(--navy); }
+.level-row:hover::before {
+  background: var(--glow);
+  box-shadow: 0 0 8px var(--glow);
+}
+
+.level-id {
+  padding: 36px 36px;
+  border-right: 1px solid rgba(22,48,88,0.2);
+  display: flex; flex-direction: column;
+  justify-content: center; gap: 6px;
+}
+.level-role {
+  font-family: var(--f-sans);
+  font-size: 8px; letter-spacing: 0.22em;
+  color: var(--rim); text-transform: uppercase;
+}
+.level-name {
+  font-family: var(--f-serif);
+  font-size: 20px; font-weight: 400;
+  color: var(--pure); letter-spacing: -0.01em;
+}
+
+.level-pain {
+  padding: 36px 36px;
+  border-right: 1px solid rgba(22,48,88,0.2);
+  display: flex; align-items: center;
+}
+.level-pain p {
+  font-family: var(--f-mono);
+  font-size: 11px; line-height: 1.85;
+  color: var(--slo); letter-spacing: 0.02em;
+}
+.level-pain strong { color: var(--smid); font-weight: 400; }
+
+.level-promise {
+  padding: 36px 36px;
+  display: flex; align-items: center;
+}
+.level-promise p {
+  font-family: var(--f-serif);
+  font-size: 15px; line-height: 1.6;
+  color: var(--shi); letter-spacing: -0.01em;
+  font-style: italic;
+}
+
+/* ═══════════════════════════
+   SECTION: HOW IT WORKS
+═══════════════════════════ */
+.how {
+  border-top: 1px solid rgba(22,48,88,0.2);
+}
+
+.how-head {
+  max-width: 560px; margin-bottom: 80px;
+}
+.how-head h2 {
+  font-family: var(--f-serif);
+  font-size: clamp(32px, 4vw, 52px);
+  font-weight: 400; color: var(--pure);
+  line-height: 1.15; margin-bottom: 24px; letter-spacing: -0.02em;
+}
+.how-head p {
+  font-family: var(--f-mono);
+  font-size: 11px; line-height: 2;
+  color: var(--slo); letter-spacing: 0.03em;
+}
+
+.how-steps {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 1px; background: rgba(22,48,88,0.2);
+}
+.how-step {
+  background: var(--void);
+  padding: 48px 36px;
+  position: relative;
+  transition: background 0.25s;
+}
+.how-step:hover { background: var(--navy); }
+.how-step-num {
+  font-family: var(--f-sans);
+  font-size: 9px; letter-spacing: 0.2em;
+  color: var(--glow); margin-bottom: 20px;
+  text-transform: uppercase;
+}
+.how-step h3 {
+  font-family: var(--f-serif);
+  font-size: 17px; font-weight: 400;
+  color: var(--pure); margin-bottom: 14px;
+  line-height: 1.3; letter-spacing: -0.01em;
+}
+.how-step p {
+  font-family: var(--f-mono);
+  font-size: 11px; line-height: 1.9;
+  color: var(--slo); letter-spacing: 0.02em;
+}
+
+/* ═══════════════════════════
+   SECTION: NUMBERS
+═══════════════════════════ */
+.numbers {
+  border-top: 1px solid rgba(22,48,88,0.2);
+  padding: 0;
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 1px; background: rgba(22,48,88,0.2);
+}
+.number-cell {
+  background: var(--void);
+  padding: 80px 56px;
+}
+.number-val {
+  font-family: var(--f-display);
+  font-size: 72px; letter-spacing: 2px;
+  color: var(--white); line-height: 1;
+  margin-bottom: 20px;
+  text-shadow: 0 0 40px rgba(184,212,255,0.08);
+}
+.number-label strong {
+  font-family: var(--f-serif);
+  display: block;
+  font-size: 15px; font-weight: 400;
+  color: var(--shi); margin-bottom: 8px;
+  letter-spacing: -0.01em;
+}
+.number-label span {
+  font-family: var(--f-mono);
+  font-size: 10px; line-height: 1.9;
+  color: var(--slo); letter-spacing: 0.02em;
+}
+
+/* ═══════════════════════════
+   SECTION: CLOSE CTA
+═══════════════════════════ */
+.close {
+  border-top: 1px solid rgba(22,48,88,0.2);
+  min-height: 60vh;
+  display: flex; flex-direction: column;
+  justify-content: center;
+  position: relative; overflow: hidden;
+}
+.close::before {
+  content: '';
+  position: absolute; right: -10%; top: 50%;
+  transform: translateY(-50%);
+  width: 50vw; height: 70vh;
+  background: radial-gradient(ellipse, rgba(126,184,247,0.025) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.close h2 {
+  font-family: var(--f-serif);
+  font-size: clamp(36px, 5.5vw, 72px);
+  font-weight: 400; color: var(--white);
+  line-height: 1.1; letter-spacing: -0.02em;
+  max-width: 800px; margin-bottom: 40px;
+}
+.close h2 em { font-style: italic; color: var(--shi); }
+
+.close p {
+  font-family: var(--f-mono);
+  font-size: 11px; line-height: 2;
+  color: var(--slo); letter-spacing: 0.03em;
+  max-width: 420px; margin-bottom: 56px;
+}
+
+.close-note {
+  font-family: var(--f-sans);
+  font-size: 9px; letter-spacing: 0.16em;
+  color: var(--rim); margin-top: 16px;
+  text-transform: uppercase;
+}
+
+/* ═══════════════════════════
+   FOOTER
+═══════════════════════════ */
+footer {
+  border-top: 1px solid rgba(22,48,88,0.2);
+  padding: 40px 56px;
+  display: flex; align-items: center; justify-content: space-between;
+  position: relative; z-index: 1;
+}
+.footer-logo {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 22px; letter-spacing: 6px;
+  color: var(--shi); text-decoration: none;
+  text-shadow: 0 0 20px rgba(200,220,255,0.1);
+}
+.footer-right {
+  display: flex; flex-direction: column;
+  align-items: flex-end; gap: 5px;
+}
+.footer-tag {
+  font-family: var(--f-sans);
+  font-size: 9px; letter-spacing: 0.16em;
+  color: var(--rim); text-transform: uppercase;
+}
+
+/* ═══════════════════════════
+   SCROLL REVEAL
+═══════════════════════════ */
+.reveal {
+  opacity: 0; transform: translateY(20px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+.reveal.d1 { transition-delay: 0.1s; }
+.reveal.d2 { transition-delay: 0.2s; }
+.reveal.d3 { transition-delay: 0.3s; }
+.reveal.d4 { transition-delay: 0.4s; }
+
+/* ═══════════════════════════
+   ANIMATIONS
+═══════════════════════════ */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes scrollPulse {
+  0%,100% { opacity: 0.2; }
+  50%      { opacity: 0.6; }
+}
+@keyframes glow-breathe {
+  0%,100% { filter: drop-shadow(0 0 4px rgba(184,212,255,0.5)); }
+  50%      { filter: drop-shadow(0 0 12px rgba(184,212,255,0.9)) drop-shadow(0 0 24px rgba(126,184,247,0.4)); }
+}
+@keyframes node-pulse {
+  0%,100% { opacity: 0.18; }
+  50%      { opacity: 0.36; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">
+    <svg width="200" height="32" viewBox="-20 0 1100 330" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:block;">
+      <defs>
+        <filter id="fNav" x="-12%" y="-80%" width="124%" height="260%">
+          <feGaussianBlur stdDeviation="4" result="blur"/>
+          <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+        <linearGradient id="gNav" x1="40" y1="0" x2="1000" y2="0" gradientUnits="userSpaceOnUse">
+          <stop offset="0%"   stop-color="#7EB8F7" stop-opacity="0"/>
+          <stop offset="8%"   stop-color="#7EB8F7" stop-opacity="0.40"/>
+          <stop offset="28%"  stop-color="#C8DCFF" stop-opacity="0.70"/>
+          <stop offset="48%"  stop-color="#FFFFFF" stop-opacity="0.95"/>
+          <stop offset="52%"  stop-color="#FFFFFF" stop-opacity="0.95"/>
+          <stop offset="72%"  stop-color="#C8DCFF" stop-opacity="0.70"/>
+          <stop offset="92%"  stop-color="#7EB8F7" stop-opacity="0.40"/>
+          <stop offset="100%" stop-color="#7EB8F7" stop-opacity="0"/>
+        </linearGradient>
+        <clipPath id="cpNavF"><rect x="-30" y="155" width="1140" height="200"/></clipPath>
+        <clipPath id="cpNavB"><rect x="-30" y="-10" width="1140" height="165"/></clipPath>
+      </defs>
+      <ellipse cx="520" cy="155" rx="440" ry="108"
+        stroke="rgba(126,184,247,0.18)" stroke-width="1.5" fill="none"
+        transform="rotate(-12 520 155)" clip-path="url(#cpNavB)"/>
+      <text x="520" y="202" text-anchor="middle"
+        font-family="'Bebas Neue', sans-serif"
+        font-size="118" letter-spacing="8" fill="#FFFFFF">AETHERTRACE</text>
+      <ellipse cx="520" cy="155" rx="440" ry="108"
+        stroke="url(#gNav)" stroke-width="2" fill="none"
+        transform="rotate(-12 520 155)"
+        clip-path="url(#cpNavF)"
+        filter="url(#fNav)"/>
+      <!-- Custody node -->
+      <circle cx="674" cy="227" r="18" fill="#7EB8F7"
+        style="animation: node-pulse 4s ease-in-out infinite; filter: blur(7px)"/>
+      <circle cx="674" cy="227" r="5" fill="#7EB8F7"/>
+    </svg>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#role">The Role</a></li>
+    <li><a href="#levels">Who It Serves</a></li>
+    <li><a href="#how">How It Works</a></li>
+  </ul>
+  <a href="#designate" class="nav-cta">Designate AetherTrace</a>
+</nav>
+
+
+<!-- ══════════ HERO ══════════ -->
+<section class="hero">
+
+  <!-- The locked mark -->
+  <div class="hero-mark">
+    <svg width="100%" viewBox="-20 0 1080 380" fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      style="overflow:visible;">
+      <defs>
+        <filter id="fHg" x="-10%" y="-50%" width="120%" height="200%">
+          <feGaussianBlur stdDeviation="4" result="b"/>
+          <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+        <linearGradient id="gHr" x1="40" y1="0" x2="1000" y2="0" gradientUnits="userSpaceOnUse">
+          <stop offset="0%"   stop-color="rgba(126,184,247,0)"/>
+          <stop offset="8%"   stop-color="rgba(126,184,247,0.4)"/>
+          <stop offset="28%"  stop-color="rgba(200,220,255,0.7)"/>
+          <stop offset="48%"  stop-color="rgba(255,255,255,0.95)"/>
+          <stop offset="52%"  stop-color="rgba(255,255,255,0.95)"/>
+          <stop offset="72%"  stop-color="rgba(200,220,255,0.7)"/>
+          <stop offset="92%"  stop-color="rgba(126,184,247,0.4)"/>
+          <stop offset="100%" stop-color="rgba(126,184,247,0)"/>
+        </linearGradient>
+        <clipPath id="cpHf"><rect x="-20" y="155" width="1080" height="225"/></clipPath>
+        <clipPath id="cpHb"><rect x="-20" y="0"   width="1080" height="155"/></clipPath>
+      </defs>
+
+      <!-- Subtitle -->
+      <text x="218" y="222" text-anchor="start"
+        font-family="IBM Plex Mono" font-size="10" letter-spacing="5"
+        fill="rgba(90,120,160,0.58)">NEUTRAL EVIDENCE TRUSTEE</text>
+
+      <!-- Wordmark -->
+      <text x="520" y="200" text-anchor="middle"
+        font-family="'Bebas Neue', sans-serif"
+        font-size="118" letter-spacing="8"
+        fill="var(--white)"
+        style="filter: drop-shadow(0 0 30px rgba(200,220,255,0.08))">AETHERTRACE</text>
+
+      <!-- Ring back -->
+      <ellipse cx="520" cy="155" rx="440" ry="108"
+        stroke="rgba(126,184,247,0.18)" stroke-width="1.5" fill="none"
+        transform="rotate(-12 520 155)" clip-path="url(#cpHb)"/>
+
+      <!-- Ring front -->
+      <ellipse cx="520" cy="155" rx="440" ry="108"
+        stroke="url(#gHr)" stroke-width="2" fill="none"
+        transform="rotate(-12 520 155)"
+        clip-path="url(#cpHf)"
+        filter="url(#fHg)"
+        style="animation: glow-breathe 4s ease-in-out infinite"/>
+
+      <!-- Custody node — t=72° on tilted ellipse, y=227 > cy=155 → front ✓ -->
+      <circle cx="674" cy="227" r="22" fill="#7EB8F7"
+        style="animation: node-pulse 4s ease-in-out infinite; filter: blur(9px)"/>
+      <circle cx="674" cy="227" r="5" fill="#7EB8F7"/>
+    </svg>
+  </div>
+
+  <div class="hero-tagline">
+    <h1><em>Neutral Evidence Trustee</em> for High-Stakes Operations.</h1>
+  </div>
+
+  <div class="hero-body">
+    <p>Evidence doesn't fail because it doesn't exist.</p>
+    <p>It fails because nobody neutral was holding it.</p>
+  </div>
+
+  <div class="hero-actions">
+    <a href="#designate" class="btn-primary">Designate AetherTrace</a>
+    <a href="#role" class="btn-ghost">What is a trustee</a>
+  </div>
+
+  <div class="hero-scroll">
+    <div class="scroll-line"></div>
+    <div class="scroll-text">Scroll</div>
+  </div>
+
+</section>
+
+
+<!-- ══════════ THE PROBLEM ══════════ -->
+<section class="problem" id="problem">
+  <div class="section-eye reveal">The Governance Gap</div>
+
+  <div class="problem-statement reveal d1">
+    Evidence is mandatory<br>
+    in high-risk programs.<br>
+    <em>Neutral custody is not.</em>
+  </div>
+
+  <div class="problem-grid">
+    <div class="problem-cell reveal">
+      <div class="problem-cell-num">01 · The Gap</div>
+      <h3>Everyone holds evidence. Nobody is neutral.</h3>
+      <p>Vendors operate inside operator control boundaries. Operators have outcomes at stake. Auditors arrive after the fact. <strong>There is no designated neutral party</strong> before the dispute opens.</p>
+    </div>
+    <div class="problem-cell reveal d1">
+      <div class="problem-cell-num">02 · The Cost</div>
+      <h3>Reconstruction is becoming unacceptable.</h3>
+      <p>Oversight bodies increasingly discount evidence assembled after a dispute begins. <strong>The era of fix it later is ending.</strong> Post-hoc assembly is slow, expensive, and challenged at every turn.</p>
+    </div>
+    <div class="problem-cell reveal d2">
+      <div class="problem-cell-num">03 · The Exposure</div>
+      <h3>Subcontractors carry the most risk with the least protection.</h3>
+      <p>Obligations flow down the hierarchy. <strong>Protection doesn't.</strong> The party who generates the evidence is the last party to control what happens to it when the dispute opens.</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════ THE ROLE ══════════ -->
+<section class="role" id="role">
+  <div class="section-eye reveal">The Role</div>
+
+  <div class="role-grid">
+    <div class="role-left reveal">
+      <h2>Not a tool.<br><em>A trustee.</em></h2>
+      <p>A trustee holds something on behalf of all parties. A trustee has a duty. A trustee cannot be adverse to any beneficiary.</p>
+      <p>You cannot buy software to solve a conflict of interest. Neutrality is a governance property — not a feature. As long as the operator holds the keys, the evidence is suspect.</p>
+      <p>AetherTrace solves custody, not outcomes.</p>
+    </div>
+    <div class="role-right reveal d1">
+      <div class="role-principles">
+        <div class="principle">
+          <div class="principle-num">01</div>
+          <div>
+            <h4>Designated Ex-Ante</h4>
+            <p>AetherTrace is designated before execution begins. The acceptance boundary is defined before any work occurs — not after a dispute opens.</p>
+          </div>
+        </div>
+        <div class="principle">
+          <div class="principle-num">02</div>
+          <div>
+            <h4>The Black Box Philosophy</h4>
+            <p>We hold evidence without analyzing, certifying, or judging. We preserve presence, absence, and silence. Evidence remains credible even when all parties disagree.</p>
+          </div>
+        </div>
+        <div class="principle">
+          <div class="principle-num">03</div>
+          <div>
+            <h4>Separated Authority</h4>
+            <p>Custody, access, and interpretation are held by different parties. AetherTrace holds the record. Others decide outcomes. Trust the architecture — not the people.</p>
+          </div>
+        </div>
+        <div class="principle">
+          <div class="principle-num">04</div>
+          <div>
+            <h4>No Retroactive Creation</h4>
+            <p>Append-only. Time-indexed. Sealed at submission. No silent rewrite. No optimization. What was submitted is what is held.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════ EVERY LEVEL ══════════ -->
+<section class="levels" id="levels">
+  <div class="section-eye reveal">Every Level of the Hierarchy</div>
+
+  <div class="levels-head">
+    <h2 class="reveal">Same trustee.<br><em>Every party.</em><br>One record.</h2>
+    <p class="reveal d1">The subcontractor sealing a daily log and the program office designating custody before a $500M operation are using the same product. The same neutrality. The same protection.</p>
+  </div>
+
+  <div class="levels-stack">
+    <div class="level-row reveal">
+      <div class="level-id">
+        <div class="level-role">Beachhead</div>
+        <div class="level-name">Subcontractor</div>
+      </div>
+      <div class="level-pain">
+        <p>You did the work. Your records are in the prime's system. When the dispute opens you're the last party with access to your own evidence — and <strong>the first party blamed for missing documentation.</strong></p>
+      </div>
+      <div class="level-promise">
+        <p>"Your evidence doesn't live in someone else's system anymore. Sealed the day you submitted it. Independent of everyone above you."</p>
+      </div>
+    </div>
+    <div class="level-row reveal d1">
+      <div class="level-id">
+        <div class="level-role">Prime Contractor</div>
+        <div class="level-name">Program Lead</div>
+      </div>
+      <div class="level-pain">
+        <p>When a subcontractor dispute opens, your program evidence gets pulled in. <strong>Fragmented records across your supply chain become your audit risk</strong> — not just theirs.</p>
+      </div>
+      <div class="level-promise">
+        <p>"When your subcontractors' records are sealed independently, your program evidence is stronger. Independent custody protects the whole chain."</p>
+      </div>
+    </div>
+    <div class="level-row reveal d2">
+      <div class="level-id">
+        <div class="level-role">Federal</div>
+        <div class="level-name">Program Office</div>
+      </div>
+      <div class="level-pain">
+        <p>$1B+ in annual DoD audit remediation. Evidence assembled ex-post. IG and GAO scrutiny increasing. <strong>The era of reconstructing records after the dispute is ending.</strong></p>
+      </div>
+      <div class="level-promise">
+        <p>"Designated before execution. Neutral to all parties. When the audit arrives, the record is already there — sealed since T=0."</p>
+      </div>
+    </div>
+    <div class="level-row reveal d3">
+      <div class="level-id">
+        <div class="level-role">Oversight</div>
+        <div class="level-name">Auditor / IG</div>
+      </div>
+      <div class="level-pain">
+        <p>Evidence held by interested parties. Records reconstructed after the fact. <strong>Audit findings weakened by chain-of-custody questions</strong> that should have been resolved before the program began.</p>
+      </div>
+      <div class="level-promise">
+        <p>"Evidence held by an independent trustee since T=0. No reconstruction. No interested parties. Just the record — exactly as it was submitted."</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════ HOW IT WORKS ══════════ -->
+<section class="how" id="how">
+  <div class="section-eye reveal">Custody as a System</div>
+
+  <div class="how-head reveal">
+    <h2>Simple to submit.<br>Impossible to compromise.</h2>
+    <p>Four steps. No new workflows. No behavior change required. The evidence you already generate — sealed independently, available when authority asks.</p>
+  </div>
+
+  <div class="how-steps">
+    <div class="how-step reveal">
+      <div class="how-step-num">Step 01 · Designation</div>
+      <h3>Define the boundary before work begins.</h3>
+      <p>AetherTrace is designated before execution. An acceptance boundary defines what counts as evidence. All parties know who holds the record before day one.</p>
+    </div>
+    <div class="how-step reveal d1">
+      <div class="how-step-num">Step 02 · Ingestion</div>
+      <h3>Submit what you already report.</h3>
+      <p>Daily logs. Photo evidence. Inspection records. Whatever you already generate. Type it in plain language, attach files, hit Seal. Append-only, cryptographically sealed at submission.</p>
+    </div>
+    <div class="how-step reveal d2">
+      <div class="how-step-num">Step 03 · Sealed Custody</div>
+      <h3>The black box holds it. Nobody touches it.</h3>
+      <p>No interpretation. No optimization. No silent rewrite. Time-indexed, access-controlled, held under separated authority. The record is what it is.</p>
+    </div>
+    <div class="how-step reveal d3">
+      <div class="how-step-num">Step 04 · Access</div>
+      <h3>Retrieved under audit authority. Not before.</h3>
+      <p>Authorized parties retrieve evidence under defined access authority. AI-assisted reconstruction for rapid export. No inference. No interpretation. The record speaks for itself.</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════ NUMBERS ══════════ -->
+<div class="numbers reveal">
+  <div class="number-cell">
+    <div class="number-val">70%</div>
+    <div class="number-label">
+      <strong>Of disputes caused by documentation failure</strong>
+      <span>Not bad contracts. Not underbidding. The evidence was absent, incomplete, or held by the opposing party. The record determined the outcome — not the work.</span>
+    </div>
+  </div>
+  <div class="number-cell">
+    <div class="number-val">$84B</div>
+    <div class="number-label">
+      <strong>In disputed sums across 2,002 projects in 2024</strong>
+      <span>~$42M average per project. A 2024 court ruling reversed damages entirely because there was no testimony to establish the amount. The work was done. The evidence wasn't held.</span>
+    </div>
+  </div>
+  <div class="number-cell">
+    <div class="number-val">2028</div>
+    <div class="number-label">
+      <strong>DoD clean audit deadline — already slipping</strong>
+      <span>December 31, 2028 is the mandate. FM Systems has already pushed to FY2031. Congressional action is imminent if missed. The era of reconstructing records after the fact is ending.</span>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════ QUOTE ══════════ -->
+<div style="position:relative; z-index:1; border-top:1px solid rgba(22,48,88,0.2); padding: 80px 56px; background: var(--navy);">
+  <div class="reveal" style="max-width:800px;">
+    <div style="font-family:'Instrument Serif',Georgia,serif; font-size:clamp(20px,2.8vw,32px); font-weight:400; font-style:italic; color:var(--pure); line-height:1.4; letter-spacing:-0.01em; margin-bottom:24px;">
+      "Whoever has the documentation writes the narrative. If they have records and you don't, you have no defense against their claim — whether it's accurate or not."
+    </div>
+    <div style="font-family:'Inter',sans-serif; font-size:9px; letter-spacing:0.2em; text-transform:uppercase; color:var(--slo);">Industry Source · Construction Dispute Analysis</div>
+  </div>
+</div>
+
+
+<!-- ══════════ CLOSE ══════════ -->
+<section class="close" id="designate">
+  <div class="section-eye reveal">Designate AetherTrace</div>
+  <h2 class="reveal">If evidence determines survival,<br><em>custody is infrastructure.</em></h2>
+  <p class="reveal d1">The record you need is the record you sealed before the dispute opened. Designation takes one conversation.</p>
+  <div class="reveal d2">
+    <a href="mailto:contact@aethertrace.io" class="btn-primary">Request a Conversation</a>
+    <div class="close-note" style="margin-top:16px;">Validation, not capital. First conversation is a question — not a pitch.</div>
+  </div>
+</section>
+
+
+<!-- FOOTER -->
+<footer>
+  <a href="#" class="footer-logo">
+    <svg width="220" height="36" viewBox="-20 0 1100 330" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:block;">
+      <defs>
+        <filter id="fFtr" x="-12%" y="-80%" width="124%" height="260%">
+          <feGaussianBlur stdDeviation="4" result="blur"/>
+          <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+        <linearGradient id="gFtr" x1="40" y1="0" x2="1000" y2="0" gradientUnits="userSpaceOnUse">
+          <stop offset="0%"   stop-color="#7EB8F7" stop-opacity="0"/>
+          <stop offset="8%"   stop-color="#7EB8F7" stop-opacity="0.30"/>
+          <stop offset="28%"  stop-color="#C8DCFF" stop-opacity="0.55"/>
+          <stop offset="48%"  stop-color="#B8D4EE" stop-opacity="0.80"/>
+          <stop offset="52%"  stop-color="#B8D4EE" stop-opacity="0.80"/>
+          <stop offset="72%"  stop-color="#C8DCFF" stop-opacity="0.55"/>
+          <stop offset="92%"  stop-color="#7EB8F7" stop-opacity="0.30"/>
+          <stop offset="100%" stop-color="#7EB8F7" stop-opacity="0"/>
+        </linearGradient>
+        <clipPath id="cpFtrF"><rect x="-30" y="155" width="1140" height="200"/></clipPath>
+        <clipPath id="cpFtrB"><rect x="-30" y="-10" width="1140" height="165"/></clipPath>
+      </defs>
+      <ellipse cx="520" cy="155" rx="440" ry="108"
+        stroke="rgba(126,184,247,0.10)" stroke-width="1.5" fill="none"
+        transform="rotate(-12 520 155)" clip-path="url(#cpFtrB)"/>
+      <text x="520" y="202" text-anchor="middle"
+        font-family="'Bebas Neue', sans-serif"
+        font-size="118" letter-spacing="8" fill="#B8D4EE">AETHERTRACE</text>
+      <ellipse cx="520" cy="155" rx="440" ry="108"
+        stroke="url(#gFtr)" stroke-width="2" fill="none"
+        transform="rotate(-12 520 155)"
+        clip-path="url(#cpFtrF)"
+        filter="url(#fFtr)"/>
+      <!-- Custody node -->
+      <circle cx="674" cy="227" r="18" fill="#7EB8F7" opacity="0.5"
+        style="filter: blur(7px)"/>
+      <circle cx="674" cy="227" r="4" fill="#7EB8F7" opacity="0.55"/>
+    </svg>
+  </a>
+  <div class="footer-right">
+    <div class="footer-tag">Neutral Evidence Trustee · High-Stakes Operations</div>
+    <div class="footer-tag" style="color:rgba(22,48,88,0.5);">Confidential · Category Validation · 2026</div>
+  </div>
+</footer>
+
+<script>
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.05, rootMargin: '0px 0px -20px 0px' });
+
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>

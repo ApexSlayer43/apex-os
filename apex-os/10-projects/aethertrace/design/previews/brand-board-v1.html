@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AetherTrace — Brand Identity v1</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --void:    #09090B;
+      --z900:    #18181B;
+      --z800:    #27272A;
+      --z700:    #3F3F46;
+      --z500:    #71717A;
+      --z400:    #A1A1AA;
+      --z100:    #F4F4F5;
+      --seal:    #FAFAFA;
+      --chain:   #10B981;
+      --chain-d: #059669;
+      --chain-l: #34D399;
+      --breach:  #EF4444;
+      --border:  rgba(255,255,255,0.07);
+      --border-h:rgba(255,255,255,0.14);
+    }
+
+    body {
+      background: var(--void);
+      color: var(--seal);
+      font-family: 'Inter', system-ui, sans-serif;
+      min-height: 100vh;
+      padding: 0 0 120px;
+    }
+
+    /* ── PAGE HEADER ── */
+    .page-header {
+      padding: 56px 80px 48px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .brand-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--z500);
+      margin-bottom: 12px;
+    }
+
+    .page-title {
+      font-size: 28px;
+      font-weight: 600;
+      letter-spacing: -0.03em;
+      color: var(--seal);
+      margin-bottom: 8px;
+    }
+
+    .page-subtitle {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+      color: var(--z500);
+    }
+
+    /* ── SECTION LAYOUT ── */
+    .section {
+      padding: 64px 80px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section-header {
+      display: flex;
+      align-items: baseline;
+      gap: 16px;
+      margin-bottom: 48px;
+    }
+
+    .section-number {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      color: var(--chain);
+      letter-spacing: 0.12em;
+    }
+
+    .section-title {
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--z400);
+    }
+
+    /* ── LOGO OPTIONS GRID ── */
+    .options-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2px;
+    }
+
+    .option-panel {
+      padding: 72px 56px;
+      background: var(--z900);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+      position: relative;
+    }
+
+    .option-panel:first-child { border-radius: 16px 0 0 16px; }
+    .option-panel:last-child  { border-radius: 0 16px 16px 0; }
+
+    .option-tag {
+      position: absolute;
+      top: 24px;
+      left: 28px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      color: var(--z500);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .mark-stage {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 140px;
+      height: 140px;
+      margin-bottom: 40px;
+    }
+
+    .option-name {
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      color: var(--seal);
+      margin-bottom: 10px;
+      text-align: center;
+    }
+
+    .option-concept {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      color: var(--chain);
+      letter-spacing: 0.08em;
+      text-align: center;
+      margin-bottom: 20px;
+      text-transform: uppercase;
+    }
+
+    .option-desc {
+      font-size: 13.5px;
+      color: var(--z400);
+      line-height: 1.7;
+      text-align: center;
+      max-width: 320px;
+    }
+
+    /* Divider between options */
+    .option-divider {
+      width: 2px;
+      background: var(--void);
+    }
+
+    /* ── WORDMARK SECTION ── */
+    .wordmark-row {
+      display: flex;
+      align-items: center;
+      gap: 64px;
+      flex-wrap: wrap;
+    }
+
+    .wordmark-item {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .wordmark-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      color: var(--z500);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .wordmark-display {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    /* Wordmark text treatment */
+    .wm-aether {
+      font-family: 'IBM Plex Mono', monospace;
+      font-weight: 300;
+      letter-spacing: 0.12em;
+      color: var(--seal);
+      text-transform: uppercase;
+    }
+
+    .wm-trace {
+      font-family: 'IBM Plex Mono', monospace;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      color: var(--seal);
+      text-transform: uppercase;
+    }
+
+    /* Size variants */
+    .wm-lg .wm-aether { font-size: 28px; }
+    .wm-lg .wm-trace  { font-size: 28px; }
+    .wm-lg .mark-icon { width: 38px; height: 38px; }
+
+    .wm-md .wm-aether { font-size: 18px; }
+    .wm-md .wm-trace  { font-size: 18px; }
+    .wm-md .mark-icon { width: 24px; height: 24px; }
+
+    .wm-sm .wm-aether { font-size: 13px; }
+    .wm-sm .wm-trace  { font-size: 13px; }
+    .wm-sm .mark-icon { width: 16px; height: 16px; }
+
+    /* On-light variant */
+    .on-light {
+      background: #F4F4F5;
+      padding: 24px 32px;
+      border-radius: 12px;
+    }
+    .on-light .wm-aether,
+    .on-light .wm-trace  { color: var(--void); }
+
+    /* On-emerald variant */
+    .on-emerald {
+      background: var(--chain);
+      padding: 24px 32px;
+      border-radius: 12px;
+    }
+    .on-emerald .wm-aether,
+    .on-emerald .wm-trace  { color: #fff; }
+
+    /* ── SCALE TESTS ── */
+    .scale-row {
+      display: flex;
+      align-items: flex-end;
+      gap: 48px;
+      margin-bottom: 32px;
+    }
+
+    .scale-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .scale-item-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      color: var(--z500);
+      letter-spacing: 0.08em;
+    }
+
+    /* ── COLOR SYSTEM ── */
+    .palette-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 12px;
+    }
+
+    .swatch {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .swatch-block {
+      height: 80px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+    }
+
+    .swatch-name {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--seal);
+    }
+
+    .swatch-hex {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      color: var(--z500);
+    }
+
+    .swatch-role {
+      font-size: 11px;
+      color: var(--z400);
+      line-height: 1.4;
+    }
+
+    /* ── TYPOGRAPHY SECTION ── */
+    .type-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+    }
+
+    .type-specimen {
+      padding: 32px;
+      background: var(--z900);
+      border-radius: 12px;
+      border: 1px solid var(--border);
+    }
+
+    .type-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      color: var(--z500);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+
+    .type-sample-h1 { font-size: 36px; font-weight: 600; letter-spacing: -0.03em; color: var(--seal); line-height: 1.1; margin-bottom: 12px; }
+    .type-sample-h2 { font-size: 22px; font-weight: 600; letter-spacing: -0.025em; color: var(--seal); line-height: 1.2; margin-bottom: 12px; }
+    .type-sample-body { font-size: 14px; color: var(--z400); line-height: 1.65; margin-bottom: 12px; }
+    .type-sample-small { font-size: 11px; color: var(--z500); line-height: 1.5; }
+
+    .type-mono-hash { font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--chain); line-height: 1.8; word-break: break-all; margin-bottom: 12px; }
+    .type-mono-label { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--z500); margin-bottom: 12px; }
+    .type-mono-badge { font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.06em; color: var(--chain); display: inline-flex; align-items: center; gap: 6px; background: rgba(16,185,129,0.08); border: 1px solid rgba(16,185,129,0.18); padding: 4px 12px; border-radius: 9999px; }
+
+    /* ── BRAND VOICE ── */
+    .voice-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .voice-card {
+      padding: 24px 28px;
+      background: var(--z900);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      transition: border-color 0.2s;
+    }
+    .voice-card:hover { border-color: var(--border-h); }
+
+    .voice-card.featured {
+      border-color: rgba(16,185,129,0.22);
+      background: rgba(16,185,129,0.04);
+      grid-column: span 2;
+    }
+
+    .voice-context {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      color: var(--z500);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    .voice-line {
+      font-size: 17px;
+      font-weight: 500;
+      color: var(--seal);
+      letter-spacing: -0.015em;
+      line-height: 1.4;
+    }
+
+    .voice-card.featured .voice-line {
+      font-size: 22px;
+      font-weight: 600;
+    }
+
+    /* ── MARK RULES ── */
+    .rules-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    .rule-block {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+    }
+
+    .rule-icon {
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .rule-text {
+      font-size: 13.5px;
+      color: var(--z400);
+      line-height: 1.6;
+    }
+
+    .rule-text strong {
+      color: var(--seal);
+      font-weight: 500;
+    }
+
+    /* Spacing */
+    hr.divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 32px 0;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- PAGE HEADER -->
+  <header class="page-header">
+    <p class="brand-label">AetherTrace · Brand Identity · First Look · March 2026</p>
+    <h1 class="page-title">Two Directions. One Decision.</h1>
+    <p class="page-subtitle">HELIOS + BEACON + PRISM — Brand Board v1</p>
+  </header>
+
+  <!-- ═══════════════════════════════════════════════════════════════════ -->
+  <!-- SECTION 01 — LOGO MARKS -->
+  <!-- ═══════════════════════════════════════════════════════════════════ -->
+  <section class="section">
+    <div class="section-header">
+      <span class="section-number">01 ——</span>
+      <span class="section-title">The Mark — Two Candidates</span>
+    </div>
+
+    <div class="options-grid">
+
+      <!-- ── OPTION A: THE LINK ── -->
+      <div class="option-panel">
+        <span class="option-tag">OPTION A</span>
+
+        <div class="mark-stage">
+          <!-- SVG: Angular chain link viewed from above -->
+          <!-- Outer rounded-rect + inner oval hole via fill-rule evenodd -->
+          <svg width="120" height="78" viewBox="0 0 120 78" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- The link body: outer rounded rect -->
+            <!-- Inner hole: centered oval — creates the chain-link opening -->
+            <path fill-rule="evenodd" clip-rule="evenodd"
+              d="M14 0H106C113.732 0 120 6.268 120 14V64C120 71.732 113.732 78 106 78H14C6.268 78 0 71.732 0 64V14C0 6.268 6.268 0 14 0Z
+                 M38 26C28.059 26 22 32.059 22 39C22 45.941 28.059 52 38 52H82C91.941 52 98 45.941 98 39C98 32.059 91.941 26 82 26H38Z"
+              fill="#10B981"/>
+            <!-- Corner chamfer indicators (precision lines) -->
+            <line x1="0" y1="14" x2="4" y2="8" stroke="#059669" stroke-width="0" opacity="0"/>
+          </svg>
+        </div>
+
+        <div class="option-name">The Link</div>
+        <div class="option-concept">Chain · Continuity · Custody</div>
+        <p class="option-desc">A single chain link viewed from above. Angular corners, not circular — precision machined, not playful. The oval negative space is the opening where the next link connects. Reads immediately at any scale. The shape IS the function.</p>
+      </div>
+
+      <!-- ── OPTION B: THE SEAL ── -->
+      <div class="option-panel">
+        <span class="option-tag">OPTION B</span>
+
+        <div class="mark-stage">
+          <!-- SVG: Hexagonal signet seal -->
+          <!-- Hexagon outline + interior chain-link mark -->
+          <svg width="110" height="124" viewBox="0 0 110 124" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Hexagon (pointed top) — outer ring -->
+            <path
+              d="M55 4L103 30.5V83.5L55 110L7 83.5V30.5L55 4Z"
+              stroke="#10B981" stroke-width="5" fill="none" stroke-linejoin="round"/>
+            <!-- Inner hexagon (thin, depth) -->
+            <path
+              d="M55 16L91 37V79L55 100L19 79V37L55 16Z"
+              stroke="rgba(16,185,129,0.18)" stroke-width="1.5" fill="none" stroke-linejoin="round"/>
+            <!-- Interior chain link mark — small, centered -->
+            <path fill-rule="evenodd" clip-rule="evenodd"
+              d="M32 50H78C82.418 50 86 53.582 86 58C86 62.418 82.418 66 78 66H32C27.582 66 24 62.418 24 58C24 53.582 27.582 50 32 50Z
+                 M40 54C36.686 54 34 56.239 34 59C34 61.761 36.686 64 40 64H70C73.314 64 76 61.761 76 59C76 56.239 73.314 54 70 54H40Z"
+              fill="#10B981"/>
+          </svg>
+        </div>
+
+        <div class="option-name">The Seal</div>
+        <div class="option-concept">Authority · Permanence · Certification</div>
+        <p class="option-desc">A hexagonal signet seal — the oldest form of authenticated custody in human history, modernized with precision geometry. The inner chain mark says: evidence lives inside. The hexagon says: this has been sealed by authority that predates you.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════════════ -->
+  <!-- SECTION 02 — WORDMARK SYSTEM -->
+  <!-- ═══════════════════════════════════════════════════════════════════ -->
+  <section class="section">
+    <div class="section-header">
+      <span class="section-number">02 ——</span>
+      <span class="section-title">Wordmark System</span>
+    </div>
+
+    <div style="display:flex; flex-direction:column; gap:48px;">
+
+      <!-- OPTION A WORDMARKS -->
+      <div>
+        <p class="brand-label" style="margin-bottom:24px;">Option A — The Link · Wordmark Variations</p>
+
+        <div class="wordmark-row">
+          <!-- Full horizontal lockup — large -->
+          <div class="wordmark-item">
+            <span class="wordmark-label">Primary</span>
+            <div class="wordmark-display wm-lg">
+              <!-- Option A mark — small inline -->
+              <svg class="mark-icon" viewBox="0 0 120 78" fill="none">
+                <path fill-rule="evenodd" clip-rule="evenodd"
+                  d="M14 0H106C113.732 0 120 6.268 120 14V64C120 71.732 113.732 78 106 78H14C6.268 78 0 71.732 0 64V14C0 6.268 6.268 0 14 0Z
+                     M38 26C28.059 26 22 32.059 22 39C22 45.941 28.059 52 38 52H82C91.941 52 98 45.941 98 39C98 32.059 91.941 26 82 26H38Z"
+                  fill="#10B981"/>
+              </svg>
+              <span class="wm-aether">Aether</span><span class="wm-trace">Trace</span>
+            </div>
+          </div>
+
+          <!-- Medium -->
+          <div class="wordmark-item">
+            <span class="wordmark-label">Navigation</span>
+            <div class="wordmark-display wm-md">
+              <svg class="mark-icon" viewBox="0 0 120 78" fill="none">
+                <path fill-rule="evenodd" clip-rule="evenodd"
+                  d="M14 0H106C113.732 0 120 6.268 120 14V64C120 71.732 113.732 78 106 78H14C6.268 78 0 71.732 0 64V14C0 6.268 6.268 0 14 0Z
+                     M38 26C28.059 26 22 32.059 22 39C22 45.941 28.059 52 38 52H82C91.941 52 98 45.941 98 39C98 32.059 91.941 26 82 26H38Z"
+                  fill="#10B981"/>
+              </svg>
+              <span class="wm-aether">Aether</span><span class="wm-trace">Trace</span>
+            </div>
+          </div>
+
+          <!-- Small -->
+          <div class="wordmark-item">
+            <span class="wordmark-label">Footer / Small</span>
+            <div class="wordmark-display wm-sm">
+              <svg class="mark-icon" viewBox="0 0 120 78" fill="none">
+                <path fill-rule="evenodd" clip-rule="evenodd"
+                  d="M14 0H106C113.732 0 120 6.268 120 14V64C120 71.732 113.732 78 106 78H14C6.268 78 0 71.732 0 64V14C0 6.268 6.268 0 14 0Z
+                     M38 26C28.059 26 22 32.059 22 39C22 45.941 28.059 52 38 52H82C91.941 52 98 45.941 98 39C98 32.059 91.941 26 82 26H38Z"
+                  fill="#10B981"/>
+              </svg>
+              <span class="wm-aether">Aether</span><span class="wm-trace">Trace</span>
+            </div>
+          </div>
+
+          <!-- Light background -->
+          <div class="wordmark-item">
+            <span class="wordmark-label">On Light</span>
+            <div class="wordmark-display wm-md on-light">
+              <svg class="mark-icon" viewBox="0 0 120 78" fill="none">
+                <path fill-rule="evenodd" clip-rule="evenodd"
+                  d="M14 0H106C113.732 0 120 6.268 120 14V64C120 71.732 113.732 78 106 78H14C6.268 78 0 71.732 0 64V14C0 6.268 6.268 0 14 0Z
+                     M38 26C28.059 26 22 32.059 22 39C22 45.941 28.059 52 38 52H82C91.941 52 98 45.941 98 39C98 32.059 91.941 26 82 26H38Z"
+                  fill="#059669"/>
+              </svg>
+              <span class="wm-aether">Aether</span><span class="wm-trace">Trace</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- OPTION B WORDMARKS -->
+      <div>
+        <p class="brand-label" style="margin-bottom:24px;">Option B — The Seal · Wordmark Variations</p>
+
+        <div class="wordmark-row">
+          <!-- Full horizontal lockup — large -->
+          <div class="wordmark-item">
+            <span class="wordmark-label">Primary</span>
+            <div class="wordmark-display wm-lg" style="align-items:center;">
+              <svg class="mark-icon" style="width:32px;height:36px;" viewBox="0 0 110 124" fill="none">
+                <path d="M55 4L103 30.5V83.5L55 110L7 83.5V30.5L55 4Z" stroke="#10B981" stroke-width="5" fill="none" stroke-linejoin="round"/>
+                <path fill-rule="evenodd" clip-rule="evenodd"
+                  d="M32 50H78C82.418 50 86 53.582 86 58C86 62.418 82.418 66 78 66H32C27.582 66 24 62.418 24 58C24 53.582 27.582 50 32 50Z
+                     M40 54C36.686 54 34 56.239 34 59C34 61.761 36.686 64 40 64H70C73.314 64 76 61.761 76 59C76 56.239 73.314 54 70 54H40Z"
+                  fill="#10B981"/>
+              </svg>
+              <span class="wm-aether">Aether</span><span class="wm-trace">Trace</span>
+            </div>
+          </div>
+
+          <!-- Medium -->
+          <div class="wordmark-item">
+            <span class="wordmark-label">Navigation</span>
+            <div class="wordmark-display wm-md" style="align-items:center;">
+              <svg style="width:18px;height:20px;" viewBox="0 0 110 124" fill="none">
+                <path d="M55 4L103 30.5V83.5L55 110L7 83.5V30.5L55 4Z" stroke="#10B981" stroke-width="5" fill="none" stroke-linejoin="round"/>
+                <path fill-rule="evenodd" clip-rule="evenodd"
+                  d="M32 50H78C82.418 50 86 53.582 86 58C86 62.418 82.418 66 78 66H32C27.582 66 24 62.418 24 58C24 53.582 27.582 50 32 50Z
+                     M40 54C36.686 54 34 56.239 34 59C34 61.761 36.686 64 40 64H70C73.314 64 76 61.761 76 59C76 56.239 73.314 54 70 54H40Z"
+                  fill="#10B981"/>
+              </svg>
+              <span class="wm-aether">Aether</span><span class="wm-trace">Trace</span>
+            </div>
+          </div>
+
+          <!-- Light background -->
+          <div class="wordmark-item">
+            <span class="wordmark-label">On Light</span>
+            <div class="wordmark-display wm-md on-light" style="align-items:center;">
+              <svg style="width:20px;height:22px;" viewBox="0 0 110 124" fill="none">
+                <path d="M55 4L103 30.5V83.5L55 110L7 83.5V30.5L55 4Z" stroke="#059669" stroke-width="5" fill="none" stroke-linejoin="round"/>
+                <path fill-rule="evenodd" clip-rule="evenodd"
+                  d="M32 50H78C82.418 50 86 53.582 86 58C86 62.418 82.418 66 78 66H32C27.582 66 24 62.418 24 58C24 53.582 27.582 50 32 50Z
+                     M40 54C36.686 54 34 56.239 34 59C34 61.761 36.686 64 40 64H70C73.314 64 76 61.761 76 59C76 56.239 73.314 54 70 54H40Z"
+                  fill="#059669"/>
+              </svg>
+              <span class="wm-aether">Aether</span><span class="wm-trace">Trace</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SCALE TEST — OPTION A -->
+      <div>
+        <p class="brand-label" style="margin-bottom:24px;">Scale Test — Option A at 5 sizes</p>
+        <div class="scale-row">
+          <div class="scale-item">
+            <svg width="64" height="42" viewBox="0 0 120 78" fill="none">
+              <path fill-rule="evenodd" clip-rule="evenodd"
+                d="M14 0H106C113.732 0 120 6.268 120 14V64C120 71.732 113.732 78 106 78H14C6.268 78 0 71.732 0 64V14C0 6.268 6.268 0 14 0Z
+                   M38 26C28.059 26 22 32.059 22 39C22 45.941 28.059 52 38 52H82C91.941 52 98 45.941 98 39C98 32.059 91.941 26 82 26H38Z"
+                fill="#10B981"/>
+            </svg>
+            <span class="scale-item-label">64px</span>
+          </div>
+          <div class="scale-item">
+            <svg width="48" height="31" viewBox="0 0 120 78" fill="none">
+              <path fill-rule="evenodd" clip-rule="evenodd"
+                d="M14 0H106C113.732 0 120 6.268 120 14V64C120 71.732 113.732 78 106 78H14C6.268 78 0 71.732 0 64V14C0 6.268 6.268 0 14 0Z
+                   M38 26C28.059 26 22 32.059 22 39C22 45.941 28.059 52 38 52H82C91.941 52 98 45.941 98 39C98 32.059 91.941 26 82 26H38Z"
+                fill="#10B981"/>
+            </svg>
+            <span class="scale-item-label">48px</span>
+          </div>
+          <div class="scale-item">
+            <svg width="32" height="21" viewBox="0 0 120 78" fill="none">
+              <path fill-rule="evenodd" clip-rule="evenodd"
+                d="M14 0H106C113.732 0 120 6.268 120 14V64C120 71.732 113.732 78 106 78H14C6.268 78 0 71.732 0 64V14C0 6.268 6.268 0 14 0Z
+                   M38 26C28.059 26 22 32.059 22 39C22 45.941 28.059 52 38 52H82C91.941 52 98 45.941 98 39C98 32.059 91.941 26 82 26H38Z"
+                fill="#10B981"/>
+            </svg>
+            <span class="scale-item-label">32px</span>
+          </div>
+          <div class="scale-item">
+            <svg width="20" height="13" viewBox="0 0 120 78" fill="none">
+              <path fill-rule="evenodd" clip-rule="evenodd"
+                d="M14 0H106C113.732 0 120 6.268 120 14V64C120 71.732 113.732 78 106 78H14C6.268 78 0 71.732 0 64V14C0 6.268 6.268 0 14 0Z
+                   M38 26C28.059 26 22 32.059 22 39C22 45.941 28.059 52 38 52H82C91.941 52 98 45.941 98 39C98 32.059 91.941 26 82 26H38Z"
+                fill="#10B981"/>
+            </svg>
+            <span class="scale-item-label">20px</span>
+          </div>
+          <div class="scale-item">
+            <svg width="14" height="9" viewBox="0 0 120 78" fill="none">
+              <path fill-rule="evenodd" clip-rule="evenodd"
+                d="M14 0H106C113.732 0 120 6.268 120 14V64C120 71.732 113.732 78 106 78H14C6.268 78 0 71.732 0 64V14C0 6.268 6.268 0 14 0Z
+                   M38 26C28.059 26 22 32.059 22 39C22 45.941 28.059 52 38 52H82C91.941 52 98 45.941 98 39C98 32.059 91.941 26 82 26H38Z"
+                fill="#10B981"/>
+            </svg>
+            <span class="scale-item-label">14px</span>
+          </div>
+          <div class="scale-item" style="margin-left:24px; padding:6px; background:#F4F4F5; border-radius:6px;">
+            <svg width="48" height="31" viewBox="0 0 120 78" fill="none">
+              <path fill-rule="evenodd" clip-rule="evenodd"
+                d="M14 0H106C113.732 0 120 6.268 120 14V64C120 71.732 113.732 78 106 78H14C6.268 78 0 71.732 0 64V14C0 6.268 6.268 0 14 0Z
+                   M38 26C28.059 26 22 32.059 22 39C22 45.941 28.059 52 38 52H82C91.941 52 98 45.941 98 39C98 32.059 91.941 26 82 26H38Z"
+                fill="#059669"/>
+            </svg>
+            <span class="scale-item-label" style="color:#71717A;">On light</span>
+          </div>
+          <div class="scale-item" style="padding:6px; background:#09090B; border-radius:6px;">
+            <svg width="48" height="31" viewBox="0 0 120 78" fill="none">
+              <path fill-rule="evenodd" clip-rule="evenodd"
+                d="M14 0H106C113.732 0 120 6.268 120 14V64C120 71.732 113.732 78 106 78H14C6.268 78 0 71.732 0 64V14C0 6.268 6.268 0 14 0Z
+                   M38 26C28.059 26 22 32.059 22 39C22 45.941 28.059 52 38 52H82C91.941 52 98 45.941 98 39C98 32.059 91.941 26 82 26H38Z"
+                fill="#FAFAFA"/>
+            </svg>
+            <span class="scale-item-label">Mono white</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════════════ -->
+  <!-- SECTION 03 — COLOR SYSTEM -->
+  <!-- ═══════════════════════════════════════════════════════════════════ -->
+  <section class="section">
+    <div class="section-header">
+      <span class="section-number">03 ——</span>
+      <span class="section-title">Color System</span>
+    </div>
+
+    <div class="palette-grid">
+      <div class="swatch">
+        <div class="swatch-block" style="background:#09090B; border-color:rgba(255,255,255,0.12);"></div>
+        <div class="swatch-name">Void</div>
+        <div class="swatch-hex">#09090B</div>
+        <div class="swatch-role">The medium. Page background. Where evidence lives.</div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-block" style="background:#18181B;"></div>
+        <div class="swatch-name">Surface</div>
+        <div class="swatch-hex">#18181B</div>
+        <div class="swatch-role">Cards, panels, elevated areas.</div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-block" style="background:#10B981;"></div>
+        <div class="swatch-name">Chain</div>
+        <div class="swatch-hex">#10B981</div>
+        <div class="swatch-role">Integrity confirmed. ONLY for sealed/intact state. Not decorative.</div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-block" style="background:#FAFAFA;"></div>
+        <div class="swatch-name">Seal</div>
+        <div class="swatch-hex">#FAFAFA</div>
+        <div class="swatch-role">Primary text and mark. The seal itself — white on void.</div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-block" style="background:#EF4444;"></div>
+        <div class="swatch-name">Breach</div>
+        <div class="swatch-hex">#EF4444</div>
+        <div class="swatch-role">Tamper detected. Reserved — appears only on chain failure.</div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-block" style="background:#A1A1AA;"></div>
+        <div class="swatch-name">Archive</div>
+        <div class="swatch-hex">#A1A1AA</div>
+        <div class="swatch-role">Muted text, metadata, secondary information.</div>
+      </div>
+    </div>
+
+    <!-- Color rule callout -->
+    <div style="margin-top:32px; padding:24px 28px; background:rgba(16,185,129,0.06); border:1px solid rgba(16,185,129,0.16); border-radius:12px;">
+      <p class="brand-label" style="margin-bottom:8px;">The one color rule that defines everything</p>
+      <p style="font-size:15px; color:#FAFAFA; font-weight:500; letter-spacing:-0.01em;">Emerald is not a brand color. It is a status indicator. The brand is black and white. Emerald appears only when the system confirms something.</p>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════════════ -->
+  <!-- SECTION 04 — TYPOGRAPHY -->
+  <!-- ═══════════════════════════════════════════════════════════════════ -->
+  <section class="section">
+    <div class="section-header">
+      <span class="section-number">04 ——</span>
+      <span class="section-title">Typography System</span>
+    </div>
+
+    <div class="type-grid">
+      <!-- Inter specimens -->
+      <div class="type-specimen">
+        <p class="type-label">Inter — Headings & Body</p>
+        <p class="type-sample-h1">You did the work. You still lost the claim.</p>
+        <p class="type-sample-h2">The chain cannot be altered.</p>
+        <p class="type-sample-body">AetherTrace seals your evidence the moment you upload it. Cryptographically. Independently. In a chain the GC can't revoke, alter, or touch.</p>
+        <p class="type-sample-small">ACTIVE · 47 SEALED · Fort Hood HVAC Retrofit — Bldg 4127</p>
+      </div>
+
+      <!-- IBM Plex Mono specimens -->
+      <div class="type-specimen">
+        <p class="type-label">IBM Plex Mono — Technical & System</p>
+        <p class="type-mono-label">CHAIN INTACT · SHA-256 · 0 ALTERATIONS DETECTED</p>
+        <p class="type-mono-hash">a7c3e9f21b4d8a6e5c90b3f42d817e6a9c0d5f281b4e7a3c6d9f2e5b8a1c4d70</p>
+        <p class="type-mono-hash" style="color:#A1A1AA; font-size:11px;">POSITION #24 · 2026-03-22T16:15:03Z · 2.4 MB</p>
+        <div style="margin-top:8px;">
+          <span class="type-mono-badge">
+            <span style="width:6px;height:6px;background:#10B981;border-radius:50%;display:inline-block;"></span>
+            CHAIN INTACT
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Type rules -->
+    <div style="margin-top:28px; display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px;">
+      <div style="padding:16px 20px; background:var(--z900); border-radius:10px; border:1px solid var(--border);">
+        <p style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--z500);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:8px;">Headings</p>
+        <p style="font-size:13px;color:var(--z400);">Inter 600 · -0.025em tracking · Never uppercase</p>
+      </div>
+      <div style="padding:16px 20px; background:var(--z900); border-radius:10px; border:1px solid var(--border);">
+        <p style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--z500);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:8px;">System Labels</p>
+        <p style="font-size:13px;color:var(--z400);">IBM Plex Mono 500 · 0.12em tracking · Always uppercase</p>
+      </div>
+      <div style="padding:16px 20px; background:var(--z900); border-radius:10px; border:1px solid var(--border);">
+        <p style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--z500);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:8px;">Hash Values</p>
+        <p style="font-size:13px;color:var(--z400);">IBM Plex Mono 400 · Emerald (#10B981) · Never truncated on verify page</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════════════ -->
+  <!-- SECTION 05 — BRAND VOICE -->
+  <!-- ═══════════════════════════════════════════════════════════════════ -->
+  <section class="section">
+    <div class="section-header">
+      <span class="section-number">05 ——</span>
+      <span class="section-title">Brand Voice — The Brand Sounds Like a Fact</span>
+    </div>
+
+    <div class="voice-grid">
+      <div class="voice-card featured">
+        <p class="voice-context">The founding line</p>
+        <p class="voice-line">"You did the work. You took the photos. You still lost the claim."</p>
+      </div>
+      <div class="voice-card">
+        <p class="voice-context">On the technology</p>
+        <p class="voice-line">"This isn't a promise. It's math."</p>
+      </div>
+      <div class="voice-card">
+        <p class="voice-context">On neutrality</p>
+        <p class="voice-line">"AetherTrace cannot modify evidence after ingestion."</p>
+      </div>
+      <div class="voice-card">
+        <p class="voice-context">On the GC problem</p>
+        <p class="voice-line">"Your evidence. Your custody. The GC can't revoke what they never controlled."</p>
+      </div>
+      <div class="voice-card">
+        <p class="voice-context">On pricing</p>
+        <p class="voice-line">"One $30K claim. 12.5 years covered."</p>
+      </div>
+    </div>
+
+    <div style="margin-top:32px; display:grid; grid-template-columns:1fr 1fr; gap:24px;">
+      <div>
+        <p class="brand-label" style="margin-bottom:16px;">The brand always —</p>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <div style="display:flex;gap:10px;align-items:flex-start;">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style="margin-top:2px;flex-shrink:0;"><path d="M3 8L6.5 11.5L13 4.5" stroke="#10B981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <p style="font-size:13.5px;color:var(--z400);">Declarative sentences. No questions in positioning copy.</p>
+          </div>
+          <div style="display:flex;gap:10px;align-items:flex-start;">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style="margin-top:2px;flex-shrink:0;"><path d="M3 8L6.5 11.5L13 4.5" stroke="#10B981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <p style="font-size:13.5px;color:var(--z400);">Numbers over adjectives. $30K not "significant claims."</p>
+          </div>
+          <div style="display:flex;gap:10px;align-items:flex-start;">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style="margin-top:2px;flex-shrink:0;"><path d="M3 8L6.5 11.5L13 4.5" stroke="#10B981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <p style="font-size:13.5px;color:var(--z400);">Pain before solution. The sub's experience first, always.</p>
+          </div>
+          <div style="display:flex;gap:10px;align-items:flex-start;">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style="margin-top:2px;flex-shrink:0;"><path d="M3 8L6.5 11.5L13 4.5" stroke="#10B981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <p style="font-size:13.5px;color:var(--z400);">The brand never raises its voice. Math doesn't yell.</p>
+          </div>
+        </div>
+      </div>
+      <div>
+        <p class="brand-label" style="margin-bottom:16px;">The brand never —</p>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <div style="display:flex;gap:10px;align-items:flex-start;">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style="margin-top:2px;flex-shrink:0;"><path d="M4 4L12 12M12 4L4 12" stroke="#EF4444" stroke-width="2" stroke-linecap="round"/></svg>
+            <p style="font-size:13.5px;color:var(--z400);">Uses "seamless," "robust," "powerful," or "leverage."</p>
+          </div>
+          <div style="display:flex;gap:10px;align-items:flex-start;">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style="margin-top:2px;flex-shrink:0;"><path d="M4 4L12 12M12 4L4 12" stroke="#EF4444" stroke-width="2" stroke-linecap="round"/></svg>
+            <p style="font-size:13.5px;color:var(--z400);">Says "get started." Says "Protect your work."</p>
+          </div>
+          <div style="display:flex;gap:10px;align-items:flex-start;">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style="margin-top:2px;flex-shrink:0;"><path d="M4 4L12 12M12 4L4 12" stroke="#EF4444" stroke-width="2" stroke-linecap="round"/></svg>
+            <p style="font-size:13.5px;color:var(--z400);">Calls evidence "files" or "documents." Says "sealed."</p>
+          </div>
+          <div style="display:flex;gap:10px;align-items:flex-start;">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style="margin-top:2px;flex-shrink:0;"><path d="M4 4L12 12M12 4L4 12" stroke="#EF4444" stroke-width="2" stroke-linecap="round"/></svg>
+            <p style="font-size:13.5px;color:var(--z400);">Competes with other software. Competes with phone photos.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════════════ -->
+  <!-- SECTION 06 — THE DECISION -->
+  <!-- ═══════════════════════════════════════════════════════════════════ -->
+  <section class="section" style="border-bottom:none;">
+    <div class="section-header">
+      <span class="section-number">06 ——</span>
+      <span class="section-title">The Decision Frame</span>
+    </div>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:24px; max-width:860px;">
+
+      <div style="padding:32px; background:var(--z900); border-radius:14px; border:1px solid var(--border);">
+        <!-- Option A mini mark -->
+        <svg width="56" height="36" viewBox="0 0 120 78" fill="none" style="margin-bottom:20px;">
+          <path fill-rule="evenodd" clip-rule="evenodd"
+            d="M14 0H106C113.732 0 120 6.268 120 14V64C120 71.732 113.732 78 106 78H14C6.268 78 0 71.732 0 64V14C0 6.268 6.268 0 14 0Z
+               M38 26C28.059 26 22 32.059 22 39C22 45.941 28.059 52 38 52H82C91.941 52 98 45.941 98 39C98 32.059 91.941 26 82 26H38Z"
+            fill="#10B981"/>
+        </svg>
+        <p style="font-size:15px;font-weight:600;color:var(--seal);margin-bottom:10px;letter-spacing:-0.015em;">Option A — The Link</p>
+        <p style="font-size:13px;color:var(--z400);line-height:1.65;">Reads as: <em>continuity, chain, the moment of connection.</em> The mark says "I am part of something that cannot be broken." Stronger for the product UI — shows up in the chain visualization naturally. The link is the evidence. The mark IS what you're building.</p>
+      </div>
+
+      <div style="padding:32px; background:var(--z900); border-radius:14px; border:1px solid var(--border);">
+        <!-- Option B mini mark -->
+        <svg width="38" height="44" viewBox="0 0 110 124" fill="none" style="margin-bottom:20px;">
+          <path d="M55 4L103 30.5V83.5L55 110L7 83.5V30.5L55 4Z" stroke="#10B981" stroke-width="5" fill="none" stroke-linejoin="round"/>
+          <path fill-rule="evenodd" clip-rule="evenodd"
+            d="M32 50H78C82.418 50 86 53.582 86 58C86 62.418 82.418 66 78 66H32C27.582 66 24 62.418 24 58C24 53.582 27.582 50 32 50Z
+               M40 54C36.686 54 34 56.239 34 59C34 61.761 36.686 64 40 64H70C73.314 64 76 61.761 76 59C76 56.239 73.314 54 70 54H40Z"
+            fill="#10B981"/>
+        </svg>
+        <p style="font-size:15px;font-weight:600;color:var(--seal);margin-bottom:10px;letter-spacing:-0.015em;">Option B — The Seal</p>
+        <p style="font-size:13px;color:var(--z400);line-height:1.65;">Reads as: <em>authority, permanence, institutional weight.</em> The mark says "this was certified here. It doesn't move." Stronger for the federal and legal audiences — DoD, attorneys, arbitrators. The hexagon is ancient and modern simultaneously.</p>
+      </div>
+    </div>
+
+    <div style="margin-top:32px; padding:28px 32px; background:rgba(16,185,129,0.04); border:1px solid rgba(16,185,129,0.14); border-radius:12px; max-width:860px;">
+      <p style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--chain);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:10px;">HELIOS — The question to carry</p>
+      <p style="font-size:15px;color:var(--seal);line-height:1.6;font-weight:400;">Option A says <em>what you build</em> — the chain. Option B says <em>what you are</em> — the authority. The sub who just got burned doesn't need authority. They need something that holds. Casey — which one do you show a contractor at 6am before they head to the jobsite?</p>
+    </div>
+  </section>
+
+</body>
+</html>

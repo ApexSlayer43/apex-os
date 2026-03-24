@@ -6,7 +6,7 @@
 <title>AetherTrace — Integrity Infrastructure</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@300;400;600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
 <style>
 
 /* ─── TOKENS ──────────────────────────────────────── */
@@ -21,12 +21,12 @@
   --breach:  #EF4444;
   --sealed:  #10B981;
 
-  --glow: drop-shadow(0 0 10px rgba(200,212,232,0.65))
-          drop-shadow(0 0 24px rgba(200,212,232,0.30))
-          drop-shadow(0 0 48px rgba(140,170,230,0.15));
+  --glow: drop-shadow(0 0 10px rgba(126,184,247,0.55))
+          drop-shadow(0 0 24px rgba(126,184,247,0.25))
+          drop-shadow(0 0 48px rgba(100,160,240,0.12));
 
-  --glow-sm: drop-shadow(0 0 6px rgba(200,212,232,0.45))
-             drop-shadow(0 0 14px rgba(200,212,232,0.20));
+  --glow-sm: drop-shadow(0 0 6px rgba(126,184,247,0.40))
+             drop-shadow(0 0 14px rgba(126,184,247,0.18));
 
   --mono: 'IBM Plex Mono', monospace;
   --sans: 'Inter', sans-serif;
@@ -931,41 +931,43 @@ footer {
 <nav>
   <div class="nav-inner">
 
-    <!-- Logo: compact orbital lock — ring rx=340, text 56px, fits with clearance -->
+    <!-- Logo: Final Mark — Bebas Neue + tilted ellipse, compact nav size -->
     <a class="nav-logo" href="#">
-      <svg viewBox="0 0 780 180" height="30" xmlns="http://www.w3.org/2000/svg" aria-label="AetherTrace">
-        <!-- back arc: dim, top half, behind text -->
-        <path d="M 50,90 A 340,50 0 0 0 730,90"
-              fill="none" stroke="#2a4568" stroke-width="14" opacity="0.05"/>
-        <path d="M 50,90 A 340,50 0 0 0 730,90"
-              fill="none" stroke="#486888" stroke-width="1.5" opacity="0.35"/>
-
+      <svg viewBox="-10 5 1060 310" height="30" style="overflow:visible"
+           xmlns="http://www.w3.org/2000/svg" aria-label="AetherTrace">
+        <defs>
+          <linearGradient id="nav-ring-grad" x1="40" y1="0" x2="1000" y2="0" gradientUnits="userSpaceOnUse">
+            <stop offset="0%"   stop-color="rgba(126,184,247,0)"/>
+            <stop offset="8%"   stop-color="rgba(126,184,247,0.4)"/>
+            <stop offset="28%"  stop-color="rgba(200,220,255,0.7)"/>
+            <stop offset="48%"  stop-color="rgba(255,255,255,0.95)"/>
+            <stop offset="52%"  stop-color="rgba(255,255,255,0.95)"/>
+            <stop offset="72%"  stop-color="rgba(200,220,255,0.7)"/>
+            <stop offset="92%"  stop-color="rgba(126,184,247,0.4)"/>
+            <stop offset="100%" stop-color="rgba(126,184,247,0)"/>
+          </linearGradient>
+          <clipPath id="nav-front"><rect x="-20" y="155" width="1080" height="170"/></clipPath>
+          <clipPath id="nav-back"> <rect x="-20" y="0"   width="1080" height="155"/></clipPath>
+        </defs>
+        <!-- ring back (dim, top) -->
+        <ellipse cx="520" cy="155" rx="440" ry="108"
+          stroke="rgba(126,184,247,0.16)" stroke-width="1.5" fill="none"
+          transform="rotate(-12 520 155)" clip-path="url(#nav-back)"/>
         <!-- wordmark -->
-        <text x="390" y="107" text-anchor="middle" dominant-baseline="auto"
-              font-family="IBM Plex Mono, monospace"
-              font-size="56" fill="#C8D4E8">
-          <tspan font-weight="300" letter-spacing="5">AETHER</tspan><tspan font-weight="600" letter-spacing="2">TRACE</tspan>
+        <text x="520" y="200" text-anchor="middle"
+          font-family="'Bebas Neue', sans-serif"
+          font-size="118" letter-spacing="8"
+          fill="#FFFFFF"
+          style="filter:drop-shadow(0 0 30px rgba(200,220,255,0.08))">
+          AETHERTRACE
         </text>
-
-        <!-- front arc: bright, bottom half, over text -->
-        <path d="M 50,90 A 340,50 0 0 1 730,90"
-              fill="none" stroke="#6a8db5" stroke-width="26" opacity="0.06"/>
-        <path d="M 50,90 A 340,50 0 0 1 730,90"
-              fill="none" stroke="#C8D4E8" stroke-width="7" opacity="0.28"/>
-        <path d="M 50,90 A 340,50 0 0 1 730,90"
-              fill="none" stroke="#E8EEFF" stroke-width="1.5" opacity="0.95"/>
-
-        <!-- lock nodes -->
-        <circle cx="50"  cy="90" r="4" fill="#1a3555" opacity="0.9"/>
-        <circle cx="50"  cy="90" r="2.5" fill="none" stroke="#5a7a9a" stroke-width="1.2"/>
-        <circle cx="50"  cy="90" r="1.2" fill="#8aaad0"/>
-        <circle cx="730" cy="90" r="4" fill="#1a3555" opacity="0.9"/>
-        <circle cx="730" cy="90" r="2.5" fill="none" stroke="#5a7a9a" stroke-width="1.2"/>
-        <circle cx="730" cy="90" r="1.2" fill="#8aaad0"/>
-
-        <!-- orbital node (animated) -->
-        <g id="nav-node-back"><circle id="nav-nb" r="3" fill="#5a7a9a" opacity="0"/></g>
-        <g id="nav-node-front"><circle id="nav-nf" r="3" fill="#E8EEFF" opacity="0"/></g>
+        <!-- ring front (bright, bottom) -->
+        <ellipse cx="520" cy="155" rx="440" ry="108"
+          stroke="url(#nav-ring-grad)" stroke-width="2" fill="none"
+          transform="rotate(-12 520 155)" clip-path="url(#nav-front)"/>
+        <!-- animated node -->
+        <g id="nav-node-back"><circle id="nav-nb" r="6" fill="rgba(126,184,247,0.3)" opacity="0"/></g>
+        <g id="nav-node-front"><circle id="nav-nf" r="6" fill="#7EB8F7" opacity="0"/></g>
       </svg>
     </a>
 
@@ -986,56 +988,72 @@ footer {
 
     <p class="hero-eyebrow">Evidence Custody for Subcontractors</p>
 
-    <!-- Hero Mark: ring rx=340, text 56px — text ~400px, ring 680px, 140px clearance each side -->
-    <svg class="hero-mark" viewBox="0 0 780 180" style="width:100%;max-width:580px;display:block;margin:0 auto;"
+    <!-- Hero Mark: FINAL APPROVED — Bebas Neue + tilted ellipse + gradient ring -->
+    <svg class="hero-mark" viewBox="-10 5 1060 310"
+         style="width:100%;max-width:660px;display:block;margin:0 auto;overflow:visible;"
          xmlns="http://www.w3.org/2000/svg" aria-label="AetherTrace wordmark">
+      <defs>
+        <filter id="hero-glow" x="-10%" y="-50%" width="120%" height="200%">
+          <feGaussianBlur stdDeviation="4" result="b"/>
+          <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+        <linearGradient id="hero-ring-grad" x1="40" y1="0" x2="1000" y2="0" gradientUnits="userSpaceOnUse">
+          <stop offset="0%"   stop-color="rgba(126,184,247,0)"/>
+          <stop offset="8%"   stop-color="rgba(126,184,247,0.4)"/>
+          <stop offset="28%"  stop-color="rgba(200,220,255,0.7)"/>
+          <stop offset="48%"  stop-color="rgba(255,255,255,0.95)"/>
+          <stop offset="52%"  stop-color="rgba(255,255,255,0.95)"/>
+          <stop offset="72%"  stop-color="rgba(200,220,255,0.7)"/>
+          <stop offset="92%"  stop-color="rgba(126,184,247,0.4)"/>
+          <stop offset="100%" stop-color="rgba(126,184,247,0)"/>
+        </linearGradient>
+        <clipPath id="hero-front"><rect x="-20" y="155" width="1080" height="225"/></clipPath>
+        <clipPath id="hero-back"> <rect x="-20" y="0"   width="1080" height="155"/></clipPath>
+      </defs>
 
-      <!-- back arc: dim, top half, behind text -->
-      <path d="M 50,90 A 340,50 0 0 0 730,90"
-            fill="none" stroke="#2a4568" stroke-width="14" opacity="0.05"/>
-      <path d="M 50,90 A 340,50 0 0 0 730,90"
-            fill="none" stroke="#486888" stroke-width="1.5" opacity="0.35"/>
+      <!-- ring back (dim, top — behind text) -->
+      <ellipse cx="520" cy="155" rx="440" ry="108"
+        stroke="rgba(126,184,247,0.18)" stroke-width="1.5" fill="none"
+        transform="rotate(-12 520 155)"
+        clip-path="url(#hero-back)"/>
 
-      <!-- node behind text -->
+      <!-- animated node behind text -->
       <g id="node-back-group">
-        <circle id="hero-nb-glow" r="12" fill="#4a6888" opacity="0"/>
-        <circle id="hero-nb-core" r="4"  fill="#8aaad0" opacity="0"/>
+        <circle id="hero-nb-glow" r="16" fill="rgba(126,184,247,0.15)" opacity="0"/>
+        <circle id="hero-nb-core" r="5"  fill="rgba(126,184,247,0.5)"  opacity="0"/>
       </g>
 
-      <!-- wordmark text -->
-      <text x="390" y="107" text-anchor="middle" dominant-baseline="auto"
-            font-family="IBM Plex Mono, monospace"
-            font-size="56" fill="#C8D4E8">
-        <tspan font-weight="300" letter-spacing="5">AETHER</tspan><tspan font-weight="600" letter-spacing="2">TRACE</tspan>
+      <!-- subtitle -->
+      <text x="218" y="222"
+        text-anchor="start"
+        font-family="'IBM Plex Mono', monospace"
+        font-size="10" letter-spacing="5"
+        fill="rgba(90,120,160,0.55)">
+        NEUTRAL EVIDENCE TRUSTEE
       </text>
 
-      <!-- front arc: bright, bottom half, in front of text -->
-      <path d="M 50,90 A 340,50 0 0 1 730,90"
-            fill="none" stroke="#6a8db5" stroke-width="26" opacity="0.06"/>
-      <path d="M 50,90 A 340,50 0 0 1 730,90"
-            fill="none" stroke="#C8D4E8" stroke-width="7" opacity="0.28"/>
-      <path d="M 50,90 A 340,50 0 0 1 730,90"
-            fill="none" stroke="#E8EEFF" stroke-width="1.5" opacity="0.95"/>
+      <!-- wordmark -->
+      <text x="520" y="200"
+        text-anchor="middle"
+        font-family="'Bebas Neue', sans-serif"
+        font-size="118" letter-spacing="8"
+        fill="#FFFFFF"
+        style="filter:drop-shadow(0 0 30px rgba(200,220,255,0.08))">
+        AETHERTRACE
+      </text>
 
-      <!-- node in front of text -->
+      <!-- ring front (bright, bottom — over text) -->
+      <ellipse cx="520" cy="155" rx="440" ry="108"
+        stroke="url(#hero-ring-grad)" stroke-width="2" fill="none"
+        transform="rotate(-12 520 155)"
+        clip-path="url(#hero-front)"
+        filter="url(#hero-glow)"/>
+
+      <!-- animated node in front of text -->
       <g id="node-front-group">
-        <circle id="hero-nf-glow" r="14" fill="#C8D4E8" opacity="0"/>
-        <circle id="hero-nf-core" r="4"  fill="#E8EEFF" opacity="0"/>
+        <circle id="hero-nf-glow" r="20" fill="rgba(126,184,247,0.20)" opacity="0"/>
+        <circle id="hero-nf-core" r="5"  fill="#7EB8F7"                opacity="0"/>
       </g>
-
-      <!-- lock nodes left -->
-      <circle cx="50" cy="90" r="6.5" fill="#1a3555" opacity="0.9"/>
-      <circle cx="50" cy="90" r="4"   fill="none" stroke="#5a7a9a" stroke-width="1.5"/>
-      <circle cx="50" cy="90" r="1.8" fill="#8aaad0"/>
-      <line x1="47" y1="80" x2="47" y2="87" stroke="#5a7a9a" stroke-width="1.5" opacity="0.8"/>
-      <line x1="53" y1="80" x2="53" y2="87" stroke="#5a7a9a" stroke-width="1.5" opacity="0.8"/>
-
-      <!-- lock nodes right -->
-      <circle cx="730" cy="90" r="6.5" fill="#1a3555" opacity="0.9"/>
-      <circle cx="730" cy="90" r="4"   fill="none" stroke="#5a7a9a" stroke-width="1.5"/>
-      <circle cx="730" cy="90" r="1.8" fill="#8aaad0"/>
-      <line x1="727" y1="80" x2="727" y2="87" stroke="#5a7a9a" stroke-width="1.5" opacity="0.8"/>
-      <line x1="733" y1="80" x2="733" y2="87" stroke="#5a7a9a" stroke-width="1.5" opacity="0.8"/>
     </svg>
 
     <h1>You did the work.<br/>You took the photos.<br/><em>You still lost the claim.</em></h1>
@@ -1383,14 +1401,21 @@ footer {
 <footer>
   <div class="footer-inner">
     <div>
-      <svg viewBox="0 0 780 180" height="24" xmlns="http://www.w3.org/2000/svg"
-           style="display:block; opacity: 0.55;">
-        <path d="M 50,90 A 340,50 0 0 0 730,90" fill="none" stroke="#486888" stroke-width="1.5" opacity="0.4"/>
-        <text x="390" y="107" text-anchor="middle" font-family="IBM Plex Mono, monospace"
-              font-size="56" fill="#46607a">
-          <tspan font-weight="300" letter-spacing="5">AETHER</tspan><tspan font-weight="600" letter-spacing="2">TRACE</tspan>
-        </text>
-        <path d="M 50,90 A 340,50 0 0 1 730,90" fill="none" stroke="#5a7a9a" stroke-width="1.5" opacity="0.55"/>
+      <svg viewBox="-10 5 1060 310" height="22" style="display:block;overflow:visible;opacity:0.5;"
+           xmlns="http://www.w3.org/2000/svg" aria-label="AetherTrace">
+        <defs>
+          <clipPath id="ft-front"><rect x="-20" y="155" width="1080" height="170"/></clipPath>
+          <clipPath id="ft-back"> <rect x="-20" y="0"   width="1080" height="155"/></clipPath>
+        </defs>
+        <ellipse cx="520" cy="155" rx="440" ry="108"
+          stroke="rgba(126,184,247,0.15)" stroke-width="1.5" fill="none"
+          transform="rotate(-12 520 155)" clip-path="url(#ft-back)"/>
+        <text x="520" y="200" text-anchor="middle"
+          font-family="'Bebas Neue', sans-serif"
+          font-size="118" letter-spacing="8" fill="#284870">AETHERTRACE</text>
+        <ellipse cx="520" cy="155" rx="440" ry="108"
+          stroke="rgba(126,184,247,0.28)" stroke-width="1.5" fill="none"
+          transform="rotate(-12 520 155)" clip-path="url(#ft-front)"/>
       </svg>
       <p class="footer-tagline">Integrity Infrastructure</p>
     </div>
@@ -1410,62 +1435,62 @@ footer {
 
 <!-- ═══════════════════════════════════════════════ ANIMATION JS -->
 <script>
-// ─── Ring geometry (fixed — rx=340 gives 680px span, text ~400px, 140px clearance each side)
-const CX = 390, CY = 90, RX = 340, RY = 50;
+// ─── Final Mark geometry — tilted ellipse matching approved brand concept
+// cx=520, cy=155, rx=440, ry=108, tilt=-12° (Bebas Neue wordmark inside)
+const CX = 520, CY = 155, RX = 440, RY = 108;
+const TILT = -12 * Math.PI / 180; // ring tilt in radians
+const cosT = Math.cos(TILT);
+const sinT = Math.sin(TILT);
 
-// Hero node elements
+// Tilted ellipse: point at parameter t
+// x = cx + rx*cos(t)*cosT - ry*sin(t)*sinT
+// y = cy + rx*cos(t)*sinT + ry*sin(t)*cosT
+// inFront = y > CY (below ring center = in front of text)
+
 const heroNBGlow = document.getElementById('hero-nb-glow');
 const heroNBCore = document.getElementById('hero-nb-core');
 const heroNFGlow = document.getElementById('hero-nf-glow');
 const heroNFCore = document.getElementById('hero-nf-core');
-
-// Nav node elements
 const navNB = document.getElementById('nav-nb');
 const navNF = document.getElementById('nav-nf');
 
-let heroAngle = Math.PI * 1.5; // start at top
-let navAngle  = Math.PI * 0.8;
+let heroAngle = Math.PI * 0.5;
+let navAngle  = Math.PI * 1.2;
 
 function animate() {
-  // ── Hero mark node ──────────────────────────────
-  heroAngle -= 0.0035;
-  const hx = CX + RX * Math.cos(heroAngle);
-  const hy = CY - RY * Math.sin(heroAngle);
-
-  // sin > 0 → top arc → behind text (back group)
-  const heroBehind = Math.sin(heroAngle) > 0;
+  heroAngle -= 0.0030;
+  const hx = CX + RX * Math.cos(heroAngle) * cosT - RY * Math.sin(heroAngle) * sinT;
+  const hy = CY + RX * Math.cos(heroAngle) * sinT + RY * Math.sin(heroAngle) * cosT;
+  const heroBehind = hy < CY; // above center = behind text
 
   if (heroBehind) {
-    // Back (dim)
     heroNBGlow.setAttribute('cx', hx); heroNBGlow.setAttribute('cy', hy);
     heroNBCore.setAttribute('cx', hx); heroNBCore.setAttribute('cy', hy);
-    heroNBGlow.setAttribute('opacity', '0.12');
-    heroNBCore.setAttribute('opacity', '0.55');
+    heroNBGlow.setAttribute('opacity', '0.10');
+    heroNBCore.setAttribute('opacity', '0.45');
     heroNFGlow.setAttribute('opacity', '0');
     heroNFCore.setAttribute('opacity', '0');
   } else {
-    // Front (bright)
     heroNFGlow.setAttribute('cx', hx); heroNFGlow.setAttribute('cy', hy);
     heroNFCore.setAttribute('cx', hx); heroNFCore.setAttribute('cy', hy);
-    heroNFGlow.setAttribute('opacity', '0.18');
+    heroNFGlow.setAttribute('opacity', '0.22');
     heroNFCore.setAttribute('opacity', '1');
     heroNBGlow.setAttribute('opacity', '0');
     heroNBCore.setAttribute('opacity', '0');
   }
 
-  // ── Nav mark node ───────────────────────────────
-  navAngle -= 0.0042;
-  const nx = CX + RX * Math.cos(navAngle);
-  const ny = CY - RY * Math.sin(navAngle);
-  const navBehind = Math.sin(navAngle) > 0;
+  navAngle -= 0.0038;
+  const nx = CX + RX * Math.cos(navAngle) * cosT - RY * Math.sin(navAngle) * sinT;
+  const ny = CY + RX * Math.cos(navAngle) * sinT + RY * Math.sin(navAngle) * cosT;
+  const navBehind = ny < CY;
 
   if (navBehind) {
     navNB.setAttribute('cx', nx); navNB.setAttribute('cy', ny);
-    navNB.setAttribute('opacity', '0.45');
+    navNB.setAttribute('opacity', '0.4');
     navNF.setAttribute('opacity', '0');
   } else {
     navNF.setAttribute('cx', nx); navNF.setAttribute('cy', ny);
-    navNF.setAttribute('opacity', '0.9');
+    navNF.setAttribute('opacity', '0.95');
     navNB.setAttribute('opacity', '0');
   }
 

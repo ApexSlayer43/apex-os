@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AetherTrace — Brand Direction v2</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      /* New palette: deep navy + silver */
+      --void:     #040D21;   /* deep navy — the deep */
+      --deep:     #060f2a;   /* slightly lighter navy */
+      --surface:  #0a1628;   /* card surface */
+      --surface2: #0f1f3d;   /* elevated panel */
+      --border:   rgba(180, 200, 240, 0.07);
+      --border-h: rgba(180, 200, 240, 0.14);
+
+      /* Silver spectrum */
+      --silver:   #C8D4E8;   /* primary silver */
+      --silver-d: #8899BB;   /* muted silver */
+      --silver-l: #E8EEFF;   /* bright silver/white */
+      --silver-s: rgba(200, 212, 232, 0.08);  /* silver surface */
+      --silver-b: rgba(200, 212, 232, 0.15);  /* silver border */
+
+      /* Text */
+      --text:     #EEF2FF;
+      --text-2:   #94A3C8;
+      --text-m:   #4A5580;
+
+      /* Glow — the signature effect */
+      --glow-sm:  drop-shadow(0 0 6px rgba(200,212,232,0.55)) drop-shadow(0 0 12px rgba(200,212,232,0.25));
+      --glow-md:  drop-shadow(0 0 10px rgba(200,212,232,0.65)) drop-shadow(0 0 24px rgba(200,212,232,0.3)) drop-shadow(0 0 48px rgba(140,170,230,0.15));
+      --glow-lg:  drop-shadow(0 0 16px rgba(200,212,232,0.8)) drop-shadow(0 0 32px rgba(200,212,232,0.4)) drop-shadow(0 0 64px rgba(140,170,230,0.2));
+    }
+
+    html, body {
+      background: var(--void);
+      color: var(--text);
+      font-family: 'Inter', system-ui, sans-serif;
+      min-height: 100vh;
+    }
+
+    /* Stars background */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        radial-gradient(1px 1px at 15% 20%, rgba(200,212,232,0.4) 0%, transparent 100%),
+        radial-gradient(1px 1px at 45% 8%,  rgba(200,212,232,0.3) 0%, transparent 100%),
+        radial-gradient(1px 1px at 72% 15%, rgba(200,212,232,0.35) 0%, transparent 100%),
+        radial-gradient(1px 1px at 88% 42%, rgba(200,212,232,0.25) 0%, transparent 100%),
+        radial-gradient(1px 1px at 28% 65%, rgba(200,212,232,0.3) 0%, transparent 100%),
+        radial-gradient(1px 1px at 62% 78%, rgba(200,212,232,0.2) 0%, transparent 100%),
+        radial-gradient(1px 1px at 5%  88%, rgba(200,212,232,0.3) 0%, transparent 100%),
+        radial-gradient(1px 1px at 93% 75%, rgba(200,212,232,0.25) 0%, transparent 100%),
+        radial-gradient(1.5px 1.5px at 35% 40%, rgba(200,212,232,0.2) 0%, transparent 100%),
+        radial-gradient(1px 1px at 78% 55%, rgba(200,212,232,0.3) 0%, transparent 100%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .page {
+      position: relative;
+      z-index: 1;
+      padding-bottom: 120px;
+    }
+
+    /* ── HEADER ── */
+    .page-header {
+      padding: 56px 80px 48px;
+      border-bottom: 1px solid var(--border);
+    }
+    .brand-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text-m);
+      margin-bottom: 14px;
+    }
+    .page-title {
+      font-size: 30px;
+      font-weight: 600;
+      letter-spacing: -0.03em;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+    .page-sub {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+      color: var(--silver-d);
+    }
+
+    /* ── SECTIONS ── */
+    .section { padding: 64px 80px; border-bottom: 1px solid var(--border); }
+    .section-header {
+      display: flex;
+      align-items: baseline;
+      gap: 16px;
+      margin-bottom: 56px;
+    }
+    .section-number {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      color: var(--silver-d);
+      letter-spacing: 0.12em;
+    }
+    .section-title {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-2);
+    }
+
+    /* ── MARKS GRID ── */
+    .marks-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3px;
+    }
+
+    .mark-panel {
+      background: var(--surface);
+      padding: 64px 48px 52px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      transition: background 0.3s;
+    }
+    .mark-panel:hover { background: var(--surface2); }
+    .mark-panel:nth-child(1) { border-radius: 16px 0 0 0; }
+    .mark-panel:nth-child(2) { border-radius: 0 16px 0 0; }
+    .mark-panel:nth-child(3) { border-radius: 0 0 0 16px; }
+    .mark-panel:nth-child(4) { border-radius: 0 0 16px 0; }
+
+    .mark-option-tag {
+      position: absolute;
+      top: 22px;
+      left: 26px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 9.5px;
+      color: var(--text-m);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .mark-stage {
+      width: 160px;
+      height: 160px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 44px;
+    }
+
+    .mark-name {
+      font-size: 17px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      color: var(--text);
+      margin-bottom: 8px;
+      text-align: center;
+    }
+    .mark-concept {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      color: var(--silver-d);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 18px;
+      text-align: center;
+    }
+    .mark-desc {
+      font-size: 13px;
+      color: var(--text-2);
+      line-height: 1.72;
+      text-align: center;
+      max-width: 300px;
+    }
+
+    /* ── WORDMARK SECTION ── */
+    .wm-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .wm-item {
+      padding: 32px;
+      background: var(--surface);
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .wm-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      color: var(--text-m);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .wm-lockup {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .wm-text {
+      display: flex;
+      align-items: baseline;
+      gap: 0;
+    }
+
+    .wm-aether {
+      font-family: 'IBM Plex Mono', monospace;
+      font-weight: 300;
+      letter-spacing: 0.14em;
+      color: var(--text);
+      text-transform: uppercase;
+    }
+    .wm-trace {
+      font-family: 'IBM Plex Mono', monospace;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      color: var(--text);
+      text-transform: uppercase;
+    }
+
+    .wm-lg .wm-aether { font-size: 24px; }
+    .wm-lg .wm-trace  { font-size: 24px; }
+    .wm-md .wm-aether { font-size: 16px; }
+    .wm-md .wm-trace  { font-size: 16px; }
+    .wm-sm .wm-aether { font-size: 12px; }
+    .wm-sm .wm-trace  { font-size: 12px; }
+
+    /* ── COLOR PALETTE ── */
+    .palette-row {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 12px;
+    }
+
+    .sw-block {
+      height: 72px;
+      border-radius: 10px;
+      margin-bottom: 10px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .sw-glow {
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+    }
+
+    .sw-name {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10.5px;
+      font-weight: 500;
+      color: var(--text);
+      margin-bottom: 3px;
+    }
+    .sw-hex { font-family: 'IBM Plex Mono', monospace; font-size: 9.5px; color: var(--text-m); margin-bottom: 4px; }
+    .sw-role { font-size: 11px; color: var(--text-2); line-height: 1.4; }
+
+    /* ── SCALE TEST ── */
+    .scale-strip {
+      display: flex;
+      align-items: flex-end;
+      gap: 40px;
+      padding: 40px;
+      background: var(--surface);
+      border-radius: 14px;
+      border: 1px solid var(--border);
+    }
+
+    .scale-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+    }
+    .scale-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 9px;
+      color: var(--text-m);
+      letter-spacing: 0.08em;
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HEADER -->
+  <header class="page-header">
+    <p class="brand-label">AetherTrace · Brand Direction v2 · Back to the Drawing Board</p>
+    <h1 class="page-title">Dark Navy. Glowing Silver. Something Distinct.</h1>
+    <p class="page-sub">HELIOS + PRISM — four new marks</p>
+  </header>
+
+  <!-- ═══════════════════ SECTION 01 — THE MARKS ═══════════════════ -->
+  <section class="section">
+    <div class="section-header">
+      <span class="section-number">01 ——</span>
+      <span class="section-title">Four Mark Concepts</span>
+    </div>
+
+    <div class="marks-grid">
+
+      <!-- ══════════════════════════════════ -->
+      <!-- MARK A: THE TRACE                  -->
+      <!-- A wave entering a crystal node,    -->
+      <!-- emerging as a settled flat line    -->
+      <!-- ══════════════════════════════════ -->
+      <div class="mark-panel">
+        <span class="mark-option-tag">A</span>
+        <div class="mark-stage">
+          <svg width="160" height="72" viewBox="0 0 160 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Left wave — fluid, uncontrolled evidence -->
+            <path d="M0 36 C10 36 14 8 24 8 C34 8 36 64 46 64 C56 64 58 20 68 36"
+              stroke="#C8D4E8" stroke-width="2.5" stroke-linecap="round" fill="none"
+              style="filter: drop-shadow(0 0 8px rgba(200,212,232,0.5))"/>
+
+            <!-- Crystal node — the sealing point (diamond) -->
+            <polygon points="80,56 92,36 80,16 68,36"
+              fill="none" stroke="#E8EEFF" stroke-width="2"
+              style="filter: drop-shadow(0 0 14px rgba(220,235,255,0.9)) drop-shadow(0 0 28px rgba(200,212,232,0.5)) drop-shadow(0 0 56px rgba(140,170,230,0.25))"/>
+            <!-- Inner crystal facets -->
+            <line x1="80" y1="16" x2="80" y2="56" stroke="rgba(200,212,232,0.25)" stroke-width="1"/>
+            <line x1="68" y1="36" x2="92" y2="36" stroke="rgba(200,212,232,0.25)" stroke-width="1"/>
+            <!-- Center glow dot -->
+            <circle cx="80" cy="36" r="3" fill="#E8EEFF"
+              style="filter: drop-shadow(0 0 8px rgba(232,238,255,1)) drop-shadow(0 0 16px rgba(200,212,232,0.8))"/>
+
+            <!-- Right line — settled, sealed, permanent -->
+            <line x1="92" y1="36" x2="160" y2="36"
+              stroke="#C8D4E8" stroke-width="2.5" stroke-linecap="round"
+              style="filter: drop-shadow(0 0 8px rgba(200,212,232,0.4))"/>
+
+            <!-- Hash tick marks on right line — suggests sealing -->
+            <line x1="108" y1="30" x2="108" y2="42" stroke="rgba(200,212,232,0.5)" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="124" y1="30" x2="124" y2="42" stroke="rgba(200,212,232,0.4)" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="140" y1="30" x2="140" y2="42" stroke="rgba(200,212,232,0.3)" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="mark-name">The Trace</div>
+        <div class="mark-concept">Chaos → Sealed → Permanent</div>
+        <p class="mark-desc">A raw evidence signal enters the crystal node and exits sealed. The wave on the left is uncontrolled — the flat line on the right cannot be altered. The diamond node is the moment of sealing. The hash marks are the chain. The name is the mark.</p>
+      </div>
+
+      <!-- ══════════════════════════════════ -->
+      <!-- MARK B: THE NODE                   -->
+      <!-- Three glowing nodes forming an     -->
+      <!-- invisible A — like a circuit       -->
+      <!-- ══════════════════════════════════ -->
+      <div class="mark-panel">
+        <span class="mark-option-tag">B</span>
+        <div class="mark-stage">
+          <svg width="110" height="130" viewBox="0 0 110 130" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Connecting lines (PCB trace style) -->
+            <!-- Left leg: top node to bottom-left -->
+            <line x1="55" y1="18" x2="15" y2="112"
+              stroke="#C8D4E8" stroke-width="2"
+              style="filter: drop-shadow(0 0 6px rgba(200,212,232,0.4))"/>
+            <!-- Right leg: top node to bottom-right -->
+            <line x1="55" y1="18" x2="95" y2="112"
+              stroke="#C8D4E8" stroke-width="2"
+              style="filter: drop-shadow(0 0 6px rgba(200,212,232,0.4))"/>
+            <!-- Crossbar (the A crossbar) -->
+            <line x1="28" y1="75" x2="82" y2="75"
+              stroke="#C8D4E8" stroke-width="2"
+              style="filter: drop-shadow(0 0 6px rgba(200,212,232,0.4))"/>
+
+            <!-- Bottom-left node -->
+            <circle cx="15" cy="112" r="7"
+              fill="#0a1628" stroke="#C8D4E8" stroke-width="2"
+              style="filter: drop-shadow(0 0 8px rgba(200,212,232,0.5)) drop-shadow(0 0 20px rgba(200,212,232,0.2))"/>
+            <circle cx="15" cy="112" r="2.5" fill="#C8D4E8"
+              style="filter: drop-shadow(0 0 6px rgba(200,212,232,0.9))"/>
+
+            <!-- Bottom-right node -->
+            <circle cx="95" cy="112" r="7"
+              fill="#0a1628" stroke="#C8D4E8" stroke-width="2"
+              style="filter: drop-shadow(0 0 8px rgba(200,212,232,0.5)) drop-shadow(0 0 20px rgba(200,212,232,0.2))"/>
+            <circle cx="95" cy="112" r="2.5" fill="#C8D4E8"
+              style="filter: drop-shadow(0 0 6px rgba(200,212,232,0.9))"/>
+
+            <!-- Apex node — brightest, the authority point -->
+            <circle cx="55" cy="18" r="11"
+              fill="#0a1628" stroke="#E8EEFF" stroke-width="2.5"
+              style="filter: drop-shadow(0 0 14px rgba(232,238,255,0.8)) drop-shadow(0 0 32px rgba(200,212,232,0.45)) drop-shadow(0 0 64px rgba(140,170,230,0.2))"/>
+            <circle cx="55" cy="18" r="4.5" fill="#E8EEFF"
+              style="filter: drop-shadow(0 0 10px rgba(232,238,255,1)) drop-shadow(0 0 24px rgba(200,212,232,0.7))"/>
+          </svg>
+        </div>
+        <div class="mark-name">The Node</div>
+        <div class="mark-concept">Three Points · One Chain · Hidden A</div>
+        <p class="mark-desc">Three custody nodes connected by precision traces. The hidden form is the letter A — you see it once and you can't unsee it. The apex node glows brightest — the authority point. Lower nodes anchor the chain to earth. Reads as: network, evidence, AetherTrace.</p>
+      </div>
+
+      <!-- ══════════════════════════════════ -->
+      <!-- MARK C: THE PRISM                  -->
+      <!-- A geometric crystal form that      -->
+      <!-- refracts light from within         -->
+      <!-- ══════════════════════════════════ -->
+      <div class="mark-panel">
+        <span class="mark-option-tag">C</span>
+        <div class="mark-stage">
+          <svg width="130" height="130" viewBox="0 0 130 130" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Outer crystal shape — irregular polygon, gem-like -->
+            <polygon points="65,4 108,28 120,65 108,102 65,126 22,102 10,65 22,28"
+              fill="rgba(10,22,40,0.8)" stroke="#C8D4E8" stroke-width="1.5"
+              style="filter: drop-shadow(0 0 12px rgba(200,212,232,0.35))"/>
+
+            <!-- Inner crystal facets — depth illusion -->
+            <polygon points="65,18 97,35 107,65 97,95 65,112 33,95 23,65 33,35"
+              fill="none" stroke="rgba(200,212,232,0.18)" stroke-width="1"/>
+
+            <!-- Facet lines — gives the crystal depth -->
+            <line x1="65" y1="4"  x2="65"  y2="126" stroke="rgba(200,212,232,0.08)" stroke-width="1"/>
+            <line x1="10" y1="65" x2="120" y2="65"  stroke="rgba(200,212,232,0.08)" stroke-width="1"/>
+            <line x1="22" y1="28" x2="108" y2="102" stroke="rgba(200,212,232,0.06)" stroke-width="1"/>
+            <line x1="108" y1="28" x2="22" y2="102" stroke="rgba(200,212,232,0.06)" stroke-width="1"/>
+
+            <!-- Inner bright facets — the glow source -->
+            <polygon points="65,18 97,35 65,65"
+              fill="rgba(200,212,232,0.07)"/>
+            <polygon points="65,18 33,35 65,65"
+              fill="rgba(200,212,232,0.04)"/>
+            <polygon points="97,95 65,112 65,65"
+              fill="rgba(200,212,232,0.05)"/>
+
+            <!-- Center glow — the custody point -->
+            <circle cx="65" cy="65" r="18"
+              fill="none" stroke="rgba(200,212,232,0.2)" stroke-width="1"/>
+            <circle cx="65" cy="65" r="8"
+              fill="rgba(15,31,61,0.95)" stroke="#E8EEFF" stroke-width="1.5"
+              style="filter: drop-shadow(0 0 16px rgba(232,238,255,0.9)) drop-shadow(0 0 32px rgba(200,212,232,0.6)) drop-shadow(0 0 64px rgba(140,170,230,0.3))"/>
+            <circle cx="65" cy="65" r="3" fill="#E8EEFF"
+              style="filter: drop-shadow(0 0 8px rgba(232,238,255,1))"/>
+          </svg>
+        </div>
+        <div class="mark-name">The Prism</div>
+        <div class="mark-concept">Crystalline · Refraction · Evidence Within</div>
+        <p class="mark-desc">A cut-crystal form with a custody point at its center. The facets suggest depth, permanence, and mathematical precision — like a diamond that's been forming for millennia. The glow at center says: something is sealed inside. People will stare at this one.</p>
+      </div>
+
+      <!-- ══════════════════════════════════ -->
+      <!-- MARK D: THE SIGIL                  -->
+      <!-- An A constructed from two          -->
+      <!-- interlocking chain arcs            -->
+      <!-- ══════════════════════════════════ -->
+      <div class="mark-panel">
+        <span class="mark-option-tag">D</span>
+        <div class="mark-stage">
+          <svg width="120" height="130" viewBox="0 0 120 130" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Left arc — first chain link arm -->
+            <path d="M60 8 C20 8 8 35 8 65 C8 95 20 115 60 122"
+              stroke="#C8D4E8" stroke-width="4" stroke-linecap="round" fill="none"
+              style="filter: drop-shadow(0 0 8px rgba(200,212,232,0.5))"/>
+
+            <!-- Right arc — second chain link arm -->
+            <path d="M60 8 C100 8 112 35 112 65 C112 95 100 115 60 122"
+              stroke="#C8D4E8" stroke-width="4" stroke-linecap="round" fill="none"
+              style="filter: drop-shadow(0 0 8px rgba(200,212,232,0.5))"/>
+
+            <!-- Crossbar — the A crossbar / chain connector -->
+            <line x1="24" y1="70" x2="96" y2="70"
+              stroke="#C8D4E8" stroke-width="3.5" stroke-linecap="round"
+              style="filter: drop-shadow(0 0 8px rgba(200,212,232,0.5))"/>
+
+            <!-- Top seal node — where evidence enters the chain -->
+            <circle cx="60" cy="8" r="8"
+              fill="#060f2a" stroke="#E8EEFF" stroke-width="2.5"
+              style="filter: drop-shadow(0 0 14px rgba(232,238,255,0.85)) drop-shadow(0 0 32px rgba(200,212,232,0.5)) drop-shadow(0 0 60px rgba(140,170,230,0.25))"/>
+            <circle cx="60" cy="8" r="3" fill="#E8EEFF"
+              style="filter: drop-shadow(0 0 8px rgba(232,238,255,1))"/>
+
+            <!-- Bottom base dots — anchors -->
+            <circle cx="60" cy="122" r="5"
+              fill="#060f2a" stroke="rgba(200,212,232,0.6)" stroke-width="1.5"
+              style="filter: drop-shadow(0 0 8px rgba(200,212,232,0.3))"/>
+
+            <!-- Small cross marks at crossbar ends — precision detail -->
+            <line x1="20" y1="66" x2="20" y2="74" stroke="rgba(200,212,232,0.5)" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="100" y1="66" x2="100" y2="74" stroke="rgba(200,212,232,0.5)" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="mark-name">The Sigil</div>
+        <div class="mark-concept">A · Arc · Infinite Loop · The Entry Point</div>
+        <p class="mark-desc">Two chain arcs forming the letter A, joined at a glowing apex node — the entry point where evidence enters the chain. The crossbar is the chain connector. The bottom opens downward — the chain continues beyond the mark. Reads as: the letter A, a chain, and an infinite loop simultaneously.</p>
+      </div>
+
+    </div><!-- /marks-grid -->
+  </section>
+
+  <!-- ═══════════════════ SECTION 02 — WORDMARK ═══════════════════ -->
+  <section class="section">
+    <div class="section-header">
+      <span class="section-number">02 ——</span>
+      <span class="section-title">Wordmark · IBM Plex Mono · Two Weights</span>
+    </div>
+
+    <div class="wm-grid">
+
+      <!-- Primary horizontal lockup -->
+      <div class="wm-item">
+        <span class="wm-label">Primary — Dark</span>
+        <div class="wm-lockup wm-lg">
+          <!-- Mark D (The Sigil) inline — small version -->
+          <svg width="28" height="31" viewBox="0 0 120 130" fill="none">
+            <path d="M60 8 C20 8 8 35 8 65 C8 95 20 115 60 122" stroke="#C8D4E8" stroke-width="4" stroke-linecap="round"/>
+            <path d="M60 8 C100 8 112 35 112 65 C112 95 100 115 60 122" stroke="#C8D4E8" stroke-width="4" stroke-linecap="round"/>
+            <line x1="24" y1="70" x2="96" y2="70" stroke="#C8D4E8" stroke-width="3.5" stroke-linecap="round"/>
+            <circle cx="60" cy="8" r="10" fill="#060f2a" stroke="#E8EEFF" stroke-width="2.5" style="filter:drop-shadow(0 0 10px rgba(232,238,255,0.8))"/>
+            <circle cx="60" cy="8" r="3.5" fill="#E8EEFF"/>
+          </svg>
+          <div class="wm-text">
+            <span class="wm-aether">Aether</span><span class="wm-trace">Trace</span>
+          </div>
+        </div>
+        <p style="font-size:11px;color:var(--text-m);font-family:'IBM Plex Mono',monospace;margin-top:4px;">IBM Plex Mono · Light 300 + Semibold 600</p>
+      </div>
+
+      <!-- Navigation size -->
+      <div class="wm-item">
+        <span class="wm-label">Navigation</span>
+        <div class="wm-lockup wm-md">
+          <svg width="18" height="20" viewBox="0 0 120 130" fill="none">
+            <path d="M60 8 C20 8 8 35 8 65 C8 95 20 115 60 122" stroke="#C8D4E8" stroke-width="5" stroke-linecap="round"/>
+            <path d="M60 8 C100 8 112 35 112 65 C112 95 100 115 60 122" stroke="#C8D4E8" stroke-width="5" stroke-linecap="round"/>
+            <line x1="24" y1="70" x2="96" y2="70" stroke="#C8D4E8" stroke-width="4.5" stroke-linecap="round"/>
+            <circle cx="60" cy="8" r="11" fill="#060f2a" stroke="#E8EEFF" stroke-width="3" style="filter:drop-shadow(0 0 8px rgba(232,238,255,0.7))"/>
+            <circle cx="60" cy="8" r="4" fill="#E8EEFF"/>
+          </svg>
+          <div class="wm-text">
+            <span class="wm-aether">Aether</span><span class="wm-trace">Trace</span>
+          </div>
+        </div>
+        <p style="font-size:11px;color:var(--text-m);font-family:'IBM Plex Mono',monospace;margin-top:4px;">16px · nav / header use</p>
+      </div>
+
+      <!-- Light background -->
+      <div class="wm-item" style="background:#EEF2FF;">
+        <span class="wm-label" style="color:#4A5580;">On Light</span>
+        <div class="wm-lockup wm-md">
+          <svg width="18" height="20" viewBox="0 0 120 130" fill="none">
+            <path d="M60 8 C20 8 8 35 8 65 C8 95 20 115 60 122" stroke="#1e3a6e" stroke-width="5" stroke-linecap="round"/>
+            <path d="M60 8 C100 8 112 35 112 65 C112 95 100 115 60 122" stroke="#1e3a6e" stroke-width="5" stroke-linecap="round"/>
+            <line x1="24" y1="70" x2="96" y2="70" stroke="#1e3a6e" stroke-width="4.5" stroke-linecap="round"/>
+            <circle cx="60" cy="8" r="11" fill="#EEF2FF" stroke="#1e3a6e" stroke-width="3"/>
+            <circle cx="60" cy="8" r="4" fill="#1e3a6e"/>
+          </svg>
+          <div class="wm-text">
+            <span class="wm-aether" style="color:#040D21;">Aether</span><span class="wm-trace" style="color:#040D21;">Trace</span>
+          </div>
+        </div>
+        <p style="font-size:11px;color:#6B7280;font-family:'IBM Plex Mono',monospace;margin-top:4px;">Navy on light — for docs, print</p>
+      </div>
+
+    </div>
+
+    <!-- Scale test -->
+    <div style="margin-top:28px;">
+      <p class="brand-label" style="margin-bottom:20px;">Mark D (The Sigil) — Scale Test</p>
+      <div class="scale-strip">
+        <!-- 96px -->
+        <div class="scale-item">
+          <svg width="42" height="46" viewBox="0 0 120 130" fill="none" style="filter:drop-shadow(0 0 8px rgba(200,212,232,0.5))">
+            <path d="M60 8 C20 8 8 35 8 65 C8 95 20 115 60 122" stroke="#C8D4E8" stroke-width="4" stroke-linecap="round"/>
+            <path d="M60 8 C100 8 112 35 112 65 C112 95 100 115 60 122" stroke="#C8D4E8" stroke-width="4" stroke-linecap="round"/>
+            <line x1="24" y1="70" x2="96" y2="70" stroke="#C8D4E8" stroke-width="3.5" stroke-linecap="round"/>
+            <circle cx="60" cy="8" r="10" fill="#060f2a" stroke="#E8EEFF" stroke-width="2.5"/>
+            <circle cx="60" cy="8" r="3.5" fill="#E8EEFF"/>
+          </svg>
+          <span class="scale-label">42px</span>
+        </div>
+        <!-- 64px -->
+        <div class="scale-item">
+          <svg width="28" height="30" viewBox="0 0 120 130" fill="none" style="filter:drop-shadow(0 0 6px rgba(200,212,232,0.5))">
+            <path d="M60 8 C20 8 8 35 8 65 C8 95 20 115 60 122" stroke="#C8D4E8" stroke-width="4" stroke-linecap="round"/>
+            <path d="M60 8 C100 8 112 35 112 65 C112 95 100 115 60 122" stroke="#C8D4E8" stroke-width="4" stroke-linecap="round"/>
+            <line x1="24" y1="70" x2="96" y2="70" stroke="#C8D4E8" stroke-width="3.5" stroke-linecap="round"/>
+            <circle cx="60" cy="8" r="10" fill="#060f2a" stroke="#E8EEFF" stroke-width="2.5"/>
+            <circle cx="60" cy="8" r="3.5" fill="#E8EEFF"/>
+          </svg>
+          <span class="scale-label">28px</span>
+        </div>
+        <!-- 32px -->
+        <div class="scale-item">
+          <svg width="18" height="20" viewBox="0 0 120 130" fill="none" style="filter:drop-shadow(0 0 5px rgba(200,212,232,0.5))">
+            <path d="M60 8 C20 8 8 35 8 65 C8 95 20 115 60 122" stroke="#C8D4E8" stroke-width="4" stroke-linecap="round"/>
+            <path d="M60 8 C100 8 112 35 112 65 C112 95 100 115 60 122" stroke="#C8D4E8" stroke-width="4" stroke-linecap="round"/>
+            <line x1="24" y1="70" x2="96" y2="70" stroke="#C8D4E8" stroke-width="4" stroke-linecap="round"/>
+            <circle cx="60" cy="8" r="10" fill="#060f2a" stroke="#E8EEFF" stroke-width="3"/>
+            <circle cx="60" cy="8" r="4" fill="#E8EEFF"/>
+          </svg>
+          <span class="scale-label">18px</span>
+        </div>
+        <!-- 16px -->
+        <div class="scale-item">
+          <svg width="12" height="13" viewBox="0 0 120 130" fill="none">
+            <path d="M60 8 C20 8 8 35 8 65 C8 95 20 115 60 122" stroke="#C8D4E8" stroke-width="5" stroke-linecap="round"/>
+            <path d="M60 8 C100 8 112 35 112 65 C112 95 100 115 60 122" stroke="#C8D4E8" stroke-width="5" stroke-linecap="round"/>
+            <line x1="24" y1="70" x2="96" y2="70" stroke="#C8D4E8" stroke-width="4.5" stroke-linecap="round"/>
+            <circle cx="60" cy="8" r="12" fill="#060f2a" stroke="#E8EEFF" stroke-width="4"/>
+          </svg>
+          <span class="scale-label">12px</span>
+        </div>
+
+        <div style="flex:1;"></div>
+
+        <!-- Context: on different backgrounds -->
+        <div class="scale-item" style="padding:12px 16px; background:#EEF2FF; border-radius:8px;">
+          <svg width="28" height="30" viewBox="0 0 120 130" fill="none">
+            <path d="M60 8 C20 8 8 35 8 65 C8 95 20 115 60 122" stroke="#1e3a6e" stroke-width="4" stroke-linecap="round"/>
+            <path d="M60 8 C100 8 112 35 112 65 C112 95 100 115 60 122" stroke="#1e3a6e" stroke-width="4" stroke-linecap="round"/>
+            <line x1="24" y1="70" x2="96" y2="70" stroke="#1e3a6e" stroke-width="3.5" stroke-linecap="round"/>
+            <circle cx="60" cy="8" r="10" fill="#EEF2FF" stroke="#1e3a6e" stroke-width="2.5"/>
+            <circle cx="60" cy="8" r="3.5" fill="#1e3a6e"/>
+          </svg>
+          <span class="scale-label" style="color:#6B7280;">Light BG</span>
+        </div>
+
+        <div class="scale-item" style="padding:12px 16px; background:#040D21; border-radius:8px; border:1px solid rgba(200,212,232,0.1);">
+          <svg width="28" height="30" viewBox="0 0 120 130" fill="none" style="filter:drop-shadow(0 0 10px rgba(200,212,232,0.6))">
+            <path d="M60 8 C20 8 8 35 8 65 C8 95 20 115 60 122" stroke="#E8EEFF" stroke-width="4" stroke-linecap="round"/>
+            <path d="M60 8 C100 8 112 35 112 65 C112 95 100 115 60 122" stroke="#E8EEFF" stroke-width="4" stroke-linecap="round"/>
+            <line x1="24" y1="70" x2="96" y2="70" stroke="#E8EEFF" stroke-width="3.5" stroke-linecap="round"/>
+            <circle cx="60" cy="8" r="10" fill="#040D21" stroke="#E8EEFF" stroke-width="2.5"/>
+            <circle cx="60" cy="8" r="3.5" fill="#E8EEFF"/>
+          </svg>
+          <span class="scale-label">Max Glow</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════ SECTION 03 — COLOR PALETTE ═══════════════════ -->
+  <section class="section">
+    <div class="section-header">
+      <span class="section-number">03 ——</span>
+      <span class="section-title">Color System — Navy + Silver</span>
+    </div>
+
+    <div class="palette-row">
+      <div>
+        <div class="sw-block" style="background:#040D21; border:1px solid rgba(180,200,240,0.15);">
+          <div class="sw-glow" style="background:radial-gradient(circle at 50% 120%, rgba(200,212,232,0.05), transparent 70%);"></div>
+        </div>
+        <div class="sw-name">Void</div>
+        <div class="sw-hex">#040D21</div>
+        <div class="sw-role">The deep. Page root. The aether itself.</div>
+      </div>
+      <div>
+        <div class="sw-block" style="background:#0a1628; border:1px solid rgba(180,200,240,0.1);"></div>
+        <div class="sw-name">Deep</div>
+        <div class="sw-hex">#0a1628</div>
+        <div class="sw-role">Cards, panels, elevated surfaces.</div>
+      </div>
+      <div>
+        <div class="sw-block" style="background:#0f1f3d; border:1px solid rgba(180,200,240,0.1);"></div>
+        <div class="sw-name">Navy</div>
+        <div class="sw-hex">#0f1f3d</div>
+        <div class="sw-role">Hover states, focused panels.</div>
+      </div>
+      <div>
+        <div class="sw-block" style="background:#C8D4E8; border:1px solid rgba(180,200,240,0.3);">
+          <div class="sw-glow" style="box-shadow: inset 0 0 20px rgba(200,212,232,0.3);"></div>
+        </div>
+        <div class="sw-name">Silver</div>
+        <div class="sw-hex">#C8D4E8</div>
+        <div class="sw-role">Primary accent. The glow. The mark itself.</div>
+      </div>
+      <div>
+        <div class="sw-block" style="background:#E8EEFF;">
+          <div class="sw-glow" style="box-shadow: inset 0 0 24px rgba(232,238,255,0.5);"></div>
+        </div>
+        <div class="sw-name">Bright</div>
+        <div class="sw-hex">#E8EEFF</div>
+        <div class="sw-role">Glow source. Apex nodes. Seal confirmed.</div>
+      </div>
+      <div>
+        <div class="sw-block" style="background:#EF4444;"></div>
+        <div class="sw-name">Breach</div>
+        <div class="sw-hex">#EF4444</div>
+        <div class="sw-role">Tamper detected. Reserved — used only on chain failure.</div>
+      </div>
+      <div>
+        <div class="sw-block" style="background:linear-gradient(135deg, #040D21 0%, #0f1f3d 50%, #1a3460 100%); border:1px solid rgba(180,200,240,0.1);"></div>
+        <div class="sw-name">Depth</div>
+        <div class="sw-hex">Gradient</div>
+        <div class="sw-role">Hero backgrounds. Suggest infinite depth.</div>
+      </div>
+    </div>
+
+    <!-- Glow demonstration -->
+    <div style="margin-top:40px; padding:40px; background:var(--surface); border-radius:14px; border:1px solid var(--border); display:flex; align-items:center; gap:48px; flex-wrap:wrap;">
+      <div>
+        <p class="brand-label" style="margin-bottom:16px;">The Glow — Three Intensities</p>
+        <div style="display:flex; align-items:center; gap:32px;">
+          <div style="text-align:center;">
+            <div style="width:48px;height:48px;border-radius:50%;background:#060f2a;border:1.5px solid rgba(200,212,232,0.5);display:flex;align-items:center;justify-content:center;margin:0 auto 10px;filter:drop-shadow(0 0 4px rgba(200,212,232,0.35))">
+              <div style="width:10px;height:10px;border-radius:50%;background:#C8D4E8;"></div>
+            </div>
+            <span style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--text-m);">SUBTLE</span>
+          </div>
+          <div style="text-align:center;">
+            <div style="width:48px;height:48px;border-radius:50%;background:#060f2a;border:2px solid rgba(220,230,250,0.7);display:flex;align-items:center;justify-content:center;margin:0 auto 10px;filter:drop-shadow(0 0 10px rgba(200,212,232,0.6)) drop-shadow(0 0 24px rgba(200,212,232,0.25))">
+              <div style="width:12px;height:12px;border-radius:50%;background:#E8EEFF;filter:drop-shadow(0 0 6px rgba(232,238,255,0.9))"></div>
+            </div>
+            <span style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--text-m);">ACTIVE</span>
+          </div>
+          <div style="text-align:center;">
+            <div style="width:48px;height:48px;border-radius:50%;background:#060f2a;border:2px solid #E8EEFF;display:flex;align-items:center;justify-content:center;margin:0 auto 10px;filter:drop-shadow(0 0 16px rgba(232,238,255,0.9)) drop-shadow(0 0 40px rgba(200,212,232,0.5)) drop-shadow(0 0 80px rgba(140,170,230,0.25))">
+              <div style="width:14px;height:14px;border-radius:50%;background:#fff;filter:drop-shadow(0 0 10px rgba(255,255,255,1))"></div>
+            </div>
+            <span style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--text-m);">SEALED</span>
+          </div>
+        </div>
+      </div>
+      <div style="flex:1; max-width:420px;">
+        <p style="font-size:13px;color:var(--text-2);line-height:1.7;">Silver doesn't decorate. It confirms. The glow intensity maps to the state of evidence: subtle = idle, active = processing, sealed = confirmed. The mark glows brightest at the moment of custody.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════ SECTION 04 — PRISM'S CALL ═══════════════════ -->
+  <section class="section" style="border-bottom:none;">
+    <div class="section-header">
+      <span class="section-number">04 ——</span>
+      <span class="section-title">PRISM's Assessment</span>
+    </div>
+
+    <div style="display:grid; grid-template-columns: repeat(4,1fr); gap:16px; max-width:1000px;">
+
+      <div style="padding:28px 24px; background:var(--surface); border-radius:14px; border:1px solid var(--border);">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--silver-d);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:12px;">MARK A</div>
+        <p style="font-size:13px;color:var(--text);font-weight:500;margin-bottom:8px;">The Trace</p>
+        <p style="font-size:12px;color:var(--text-2);line-height:1.6;">Most conceptually rich. The wave-to-line narrative is perfect. Hard to read at favicon size. Best for hero/hero applications.</p>
+      </div>
+
+      <div style="padding:28px 24px; background:var(--surface); border-radius:14px; border:1px solid var(--border);">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--silver-d);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:12px;">MARK B</div>
+        <p style="font-size:13px;color:var(--text);font-weight:500;margin-bottom:8px;">The Node</p>
+        <p style="font-size:12px;color:var(--text-2);line-height:1.6;">Hidden A is a strong idea. Scales perfectly. The apex glow naturally communicates authority. Most versatile of the four.</p>
+      </div>
+
+      <div style="padding:28px 24px; background:var(--surface); border-radius:14px; border:1px solid var(--border);">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--silver-d);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:12px;">MARK C</div>
+        <p style="font-size:13px;color:var(--text);font-weight:500;margin-bottom:8px;">The Prism</p>
+        <p style="font-size:12px;color:var(--text-2);line-height:1.6;">Most visually arresting. People will stop at this one. The crystal depth communicates permanence unlike anything else here.</p>
+      </div>
+
+      <div style="padding:28px 24px; background:var(--surface); border-radius:14px; border:1px solid rgba(200,212,232,0.18);">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--silver);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:12px;">MARK D ★</div>
+        <p style="font-size:13px;color:var(--text);font-weight:500;margin-bottom:8px;">The Sigil</p>
+        <p style="font-size:12px;color:var(--text-2);line-height:1.6;">PRISM's lead. An A that is also a chain that is also an open loop. The apex glow seals it. Works at every size. Has depth without complexity.</p>
+      </div>
+
+    </div>
+
+    <div style="margin-top:28px; padding:28px 32px; background:rgba(200,212,232,0.04); border:1px solid rgba(200,212,232,0.12); border-radius:12px; max-width:800px;">
+      <p style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--silver-d);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:10px;">The question —</p>
+      <p style="font-size:14px;color:var(--text);line-height:1.7;">Casey, which mark makes you feel something when you look at it? Not which one is "best" — which one feels like yours? That's the one we develop into a full system. We can also combine elements: Mark A's wave concept in a Mark D framework, or Mark C's crystal as an alternative hero asset.</p>
+    </div>
+  </section>
+
+</div>
+</body>
+</html>

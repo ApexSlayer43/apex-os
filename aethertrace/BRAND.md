@@ -120,3 +120,58 @@ IntersectionObserver, threshold 0.05, rootMargin `0px 0px -20px 0px`. All `.reve
 - `AETHERTRACE-mark.svg` — Production master mark SVG
 - `aethertrace-brand-locked.html` — Brand identity system document
 - `aethertrace-landing-final.html` — Locked landing page
+
+---
+
+## Dashboard — Design Locked
+
+**Date locked:** March 24, 2026
+**File:** `aethertrace-mvp/src/app/dashboard/page.tsx` + `layout.tsx` (to be rebuilt)
+
+### Layout
+- No sidebar. Full width. Single column. Sticky nav 64px. Content padding `80px 52px 120px`.
+- Background: `#02050B` (Void) everywhere.
+
+### Nav — 64px, sticky, `rgba(2,5,11,0.96)`, `backdrop-filter: blur(12px)`, border-bottom `1px solid rgba(22,48,88,0.3)`
+- **Left:** Full master mark as inline SVG — same ring technique as landing page. `width=180 height=28`, viewBox `-20 0 1100 330`. Includes custody node (cx 674, cy 227). Ring glows on front half.
+- **Right:** User email — IBM Plex Mono 10px `#284870`. Sign out — Inter 10px, letter-spacing 0.14em, uppercase, `#284870`, hover `#7EB8F7`.
+
+### Command Header
+- Eye label: Inter 9px, letter-spacing 0.28em, uppercase, `#7EB8F7`. Line before it: `24px × 1px`, `#7EB8F7`, glow `box-shadow: 0 0 6px rgba(126,184,247,0.6)`.
+- Workspace name: Instrument Serif 40px, `#DCF0FF`, letter-spacing -0.02em, line-height 1.1.
+- Subscription status: IBM Plex Mono 10px, `#486080`, letter-spacing 0.1em. e.g. `"PROFESSIONAL · ACTIVE"`.
+- **New project input (top right):** Instrument Serif 18px, `#B8D4EE`, borderless except bottom border `1px solid rgba(22,48,88,0.5)`. Focus: border-bottom `#7EB8F7`, color `#DCF0FF`, caret `#7EB8F7`. Placeholder: italic, `#284870`. Width 220px. Hint below: IBM Plex Mono 8px, `#284870`, uppercase — `"Press ↵ Enter to create"`.
+
+### Stats Strip — 3 cells
+- Container: `display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:rgba(22,48,88,0.22); border:1px solid rgba(22,48,88,0.28)`. Margin-bottom 64px.
+- Each cell: `background:#06101E; padding:40px 44px`.
+- Label: Inter 9px, letter-spacing 0.22em, uppercase, `#486080`. Margin-bottom 16px.
+- Value (numeric): Bebas Neue 56px, `#FFFFFF`, letter-spacing 1px.
+- Value (Custody Status): Instrument Serif 34px. `#10B981` if active, `#F59E0B` if inactive. Only time these colors appear.
+- Sub: IBM Plex Mono 9px, `#284870`, letter-spacing 0.08em.
+
+### Project List
+- Container: `gap:1px; background:rgba(22,48,88,0.15)`. Margin-top 12px.
+- Section label above: Inter 9px, letter-spacing 0.24em, uppercase, `#486080`.
+
+#### Project Row — 80px tall
+- `padding: 0 52px`. `background: #06101E`. `border-left: 2px solid transparent`.
+- Hover: `background: #081422`, `border-left-color: #7EB8F7`, `box-shadow: -3px 0 16px rgba(126,184,247,0.14)`.
+- Archived rows: `opacity: 0.5`.
+- **Left:** folder icon 15×13px `#7AAAC8` (archived: `#486080`). Project name: Inter 14px weight 500 `#B8D4EE`, letter-spacing -0.01em. Date below: IBM Plex Mono 9px `#284870`.
+- **Right (flex, gap 36px):** Items sealed count — IBM Plex Mono 14px `#7AAAC8`, label 8px uppercase `#284870`. Last sealed time — IBM Plex Mono 10px `#486080`, min-width 90px. Status badge. Chevron 12px `#163058` → hover `#486080`.
+- **Active badge:** `background:rgba(16,185,129,0.06); border:1px solid rgba(16,185,129,0.16); color:#10B981`. IBM Plex Mono 8px, letter-spacing 0.14em, uppercase.
+- **Archived badge:** `background:rgba(22,48,88,0.3); border:1px solid rgba(22,48,88,0.5); color:#486080`.
+
+#### Inline Create Row — docked below project list
+- `height:80px; padding:0 52px; background:#04090F; border-left:2px solid rgba(126,184,247,0.12); border-top:1px dashed rgba(22,48,88,0.3); display:flex; align-items:center; gap:20px`.
+- Folder icon: `#7EB8F7`, opacity 0.14.
+- Input: Instrument Serif 14px, `#7AAAC8`, borderless, transparent bg, caret `#7EB8F7`. Focus: `#B8D4EE`. Placeholder: italic `#163058` — `"Name new project…"`. Flex 1.
+- Hint right: IBM Plex Mono 8px, letter-spacing 0.14em, uppercase, `#163058` — `"↵ to seal"`.
+- On Enter: submit project name, clear input.
+
+### Spacing
+- Page padding: `80px 52px 120px`
+- Header → stats: 64px
+- Stats → projects label: 64px
+- Between sections: 48px

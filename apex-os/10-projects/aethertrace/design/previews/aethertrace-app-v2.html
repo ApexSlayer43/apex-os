@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AetherTrace App — Project View</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --void:    #040D21;
+      --deep:    #0a1628;
+      --card:    #0d1b35;
+      --navy:    #0f1f3d;
+      --silver:  #C8D4E8;
+      --bright:  #E8EEFF;
+      --dim:     #46607a;
+      --dimmer:  #2a3f55;
+      --breach:  #EF4444;
+      --sealed:  #10B981;
+      --mono:    'IBM Plex Mono', monospace;
+      --sans:    'Inter', sans-serif;
+    }
+
+    html, body {
+      background: var(--void);
+      color: var(--silver);
+      font-family: var(--sans);
+      height: 100%;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    /* Subtle starfield */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background:
+        radial-gradient(1px 1px at 8% 12%,  rgba(200,212,232,0.55) 0%, transparent 0),
+        radial-gradient(1px 1px at 23% 7%,  rgba(200,212,232,0.30) 0%, transparent 0),
+        radial-gradient(1px 1px at 47% 19%, rgba(200,212,232,0.45) 0%, transparent 0),
+        radial-gradient(1px 1px at 71% 5%,  rgba(200,212,232,0.25) 0%, transparent 0),
+        radial-gradient(1px 1px at 89% 14%, rgba(200,212,232,0.50) 0%, transparent 0),
+        radial-gradient(1px 1px at 15% 38%, rgba(200,212,232,0.20) 0%, transparent 0),
+        radial-gradient(1px 1px at 62% 44%, rgba(200,212,232,0.35) 0%, transparent 0),
+        radial-gradient(1px 1px at 34% 61%, rgba(200,212,232,0.25) 0%, transparent 0),
+        radial-gradient(1px 1px at 78% 58%, rgba(200,212,232,0.40) 0%, transparent 0),
+        radial-gradient(1px 1px at 92% 73%, rgba(200,212,232,0.20) 0%, transparent 0),
+        radial-gradient(1px 1px at 5%  82%, rgba(200,212,232,0.35) 0%, transparent 0),
+        radial-gradient(1px 1px at 54% 88%, rgba(200,212,232,0.25) 0%, transparent 0);
+    }
+
+    .shell {
+      display: flex;
+      height: 100vh;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ══ SIDEBAR ══════════════════════════════════════════ */
+    .sidebar {
+      width: 200px;
+      flex-shrink: 0;
+      background: rgba(10, 22, 40, 0.85);
+      border-right: 1px solid rgba(200,212,232,0.06);
+      display: flex;
+      flex-direction: column;
+      backdrop-filter: blur(8px);
+    }
+
+    .sidebar-mark {
+      padding: 28px 20px 22px;
+      border-bottom: 1px solid rgba(200,212,232,0.06);
+    }
+
+    .wordmark {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.22em;
+      color: var(--bright);
+      line-height: 1;
+    }
+
+    .wordmark span { font-weight: 600; }
+
+    .tagline {
+      margin-top: 6px;
+      font-family: var(--mono);
+      font-size: 7px;
+      letter-spacing: 0.32em;
+      color: var(--dimmer);
+      text-transform: uppercase;
+    }
+
+    .sidebar-nav {
+      flex: 1;
+      padding: 24px 0;
+      overflow-y: auto;
+    }
+
+    .nav-group-label {
+      font-family: var(--mono);
+      font-size: 7px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--dimmer);
+      padding: 0 20px;
+      margin-bottom: 4px;
+    }
+
+    .nav-group { margin-bottom: 24px; }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 20px;
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.06em;
+      color: var(--dim);
+      text-decoration: none;
+      cursor: pointer;
+      transition: color 0.15s;
+      border-left: 2px solid transparent;
+    }
+
+    .nav-item:hover { color: var(--silver); }
+
+    .nav-item.active {
+      color: var(--bright);
+      border-left-color: var(--silver);
+      background: rgba(200,212,232,0.03);
+    }
+
+    .nav-dot {
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: currentColor;
+      opacity: 0.6;
+      flex-shrink: 0;
+    }
+
+    .sidebar-footer {
+      padding: 16px 20px;
+      border-top: 1px solid rgba(200,212,232,0.06);
+    }
+
+    .footer-email {
+      font-family: var(--mono);
+      font-size: 8px;
+      color: var(--dimmer);
+      letter-spacing: 0.04em;
+      margin-bottom: 8px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .footer-signout {
+      font-family: var(--mono);
+      font-size: 8px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--dimmer);
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      transition: color 0.15s;
+    }
+
+    .footer-signout:hover { color: var(--silver); }
+
+    /* ══ MAIN ══════════════════════════════════════════════ */
+    .main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* Top bar */
+    .topbar {
+      height: 52px;
+      border-bottom: 1px solid rgba(200,212,232,0.06);
+      display: flex;
+      align-items: center;
+      padding: 0 40px;
+      gap: 8px;
+      flex-shrink: 0;
+      background: rgba(4,13,33,0.6);
+      backdrop-filter: blur(8px);
+    }
+
+    .breadcrumb-link {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      color: var(--dim);
+      text-decoration: none;
+      cursor: pointer;
+      transition: color 0.15s;
+    }
+
+    .breadcrumb-link:hover { color: var(--silver); }
+
+    .breadcrumb-sep {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--dimmer);
+    }
+
+    .breadcrumb-current {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      color: var(--silver);
+    }
+
+    /* Tab bar */
+    .tabbar {
+      height: 44px;
+      border-bottom: 1px solid rgba(200,212,232,0.06);
+      display: flex;
+      align-items: flex-end;
+      padding: 0 40px;
+      gap: 0;
+      flex-shrink: 0;
+    }
+
+    .tab {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 0 16px 13px;
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--dim);
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+      cursor: pointer;
+      transition: color 0.15s;
+      margin-bottom: -1px;
+    }
+
+    .tab:hover { color: var(--silver); }
+
+    .tab.active {
+      color: var(--bright);
+      border-bottom-color: var(--silver);
+    }
+
+    .tab svg { opacity: 0.7; }
+    .tab.active svg { opacity: 1; }
+
+    /* Page content */
+    .content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 52px 40px 80px;
+      max-width: 820px;
+    }
+
+    /* Project identity block */
+    .project-identity {
+      margin-bottom: 56px;
+    }
+
+    .project-status-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--sealed);
+      box-shadow: 0 0 6px rgba(16,185,129,0.5);
+    }
+
+    .status-label {
+      font-family: var(--mono);
+      font-size: 8px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--sealed);
+    }
+
+    .project-title {
+      font-family: var(--mono);
+      font-size: 26px;
+      font-weight: 300;
+      letter-spacing: 0.04em;
+      color: var(--bright);
+      line-height: 1.2;
+      margin-bottom: 10px;
+    }
+
+    .project-meta {
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.08em;
+      color: var(--dim);
+    }
+
+    /* Integrity line */
+    .integrity-line {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 18px 0;
+      border-top: 1px solid rgba(200,212,232,0.06);
+      border-bottom: 1px solid rgba(200,212,232,0.06);
+      margin-bottom: 52px;
+    }
+
+    .integrity-icon { color: var(--sealed); flex-shrink: 0; }
+
+    .integrity-text {
+      flex: 1;
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.06em;
+      color: var(--dim);
+    }
+
+    .integrity-text strong {
+      color: var(--silver);
+      font-weight: 400;
+    }
+
+    .integrity-hash {
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.04em;
+      color: var(--dimmer);
+      cursor: help;
+    }
+
+    .integrity-hash:hover { color: var(--dim); }
+
+    /* Stats row */
+    .stats-row {
+      display: flex;
+      gap: 1px;
+      margin-bottom: 52px;
+    }
+
+    .stat {
+      flex: 1;
+      padding: 20px 24px;
+      background: rgba(13,27,53,0.5);
+      border: 1px solid rgba(200,212,232,0.06);
+    }
+
+    .stat-value {
+      font-family: var(--mono);
+      font-size: 28px;
+      font-weight: 300;
+      color: var(--bright);
+      letter-spacing: 0.02em;
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+
+    .stat-label {
+      font-family: var(--mono);
+      font-size: 8px;
+      letter-spacing: 0.20em;
+      text-transform: uppercase;
+      color: var(--dim);
+    }
+
+    /* Actions */
+    .actions-label {
+      font-family: var(--mono);
+      font-size: 8px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--dimmer);
+      margin-bottom: 16px;
+    }
+
+    .actions-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      margin-bottom: 52px;
+    }
+
+    .action-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 20px;
+      background: rgba(10,22,40,0.5);
+      border: 1px solid rgba(200,212,232,0.05);
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s;
+      text-decoration: none;
+    }
+
+    .action-row:hover {
+      background: rgba(13,27,53,0.7);
+      border-color: rgba(200,212,232,0.10);
+    }
+
+    .action-row.primary {
+      border-color: rgba(200,212,232,0.10);
+    }
+
+    .action-row.primary:hover {
+      border-color: rgba(200,212,232,0.20);
+    }
+
+    .action-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .action-icon {
+      color: var(--silver);
+      opacity: 0.5;
+      flex-shrink: 0;
+    }
+
+    .action-row.primary .action-icon { opacity: 0.9; }
+
+    .action-name {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      color: var(--silver);
+      font-weight: 400;
+      margin-bottom: 3px;
+    }
+
+    .action-row.primary .action-name { color: var(--bright); }
+
+    .action-desc {
+      font-family: var(--sans);
+      font-size: 11px;
+      font-weight: 300;
+      color: var(--dim);
+      letter-spacing: 0.01em;
+    }
+
+    .action-arrow {
+      color: var(--dimmer);
+      flex-shrink: 0;
+      transition: color 0.15s, transform 0.15s;
+    }
+
+    .action-row:hover .action-arrow {
+      color: var(--silver);
+      transform: translateX(2px);
+    }
+
+    /* Recent activity */
+    .activity-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .activity-label {
+      font-family: var(--mono);
+      font-size: 8px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--dimmer);
+    }
+
+    .activity-link {
+      font-family: var(--mono);
+      font-size: 8px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--dimmer);
+      text-decoration: none;
+      cursor: pointer;
+      transition: color 0.15s;
+    }
+
+    .activity-link:hover { color: var(--silver); }
+
+    .activity-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      border: 1px solid rgba(200,212,232,0.06);
+    }
+
+    .activity-item {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 14px 20px;
+      border-bottom: 1px solid rgba(200,212,232,0.04);
+      transition: background 0.12s;
+      cursor: default;
+    }
+
+    .activity-item:last-child { border-bottom: none; }
+    .activity-item:hover { background: rgba(13,27,53,0.4); }
+
+    .chain-index {
+      font-family: var(--mono);
+      font-size: 8px;
+      letter-spacing: 0.06em;
+      color: var(--dimmer);
+      width: 20px;
+      text-align: right;
+      flex-shrink: 0;
+    }
+
+    .chain-index.head { color: var(--sealed); }
+
+    .activity-filename {
+      flex: 1;
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.04em;
+      color: var(--silver);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-weight: 300;
+    }
+
+    .activity-time {
+      font-family: var(--mono);
+      font-size: 9px;
+      color: var(--dimmer);
+      flex-shrink: 0;
+      letter-spacing: 0.04em;
+    }
+
+    /* hash — shown only on hover via js */
+    .activity-hash {
+      font-family: var(--mono);
+      font-size: 8px;
+      color: var(--dimmer);
+      letter-spacing: 0.03em;
+      flex-shrink: 0;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .activity-item:hover .activity-hash { opacity: 1; }
+
+    /* scrollbar */
+    ::-webkit-scrollbar { width: 3px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(200,212,232,0.1); }
+  </style>
+</head>
+<body>
+<div class="shell">
+
+  <!-- ══ SIDEBAR ══════════════════════════════════════════ -->
+  <aside class="sidebar">
+
+    <div class="sidebar-mark">
+      <div class="wordmark">AETHER<span>TRACE</span></div>
+      <div class="tagline">Integrity Infrastructure</div>
+    </div>
+
+    <nav class="sidebar-nav">
+
+      <div class="nav-group">
+        <div class="nav-group-label">Overview</div>
+        <a class="nav-item" href="#">
+          <div class="nav-dot"></div>
+          Dashboard
+        </a>
+      </div>
+
+      <div class="nav-group">
+        <div class="nav-group-label">Projects</div>
+        <a class="nav-item active" href="#">
+          <div class="nav-dot"></div>
+          Riverside Complex
+        </a>
+        <a class="nav-item" href="#">
+          <div class="nav-dot"></div>
+          NorCal Hwy 68
+        </a>
+        <a class="nav-item" href="#">
+          <div class="nav-dot"></div>
+          Southgate Plaza
+        </a>
+      </div>
+
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="footer-email">casey@aethertrace.io</div>
+      <button class="footer-signout">Sign out</button>
+    </div>
+
+  </aside>
+
+  <!-- ══ MAIN ══════════════════════════════════════════════ -->
+  <div class="main">
+
+    <!-- Top bar -->
+    <div class="topbar">
+      <a class="breadcrumb-link" href="#">Dashboard</a>
+      <span class="breadcrumb-sep">/</span>
+      <span class="breadcrumb-current">Riverside Apartment Complex</span>
+    </div>
+
+    <!-- Tab bar -->
+    <div class="tabbar">
+      <a class="tab active" href="#">
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        Seal
+      </a>
+      <a class="tab" href="#">
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+        Chain
+      </a>
+      <a class="tab" href="#">
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+        Packages
+      </a>
+      <a class="tab" href="#">
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M9 9h6M9 12h6M9 15h4"/></svg>
+        Reconstruct
+      </a>
+    </div>
+
+    <!-- Content -->
+    <div class="content">
+
+      <!-- Project identity -->
+      <div class="project-identity">
+        <div class="project-status-row">
+          <div class="status-dot"></div>
+          <div class="status-label">Active</div>
+        </div>
+        <h1 class="project-title">Riverside Apartment Complex</h1>
+        <div class="project-meta">Created March 14, 2026 · Commercial subcontract</div>
+      </div>
+
+      <!-- Integrity line -->
+      <div class="integrity-line">
+        <svg class="integrity-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
+        <div class="integrity-text">
+          <strong>Chain intact</strong> · 47 items sealed · verified Mar 24, 2026 at 9:41 AM
+        </div>
+        <div class="integrity-hash" title="HEAD chain hash: a7f3c91d4e2b8c05f1d6e3a9b7c2f8d4">HEAD · a7f3c91d…</div>
+      </div>
+
+      <!-- Stats -->
+      <div class="stats-row">
+        <div class="stat">
+          <div class="stat-value">47</div>
+          <div class="stat-label">Items Sealed</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value">3</div>
+          <div class="stat-label">Packages</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value">31d</div>
+          <div class="stat-label">Chain Age</div>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="actions-label">Protocol</div>
+      <div class="actions-list">
+
+        <a class="action-row primary" href="#">
+          <div class="action-left">
+            <svg class="action-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            <div>
+              <div class="action-name">Seal Evidence</div>
+              <div class="action-desc">Upload files, photos, or notes — hashed and chained immediately</div>
+            </div>
+          </div>
+          <svg class="action-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+
+        <a class="action-row" href="#">
+          <div class="action-left">
+            <svg class="action-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+            <div>
+              <div class="action-name">View Chain</div>
+              <div class="action-desc">47 items · full custody ledger with cryptographic verification</div>
+            </div>
+          </div>
+          <svg class="action-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+
+        <a class="action-row" href="#">
+          <div class="action-left">
+            <svg class="action-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+            <div>
+              <div class="action-name">Export Package</div>
+              <div class="action-desc">3 packages generated · court-ready PDF + ZIP with verification URL</div>
+            </div>
+          </div>
+          <svg class="action-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+
+        <a class="action-row" href="#">
+          <div class="action-left">
+            <svg class="action-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M9 9h6M9 12h6M9 15h4"/></svg>
+            <div>
+              <div class="action-name">AI Reconstruct</div>
+              <div class="action-desc">Query the sealed chain — AI builds a verified narrative on demand</div>
+            </div>
+          </div>
+          <svg class="action-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+
+      </div>
+
+      <!-- Recent activity -->
+      <div class="activity-header">
+        <div class="activity-label">Recent Chain Activity</div>
+        <a class="activity-link" href="#">View all →</a>
+      </div>
+
+      <div class="activity-list">
+
+        <div class="activity-item">
+          <div class="chain-index head">47</div>
+          <div class="activity-filename">site-inspection-photos-march24.zip</div>
+          <div class="activity-hash">a7f3c91d…</div>
+          <div class="activity-time">Mar 24 · 9:41 AM</div>
+        </div>
+
+        <div class="activity-item">
+          <div class="chain-index">46</div>
+          <div class="activity-filename">concrete-pour-certificate.pdf</div>
+          <div class="activity-hash">e19c072f…</div>
+          <div class="activity-time">Mar 23 · 3:17 PM</div>
+        </div>
+
+        <div class="activity-item">
+          <div class="chain-index">45</div>
+          <div class="activity-filename">framing-progress-note.txt</div>
+          <div class="activity-hash">9d4a823b…</div>
+          <div class="activity-time">Mar 23 · 11:04 AM</div>
+        </div>
+
+        <div class="activity-item">
+          <div class="chain-index">44</div>
+          <div class="activity-filename">change-order-17-signed.pdf</div>
+          <div class="activity-hash">3fa0d7c1…</div>
+          <div class="activity-time">Mar 22 · 4:55 PM</div>
+        </div>
+
+        <div class="activity-item">
+          <div class="chain-index">43</div>
+          <div class="activity-filename">daily-log-mar22-morning.txt</div>
+          <div class="activity-hash">1bc4e9d7…</div>
+          <div class="activity-time">Mar 22 · 8:30 AM</div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</div>
+</body>
+</html>

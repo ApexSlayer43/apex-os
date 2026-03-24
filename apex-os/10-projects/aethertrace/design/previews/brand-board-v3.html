@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AetherTrace — Brand Board v3 — Orbital Series</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --void:   #040D21;
+  --deep:   #0a1628;
+  --card:   #0d1b35;
+  --navy:   #0f1f3d;
+  --silver: #C8D4E8;
+  --bright: #E8EEFF;
+  --dim:    #46607a;
+  --breach: #EF4444;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--void);
+  color: var(--silver);
+  font-family: 'Inter', sans-serif;
+  min-height: 100vh;
+  padding: 56px 48px 96px;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* ── STAR FIELD ── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(1px 1px at  7%  9%, rgba(200,212,232,0.75) 0%, transparent 0),
+    radial-gradient(1px 1px at 14% 55%, rgba(200,212,232,0.40) 0%, transparent 0),
+    radial-gradient(1.5px 1.5px at 23% 18%, rgba(200,212,232,0.60) 0%, transparent 0),
+    radial-gradient(1px 1px at 31% 73%, rgba(200,212,232,0.35) 0%, transparent 0),
+    radial-gradient(1px 1px at 39%  4%, rgba(200,212,232,0.55) 0%, transparent 0),
+    radial-gradient(2px 2px at 47% 88%, rgba(200,212,232,0.20) 0%, transparent 0),
+    radial-gradient(1px 1px at 54% 31%, rgba(200,212,232,0.50) 0%, transparent 0),
+    radial-gradient(1px 1px at 61% 62%, rgba(200,212,232,0.38) 0%, transparent 0),
+    radial-gradient(1.5px 1.5px at 68% 14%, rgba(200,212,232,0.65) 0%, transparent 0),
+    radial-gradient(1px 1px at 76% 47%, rgba(200,212,232,0.30) 0%, transparent 0),
+    radial-gradient(1px 1px at 83% 80%, rgba(200,212,232,0.45) 0%, transparent 0),
+    radial-gradient(1px 1px at 90% 22%, rgba(200,212,232,0.55) 0%, transparent 0),
+    radial-gradient(2px 2px at 96% 66%, rgba(200,212,232,0.25) 0%, transparent 0),
+    radial-gradient(1px 1px at  5% 90%, rgba(200,212,232,0.40) 0%, transparent 0),
+    radial-gradient(1px 1px at 19% 40%, rgba(200,212,232,0.30) 0%, transparent 0),
+    radial-gradient(1.5px 1.5px at 42% 58%, rgba(200,212,232,0.22) 0%, transparent 0),
+    radial-gradient(1px 1px at 58%  76%, rgba(200,212,232,0.48) 0%, transparent 0),
+    radial-gradient(1px 1px at 72% 95%, rgba(200,212,232,0.33) 0%, transparent 0),
+    radial-gradient(1px 1px at 88% 38%, rgba(200,212,232,0.50) 0%, transparent 0);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── SUBTLE NEBULA GLOW ── */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 60% 40% at 20% 30%, rgba(10,40,90,0.35) 0%, transparent 70%),
+    radial-gradient(ellipse 50% 30% at 80% 70%, rgba(5,20,60,0.25) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.content {
+  position: relative;
+  z-index: 1;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* ── HEADER ── */
+.board-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 60px;
+  padding-bottom: 28px;
+  border-bottom: 1px solid rgba(200,212,232,0.07);
+}
+
+.board-eyebrow {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.35em;
+  color: var(--dim);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.board-title {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 15px;
+  font-weight: 300;
+  letter-spacing: 0.20em;
+  color: var(--bright);
+  text-transform: uppercase;
+}
+
+.board-meta {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  font-weight: 300;
+  letter-spacing: 0.18em;
+  color: var(--dim);
+  text-align: right;
+  line-height: 2.0;
+  text-transform: uppercase;
+}
+
+/* ── SECTION LABEL ── */
+.section-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.38em;
+  color: var(--dim);
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+
+/* ── CONCEPT CARDS ── */
+.concept-card {
+  background: var(--card);
+  border: 1px solid rgba(200,212,232,0.06);
+  border-radius: 3px;
+  position: relative;
+  overflow: hidden;
+}
+
+.concept-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, rgba(200,212,232,0.18) 50%, transparent 100%);
+}
+
+.concept-body {
+  padding: 52px 48px 44px;
+}
+
+.concept-footer {
+  padding: 20px 48px 24px;
+  border-top: 1px solid rgba(200,212,232,0.05);
+  display: flex;
+  align-items: baseline;
+  gap: 24px;
+}
+
+.concept-name {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.28em;
+  color: var(--silver);
+  opacity: 0.65;
+  text-transform: uppercase;
+}
+
+.concept-desc {
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 300;
+  letter-spacing: 0.02em;
+  color: var(--dim);
+  line-height: 1.6;
+}
+
+/* ── SVG STAGE ── */
+.svg-stage {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* ── ROW ── */
+.row-two {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  margin-top: 18px;
+}
+
+/* ── PALETTE ── */
+.palette-grid {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.swatch {
+  flex: 1;
+  border-radius: 2px;
+  overflow: hidden;
+  border: 1px solid rgba(200,212,232,0.06);
+}
+
+.swatch-color { height: 52px; }
+
+.swatch-info {
+  padding: 9px 11px;
+  background: var(--deep);
+}
+
+.swatch-name {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 8px;
+  font-weight: 600;
+  letter-spacing: 0.25em;
+  color: var(--silver);
+  opacity: 0.65;
+  text-transform: uppercase;
+}
+
+.swatch-hex {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  font-weight: 300;
+  color: var(--dim);
+  margin-top: 3px;
+}
+
+/* ── TYPE SPECIMEN ── */
+.type-row {
+  display: flex;
+  gap: 48px;
+  align-items: flex-end;
+  flex-wrap: wrap;
+}
+
+.type-col {}
+
+.type-specimen {
+  filter: drop-shadow(0 0 8px rgba(200,212,232,0.35)) drop-shadow(0 0 24px rgba(140,170,220,0.12));
+}
+
+.type-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  font-weight: 300;
+  letter-spacing: 0.2em;
+  color: var(--dim);
+  margin-top: 10px;
+  text-transform: uppercase;
+}
+
+/* ── PRISM NOTE ── */
+.prism-note {
+  margin-top: 28px;
+  padding: 18px 22px;
+  background: rgba(200,212,232,0.025);
+  border: 1px solid rgba(200,212,232,0.055);
+  border-radius: 2px;
+}
+
+.prism-note-text {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9.5px;
+  font-weight: 300;
+  letter-spacing: 0.08em;
+  color: var(--dim);
+  line-height: 1.8;
+}
+
+.prism-note-text strong {
+  color: rgba(200,212,232,0.5);
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  font-size: 8.5px;
+}
+
+</style>
+</head>
+<body>
+<div class="content">
+
+  <!-- ══════════════════════════════════════════
+       HEADER
+  ═══════════════════════════════════════════ -->
+  <div class="board-header">
+    <div>
+      <div class="board-eyebrow">PRISM · Brand Intelligence · AetherTrace</div>
+      <div class="board-title">Brand Board v3 — Orbital Series</div>
+    </div>
+    <div class="board-meta">
+      March 24, 2026<br>
+      Direction: Approved Navy × Silver<br>
+      Concept: Orbital Lock / Ring Mark
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════
+       CONCEPT A — THE ORBITAL LOCK (HERO)
+  ═══════════════════════════════════════════ -->
+  <div class="section-label">Primary Mark — Concept A</div>
+  <div class="concept-card">
+    <div class="concept-body">
+      <div class="svg-stage">
+
+        <!-- ──────────────────────────────────────
+             MAIN ORBITAL LOCK SVG
+             Ring: cx=360 cy=108 rx=275 ry=54
+             Back arc (top):  sweep=0 → behind text
+             Front arc (bot): sweep=1 → in front of text
+        ─────────────────────────────────────── -->
+        <svg id="main-mark" viewBox="0 0 720 220" width="720" height="220"
+             xmlns="http://www.w3.org/2000/svg" style="overflow:visible">
+          <defs>
+
+            <!-- Soft text atmosphere glow -->
+            <filter id="atmo" x="-20%" y="-60%" width="140%" height="220%">
+              <feGaussianBlur stdDeviation="18" result="b1"/>
+              <feGaussianBlur stdDeviation="7" result="b2" in="SourceGraphic"/>
+              <feMerge>
+                <feMergeNode in="b1"/>
+                <feMergeNode in="b2"/>
+                <feMergeNode in="SourceGraphic"/>
+              </feMerge>
+            </filter>
+
+            <!-- Text glow -->
+            <filter id="txt-glow" x="-5%" y="-30%" width="110%" height="160%">
+              <feGaussianBlur stdDeviation="2.5" result="b"/>
+              <feMerge>
+                <feMergeNode in="b"/>
+                <feMergeNode in="SourceGraphic"/>
+              </feMerge>
+            </filter>
+
+            <!-- Front arc glow (bright) -->
+            <filter id="arc-front" x="-5%" y="-120%" width="110%" height="340%">
+              <feGaussianBlur stdDeviation="5" result="b"/>
+              <feMerge>
+                <feMergeNode in="b"/>
+                <feMergeNode in="SourceGraphic"/>
+              </feMerge>
+            </filter>
+
+            <!-- Back arc glow (dim) -->
+            <filter id="arc-back" x="-5%" y="-120%" width="110%" height="340%">
+              <feGaussianBlur stdDeviation="3" result="b"/>
+              <feMerge>
+                <feMergeNode in="b"/>
+                <feMergeNode in="SourceGraphic"/>
+              </feMerge>
+            </filter>
+
+            <!-- Node glow -->
+            <filter id="node-glow" x="-300%" y="-300%" width="700%" height="700%">
+              <feGaussianBlur stdDeviation="10" result="b1"/>
+              <feGaussianBlur stdDeviation="4" result="b2" in="SourceGraphic"/>
+              <feMerge>
+                <feMergeNode in="b1"/>
+                <feMergeNode in="b2"/>
+                <feMergeNode in="SourceGraphic"/>
+              </feMerge>
+            </filter>
+
+            <!-- Node glow (dim, for back) -->
+            <filter id="node-glow-dim" x="-200%" y="-200%" width="500%" height="500%">
+              <feGaussianBlur stdDeviation="5" result="b"/>
+              <feMerge>
+                <feMergeNode in="b"/>
+                <feMergeNode in="SourceGraphic"/>
+              </feMerge>
+            </filter>
+
+          </defs>
+
+          <!-- ── LAYER 1: BACK ARC  (drawn BEFORE text = behind) ── -->
+          <!-- Ring: cx=360,cy=108, rx=275,ry=54. Back arc = top arc, sweep=0 (CCW) -->
+          <!-- Endpoints: (85,108) and (635,108) -->
+
+          <!-- Wide diffuse glow -->
+          <path d="M 85,108 A 275,54 0 0 0 635,108"
+                fill="none" stroke="#7090b8" stroke-width="22" opacity="0.04"
+                stroke-linecap="round"/>
+          <!-- Medium glow -->
+          <path d="M 85,108 A 275,54 0 0 0 635,108"
+                fill="none" stroke="#8aaad0" stroke-width="10" opacity="0.08"
+                stroke-linecap="round"/>
+          <!-- Inner glow -->
+          <path d="M 85,108 A 275,54 0 0 0 635,108"
+                fill="none" stroke="#9ab8d8" stroke-width="4.5" opacity="0.22"
+                stroke-linecap="round"
+                filter="url(#arc-back)"/>
+          <!-- Core back arc -->
+          <path d="M 85,108 A 275,54 0 0 0 635,108"
+                fill="none" stroke="#6a8db5" stroke-width="2" opacity="0.5"
+                stroke-linecap="round"/>
+
+          <!-- Lock endpoints — small tick marks -->
+          <line x1="85" y1="101" x2="85" y2="115"
+                stroke="#C8D4E8" stroke-width="1.5" opacity="0.35"/>
+          <circle cx="85" cy="108" r="2.5"
+                  fill="none" stroke="#C8D4E8" stroke-width="1" opacity="0.3"/>
+          <line x1="635" y1="101" x2="635" y2="115"
+                stroke="#C8D4E8" stroke-width="1.5" opacity="0.35"/>
+          <circle cx="635" cy="108" r="2.5"
+                  fill="none" stroke="#C8D4E8" stroke-width="1" opacity="0.3"/>
+
+          <!-- ── LAYER 2: ATMOSPHERIC GLOW (behind text) ── -->
+          <ellipse cx="360" cy="108" rx="200" ry="32"
+                   fill="none" stroke="rgba(80,130,220,0.06)" stroke-width="50"
+                   filter="url(#atmo)"/>
+
+          <!-- ── NODE BACK INSTANCE (appears behind text) ── -->
+          <!-- Hidden initially; JS controls visibility + position -->
+          <g id="node-back-group" opacity="0">
+            <circle id="node-back-outer" cx="635" cy="108" r="5"
+                    fill="#8aaad0" filter="url(#node-glow-dim)"/>
+            <circle id="node-back-core" cx="635" cy="108" r="2.2"
+                    fill="#C8D4E8"/>
+          </g>
+
+          <!-- ── LAYER 3: WORDMARK ── -->
+          <text
+            x="360" y="126"
+            font-family="'IBM Plex Mono', monospace"
+            font-size="54"
+            fill="#C8D4E8"
+            text-anchor="middle"
+            filter="url(#txt-glow)">
+            <tspan
+              font-weight="300"
+              style="letter-spacing:0.14em">AETHER</tspan><tspan
+              font-weight="600"
+              style="letter-spacing:0.06em">TRACE</tspan>
+          </text>
+
+          <!-- ── LAYER 4: FRONT ARC (drawn AFTER text = in front) ── -->
+          <!-- Front arc = bottom arc, sweep=1 (CW) -->
+
+          <!-- Wide diffuse glow -->
+          <path d="M 85,108 A 275,54 0 0 1 635,108"
+                fill="none" stroke="#b8ccee" stroke-width="24" opacity="0.05"
+                stroke-linecap="round"/>
+          <!-- Medium glow -->
+          <path d="M 85,108 A 275,54 0 0 1 635,108"
+                fill="none" stroke="#C8D4E8" stroke-width="12" opacity="0.09"
+                stroke-linecap="round"/>
+          <!-- Inner glow -->
+          <path d="M 85,108 A 275,54 0 0 1 635,108"
+                fill="none" stroke="#D8E4F4" stroke-width="5" opacity="0.30"
+                stroke-linecap="round"
+                filter="url(#arc-front)"/>
+          <!-- Core front arc -->
+          <path d="M 85,108 A 275,54 0 0 1 635,108"
+                fill="none" stroke="#E8EEFF" stroke-width="2" opacity="0.95"
+                stroke-linecap="round"/>
+
+          <!-- ── NODE FRONT INSTANCE (appears in front of text) ── -->
+          <g id="node-front-group" opacity="1">
+            <circle id="node-front-outer" cx="635" cy="108" r="6"
+                    fill="#E8EEFF" filter="url(#node-glow)"/>
+            <circle id="node-front-core" cx="635" cy="108" r="2.5"
+                    fill="#ffffff"/>
+          </g>
+
+        </svg>
+      </div>
+    </div>
+    <div class="concept-footer">
+      <span class="concept-name">The Orbital Lock</span>
+      <span class="concept-desc">The word is the planet. The ring is the chain. A custody event orbits continuously — the front arc locks, the back arc recedes, depth is implied not drawn.</span>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════
+       ROW: CONCEPT B + CONCEPT C
+  ═══════════════════════════════════════════ -->
+  <div class="row-two">
+
+    <!-- ── CONCEPT B: PLANET MARK (ICON ONLY) ── -->
+    <div>
+      <div class="section-label" style="margin-top:20px">Icon Mark — Concept B</div>
+      <div class="concept-card">
+        <div class="concept-body" style="padding:44px 40px 36px">
+          <div class="svg-stage">
+
+            <svg viewBox="0 0 200 200" width="168" height="168"
+                 xmlns="http://www.w3.org/2000/svg" style="overflow:visible">
+              <defs>
+                <radialGradient id="planet-fill" cx="38%" cy="35%" r="65%">
+                  <stop offset="0%"   stop-color="#162850" stop-opacity="1"/>
+                  <stop offset="60%"  stop-color="#0a1628" stop-opacity="1"/>
+                  <stop offset="100%" stop-color="#040D21" stop-opacity="1"/>
+                </radialGradient>
+                <filter id="planet-glow" x="-40%" y="-40%" width="180%" height="180%">
+                  <feGaussianBlur stdDeviation="6" result="b"/>
+                  <feMerge>
+                    <feMergeNode in="b"/>
+                    <feMergeNode in="SourceGraphic"/>
+                  </feMerge>
+                </filter>
+                <filter id="ring-glow-b" x="-10%" y="-80%" width="120%" height="260%">
+                  <feGaussianBlur stdDeviation="4" result="b"/>
+                  <feMerge>
+                    <feMergeNode in="b"/>
+                    <feMergeNode in="SourceGraphic"/>
+                  </feMerge>
+                </filter>
+              </defs>
+
+              <!-- Planet sphere — back ring arc first -->
+              <!-- Ring: cx=100,cy=100, rx=74,ry=18, tilt=-18deg -->
+              <g transform="rotate(-18, 100, 100)">
+                <!-- Back arc (top) -->
+                <path d="M 26,100 A 74,18 0 0 0 174,100"
+                      fill="none" stroke="#5a7ea8" stroke-width="2.5" opacity="0.4"/>
+                <!-- Outer back glow -->
+                <path d="M 26,100 A 74,18 0 0 0 174,100"
+                      fill="none" stroke="#6a90b8" stroke-width="7" opacity="0.08"/>
+              </g>
+
+              <!-- Planet body -->
+              <circle cx="100" cy="100" r="46"
+                      fill="url(#planet-fill)"
+                      stroke="#C8D4E8" stroke-width="1.2"
+                      filter="url(#planet-glow)"
+                      style="filter: drop-shadow(0 0 18px rgba(200,212,232,0.35)) drop-shadow(0 0 48px rgba(100,150,220,0.15))"/>
+
+              <!-- Subtle equatorial lines on planet -->
+              <ellipse cx="100" cy="100" rx="46" ry="14"
+                       fill="none" stroke="rgba(200,212,232,0.10)" stroke-width="1"/>
+              <ellipse cx="100" cy="100" rx="46" ry="27"
+                       fill="none" stroke="rgba(200,212,232,0.06)" stroke-width="1"/>
+
+              <!-- AT monogram -->
+              <text x="100" y="108" text-anchor="middle"
+                    font-family="'IBM Plex Mono', monospace"
+                    font-size="24" font-weight="600"
+                    fill="#C8D4E8"
+                    style="letter-spacing:0.04em; filter: drop-shadow(0 0 10px rgba(200,212,232,0.65))">AT</text>
+
+              <!-- Front ring arc (in front of planet) -->
+              <g transform="rotate(-18, 100, 100)">
+                <!-- Wide glow -->
+                <path d="M 26,100 A 74,18 0 0 1 174,100"
+                      fill="none" stroke="#C8D4E8" stroke-width="14" opacity="0.08"/>
+                <!-- Mid glow -->
+                <path d="M 26,100 A 74,18 0 0 1 174,100"
+                      fill="none" stroke="#D8E4F4" stroke-width="6" opacity="0.20"/>
+                <!-- Core -->
+                <path d="M 26,100 A 74,18 0 0 1 174,100"
+                      fill="none" stroke="#E8EEFF" stroke-width="2.5" opacity="0.92"
+                      filter="url(#ring-glow-b)"/>
+              </g>
+
+            </svg>
+
+          </div>
+        </div>
+        <div class="concept-footer">
+          <span class="concept-name">Planet Mark</span>
+          <span class="concept-desc">Standalone icon — favicon, app badge, embossed seal. Ring at −18° orbital tilt.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── CONCEPT C: COMPACT LOCKUP ── -->
+    <div>
+      <div class="section-label" style="margin-top:20px">Compact Lockup — Concept C</div>
+      <div class="concept-card">
+        <div class="concept-body" style="padding:44px 40px 36px">
+          <div class="svg-stage">
+
+            <svg viewBox="0 0 600 160" width="560" height="149"
+                 xmlns="http://www.w3.org/2000/svg" style="overflow:visible">
+              <defs>
+                <filter id="sm-txt-glow" x="-5%" y="-30%" width="110%" height="160%">
+                  <feGaussianBlur stdDeviation="2" result="b"/>
+                  <feMerge>
+                    <feMergeNode in="b"/>
+                    <feMergeNode in="SourceGraphic"/>
+                  </feMerge>
+                </filter>
+                <filter id="sm-arc-front" x="-5%" y="-100%" width="110%" height="300%">
+                  <feGaussianBlur stdDeviation="3.5" result="b"/>
+                  <feMerge>
+                    <feMergeNode in="b"/>
+                    <feMergeNode in="SourceGraphic"/>
+                  </feMerge>
+                </filter>
+              </defs>
+
+              <!-- Compact ring + wordmark stacked vertically -->
+              <!-- Icon planet at top, wordmark below -->
+
+              <!-- ICON: small planet mark centered at (300, 52) -->
+              <!-- ring rx=42, ry=10 -->
+              <g transform="rotate(-15, 300, 52)">
+                <path d="M 258,52 A 42,10 0 0 0 342,52"
+                      fill="none" stroke="#5a7ea8" stroke-width="1.5" opacity="0.4"/>
+              </g>
+              <!-- Planet body -->
+              <circle cx="300" cy="52" r="26"
+                      fill="#0a1628"
+                      stroke="#C8D4E8" stroke-width="1"
+                      style="filter: drop-shadow(0 0 12px rgba(200,212,232,0.30))"/>
+              <!-- AT inside -->
+              <text x="300" y="59" text-anchor="middle"
+                    font-family="'IBM Plex Mono', monospace"
+                    font-size="13" font-weight="600"
+                    fill="#C8D4E8"
+                    style="letter-spacing:0.04em; filter:drop-shadow(0 0 6px rgba(200,212,232,0.6))">AT</text>
+              <!-- Front ring arc -->
+              <g transform="rotate(-15, 300, 52)">
+                <path d="M 258,52 A 42,10 0 0 1 342,52"
+                      fill="none" stroke="#C8D4E8" stroke-width="8" opacity="0.08"/>
+                <path d="M 258,52 A 42,10 0 0 1 342,52"
+                      fill="none" stroke="#E8EEFF" stroke-width="1.5" opacity="0.88"
+                      filter="url(#sm-arc-front)"/>
+              </g>
+
+              <!-- WORDMARK below icon -->
+              <text x="300" y="118"
+                    font-family="'IBM Plex Mono', monospace"
+                    font-size="34"
+                    fill="#C8D4E8"
+                    text-anchor="middle"
+                    filter="url(#sm-txt-glow)">
+                <tspan font-weight="300" style="letter-spacing:0.14em">AETHER</tspan><tspan font-weight="600" style="letter-spacing:0.06em">TRACE</tspan>
+              </text>
+
+              <!-- Tagline -->
+              <text x="300" y="140"
+                    text-anchor="middle"
+                    font-family="'IBM Plex Mono', monospace"
+                    font-size="7.5"
+                    fill="#46607a"
+                    style="letter-spacing:0.34em">INTEGRITY INFRASTRUCTURE</text>
+
+            </svg>
+
+          </div>
+        </div>
+        <div class="concept-footer">
+          <span class="concept-name">Stacked Lockup</span>
+          <span class="concept-desc">Icon over wordmark over tagline — document headers, email signature, onboarding screens.</span>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /row-two -->
+
+
+  <!-- ══════════════════════════════════════════
+       RING ANATOMY CALLOUT
+  ═══════════════════════════════════════════ -->
+  <div style="margin-top:18px">
+    <div class="section-label">Ring Anatomy — Why This Works</div>
+    <div class="concept-card">
+      <div class="concept-body" style="padding:40px 48px">
+        <div class="svg-stage">
+
+          <svg viewBox="0 0 820 180" width="820" height="180"
+               xmlns="http://www.w3.org/2000/svg" style="overflow:visible">
+            <defs>
+              <filter id="ann-glow" x="-5%" y="-60%" width="110%" height="220%">
+                <feGaussianBlur stdDeviation="2" result="b"/>
+                <feMerge>
+                  <feMergeNode in="b"/>
+                  <feMergeNode in="SourceGraphic"/>
+                </feMerge>
+              </filter>
+            </defs>
+
+            <!-- Annotated version of the mark at ~80% size -->
+            <!-- Ring: cx=410,cy=90  rx=240,ry=46 -->
+
+            <!-- Back arc -->
+            <path d="M 170,90 A 240,46 0 0 0 650,90"
+                  fill="none" stroke="#6a8db5" stroke-width="1.5" opacity="0.5"
+                  stroke-dasharray="4 3"/>
+
+            <!-- Wordmark (smaller) -->
+            <text x="410" y="104"
+                  font-family="'IBM Plex Mono', monospace"
+                  font-size="42" fill="#C8D4E8" text-anchor="middle"
+                  filter="url(#ann-glow)">
+              <tspan font-weight="300" style="letter-spacing:0.14em">AETHER</tspan><tspan font-weight="600" style="letter-spacing:0.06em">TRACE</tspan>
+            </text>
+
+            <!-- Front arc (solid) -->
+            <path d="M 170,90 A 240,46 0 0 1 650,90"
+                  fill="none" stroke="#E8EEFF" stroke-width="1.5" opacity="0.9"/>
+
+            <!-- ── ANNOTATION LINES ── -->
+            <!-- Back arc annotation -->
+            <line x1="320" y1="47" x2="280" y2="22"
+                  stroke="rgba(200,212,232,0.2)" stroke-width="1"/>
+            <text x="272" y="18" text-anchor="end"
+                  font-family="'IBM Plex Mono', monospace" font-size="9"
+                  fill="#46607a" style="letter-spacing:0.15em">BACK ARC — CUSTODY CHAIN RECEDING</text>
+
+            <!-- Front arc annotation -->
+            <line x1="400" y1="136" x2="360" y2="162"
+                  stroke="rgba(200,212,232,0.2)" stroke-width="1"/>
+            <text x="352" y="166" text-anchor="end"
+                  font-family="'IBM Plex Mono', monospace" font-size="9"
+                  fill="#46607a" style="letter-spacing:0.15em">FRONT ARC — CHAIN LOCKS IN FOREGROUND</text>
+
+            <!-- Left endpoint annotation -->
+            <line x1="170" y1="90" x2="132" y2="76"
+                  stroke="rgba(200,212,232,0.2)" stroke-width="1"/>
+            <text x="128" y="72" text-anchor="end"
+                  font-family="'IBM Plex Mono', monospace" font-size="9"
+                  fill="#46607a" style="letter-spacing:0.12em">LOCK NODE</text>
+
+            <!-- Right endpoint annotation -->
+            <line x1="650" y1="90" x2="688" y2="76"
+                  stroke="rgba(200,212,232,0.2)" stroke-width="1"/>
+            <text x="692" y="72" text-anchor="start"
+                  font-family="'IBM Plex Mono', monospace" font-size="9"
+                  fill="#46607a" style="letter-spacing:0.12em">LOCK NODE</text>
+
+            <!-- Orbit node annotation -->
+            <circle cx="650" cy="90" r="4" fill="#E8EEFF" opacity="0.85"/>
+            <circle cx="650" cy="90" r="7" fill="none" stroke="#E8EEFF" stroke-width="1" opacity="0.3"/>
+
+            <!-- Orbit path label -->
+            <line x1="560" y1="55" x2="596" y2="30"
+                  stroke="rgba(200,212,232,0.2)" stroke-width="1"/>
+            <text x="600" y="26" text-anchor="start"
+                  font-family="'IBM Plex Mono', monospace" font-size="9"
+                  fill="#46607a" style="letter-spacing:0.12em">ORBITAL NODE — LIVE CUSTODY EVENT</text>
+
+            <!-- Equatorial split line (subtle) -->
+            <line x1="170" y1="90" x2="650" y2="90"
+                  stroke="rgba(200,212,232,0.06)" stroke-width="1" stroke-dasharray="3 4"/>
+
+            <!-- Equatorial label -->
+            <text x="413" y="88"
+                  text-anchor="middle"
+                  font-family="'IBM Plex Mono', monospace" font-size="7.5"
+                  fill="rgba(200,212,232,0.12)" style="letter-spacing:0.2em">— ORBITAL PLANE —</text>
+
+          </svg>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════
+       PALETTE
+  ═══════════════════════════════════════════ -->
+  <div style="margin-top:40px">
+    <div class="section-label">Approved Color System</div>
+    <div class="palette-grid">
+
+      <div class="swatch">
+        <div class="swatch-color" style="background:#040D21"></div>
+        <div class="swatch-info">
+          <div class="swatch-name">Void</div>
+          <div class="swatch-hex">#040D21</div>
+        </div>
+      </div>
+
+      <div class="swatch">
+        <div class="swatch-color" style="background:#0a1628"></div>
+        <div class="swatch-info">
+          <div class="swatch-name">Deep</div>
+          <div class="swatch-hex">#0a1628</div>
+        </div>
+      </div>
+
+      <div class="swatch">
+        <div class="swatch-color" style="background:#0d1b35"></div>
+        <div class="swatch-info">
+          <div class="swatch-name">Card</div>
+          <div class="swatch-hex">#0d1b35</div>
+        </div>
+      </div>
+
+      <div class="swatch">
+        <div class="swatch-color" style="background:#0f1f3d"></div>
+        <div class="swatch-info">
+          <div class="swatch-name">Navy</div>
+          <div class="swatch-hex">#0f1f3d</div>
+        </div>
+      </div>
+
+      <div class="swatch">
+        <div class="swatch-color" style="background:#C8D4E8; border-bottom:1px solid rgba(200,212,232,0.1)"></div>
+        <div class="swatch-info">
+          <div class="swatch-name">Silver</div>
+          <div class="swatch-hex">#C8D4E8</div>
+        </div>
+      </div>
+
+      <div class="swatch">
+        <div class="swatch-color" style="background:#E8EEFF"></div>
+        <div class="swatch-info">
+          <div class="swatch-name">Bright</div>
+          <div class="swatch-hex">#E8EEFF</div>
+        </div>
+      </div>
+
+      <div class="swatch">
+        <div class="swatch-color" style="background:#EF4444"></div>
+        <div class="swatch-info">
+          <div class="swatch-name">Breach</div>
+          <div class="swatch-hex">#EF4444</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════
+       TYPOGRAPHY
+  ═══════════════════════════════════════════ -->
+  <div style="margin-top:36px">
+    <div class="section-label">Typography System</div>
+    <div class="concept-card">
+      <div class="concept-body" style="padding:36px 44px">
+        <div class="type-row">
+
+          <div class="type-col">
+            <div class="type-specimen"
+                 style="font-family:'IBM Plex Mono',monospace; font-size:34px; font-weight:300; letter-spacing:0.14em; color:#C8D4E8; filter:drop-shadow(0 0 8px rgba(200,212,232,0.4)) drop-shadow(0 0 24px rgba(140,170,220,0.12))">
+              AETHER
+            </div>
+            <div class="type-label">IBM Plex Mono · Weight 300 · Tracking 0.14em</div>
+          </div>
+
+          <div class="type-col">
+            <div class="type-specimen"
+                 style="font-family:'IBM Plex Mono',monospace; font-size:34px; font-weight:600; letter-spacing:0.06em; color:#C8D4E8; filter:drop-shadow(0 0 8px rgba(200,212,232,0.4)) drop-shadow(0 0 24px rgba(140,170,220,0.12))">
+              TRACE
+            </div>
+            <div class="type-label">IBM Plex Mono · Weight 600 · Tracking 0.06em</div>
+          </div>
+
+          <div class="type-col" style="align-self:center">
+            <div style="font-family:'Inter',sans-serif; font-size:11px; font-weight:300; letter-spacing:0.32em; color:#46607a; text-transform:uppercase">
+              Integrity Infrastructure
+            </div>
+            <div class="type-label">Inter · Weight 300 · Tagline</div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════
+       PRISM NOTE
+  ═══════════════════════════════════════════ -->
+  <div class="prism-note">
+    <p class="prism-note-text">
+      <strong>PRISM NOTE — </strong>
+      The orbital ring is not decorative — it is structural. The ring communicates the core invariant of AetherTrace: a chain of custody that encircles and locks the evidence it contains. The front arc (bright, close) is the seal you can see. The back arc (dim, receding) is the chain you know exists. The traveling node is the live custody event. The word does not sit beside the ring — it is the planet the ring orbits. This mark will not look like any other infrastructure brand because infrastructure brands do not yet think this way.
+      <strong style="margin-left:12px"> — V3 / ORBITAL SERIES / PRISM APPROVED</strong>
+    </p>
+  </div>
+
+</div><!-- /content -->
+
+
+<!-- ══════════════════════════════════════════
+     ORBITAL NODE ANIMATION
+═══════════════════════════════════════════ -->
+<script>
+(function () {
+  'use strict';
+
+  // Ring geometry — MUST match SVG values exactly
+  const CX = 360, CY = 108;    // ring center
+  const RX = 275, RY = 54;     // ring semi-axes
+  const SPEED = 0.0035;        // radians per frame (slow, deliberate)
+
+  let angle = Math.PI * 1.75;  // start near right side, in front half
+
+  // DOM refs
+  const backGroup  = document.getElementById('node-back-group');
+  const frontGroup = document.getElementById('node-front-group');
+  const backOuter  = document.getElementById('node-back-outer');
+  const backCore   = document.getElementById('node-back-core');
+  const frontOuter = document.getElementById('node-front-outer');
+  const frontCore  = document.getElementById('node-front-core');
+
+  if (!backGroup || !frontGroup) return;
+
+  // Pulse timing for the node glow
+  let pulseT = 0;
+
+  function setPos(el, x, y) {
+    el.setAttribute('cx', x.toFixed(3));
+    el.setAttribute('cy', y.toFixed(3));
+  }
+
+  function tick() {
+    angle += SPEED;
+    if (angle >= Math.PI * 2) angle -= Math.PI * 2;
+    pulseT += 0.04;
+
+    // Parametric ellipse position (SVG y-axis inverted = minus sign on sin)
+    const ex = CX + RX * Math.cos(angle);
+    const ey = CY - RY * Math.sin(angle);
+
+    // sin(angle) > 0  →  TOP half  →  BEHIND text
+    // sin(angle) <= 0 →  BOTTOM half → IN FRONT of text
+    const behind = Math.sin(angle) > 0;
+
+    // Pulse factor (subtle breathe)
+    const pulse = 0.85 + 0.15 * Math.sin(pulseT);
+
+    if (behind) {
+      // Show behind-text node (drawn before wordmark in SVG)
+      setPos(backOuter, ex, ey);
+      setPos(backCore,  ex, ey);
+      backGroup.setAttribute('opacity', (0.35 * pulse).toFixed(3));
+      frontGroup.setAttribute('opacity', '0');
+    } else {
+      // Show in-front node (drawn after wordmark in SVG)
+      setPos(frontOuter, ex, ey);
+      setPos(frontCore,  ex, ey);
+      frontGroup.setAttribute('opacity', (pulse).toFixed(3));
+      backGroup.setAttribute('opacity', '0');
+    }
+
+    requestAnimationFrame(tick);
+  }
+
+  // Start after fonts load to avoid flash
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(tick);
+  } else {
+    setTimeout(tick, 400);
+  }
+
+})();
+</script>
+
+</body>
+</html>

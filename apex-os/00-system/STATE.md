@@ -1,6 +1,6 @@
 ---
 type: system-state
-last-updated: 2026-03-23
+last-updated: 2026-03-24
 updated-by: cowork-session — design-inspiration vault cataloged, apex-os wiring complete
 ---
 
@@ -135,3 +135,22 @@ AetherTrace is now a proper project inside Apex OS. All planning files moved int
 - `CLAUDE.md` updated with vault structure map and session protocol
 
 **Vault root now contains only:** CLAUDE.md, Welcome.md, setup script, skill files, and the three code directories.
+
+---
+
+## Brand Approval — 2026-03-24
+
+**PRISM: COMPLETE.** Brand locked by Casey 2026-03-24.
+
+Battle drill status update:
+- Step 6 PRISM → **COMPLETE** (was PENDING)
+- Step 7 ANVIL → **NEXT ACTION**
+
+**Approved Mark:** The Orbital Lock — wordmark as planet, ring orbits the identity  
+**Palette:** `#040D21` void · `#0a1628` deep · `#C8D4E8` silver · `#E8EEFF` bright · `#EF4444` breach (tamper only)  
+**Typography:** IBM Plex Mono 300 (AETHER) + 600 (TRACE) · Inter 300–500 (UI)  
+**Tagline:** INTEGRITY INFRASTRUCTURE  
+**Full spec:** `apex-os/10-projects/aethertrace/design/BRAND-SPEC.md`  
+**Source board:** `apex-os/10-projects/aethertrace/design/previews/brand-board-v3.html`  
+
+**Next action: ANVIL — first commit `lib/hash-chain.ts`**

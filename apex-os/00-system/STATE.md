@@ -154,3 +154,34 @@ Battle drill status update:
 **Source board:** `apex-os/10-projects/aethertrace/design/previews/brand-board-v3.html`  
 
 **Next action: ANVIL — first commit `lib/hash-chain.ts`**
+
+
+---
+
+## PRISM: Landing Page Redesign — COMPLETE
+**Date:** 2026-03-24
+
+### What Changed
+- Full landing page redesigned applying locked brand spec (BRAND-SPEC.md v1.0)
+- Deliverable: `apex-os/10-projects/aethertrace/design/previews/PRISM-2026-03-24-landing-redesign.html`
+
+### Design Decisions Applied
+- Background: `#040D21` void + CSS starfield + nebula depth layers
+- Typography: IBM Plex Mono (headings/wordmark) + Inter (body)
+- Animated Orbital Lock mark in hero (exact brand spec geometry — split arc z-layering)
+- Nav: fixed, blur backdrop, smaller orbital lock SVG with independent animation node
+- Sections: Pain (stats + structural trap), How It Works (3 steps), Chain Visualization, Public Verification, Why AetherTrace, Pricing, Final CTA, Footer
+- Emerald (#10B981) used ONLY for sealed status and verification — not in mark or palette
+- Breach red (#EF4444) used ONLY for stat card showing $60.1M dispute figure
+- Scroll fade-in animations on all cards via IntersectionObserver
+
+### Copy Sources
+- Hero: AETHERTRACE-UI-PROMPT.md — "You did the work. You took the photos. You still lost the claim."
+- Stats: VIGIL dossier ($60.1M Arcadis 2025, $4–12B/yr, 12.5 months)
+- Verification: "No account. No login. No trust in us."
+- Pricing: $199/mo (5 projects) and $499/mo (unlimited) — no free tier, no trial
+
+### Next Action
+- Casey reviews landing redesign, approves or requests revisions
+- If approved: ANVIL translates to Next.js components (page.tsx + components/)
+- ANVIL build queue: Phase 2 tasks (Supabase schema, auth) remain unblocked

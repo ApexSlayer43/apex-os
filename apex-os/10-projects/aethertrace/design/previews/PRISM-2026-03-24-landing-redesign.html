@@ -482,9 +482,138 @@ footer { border-top: 1px solid rgba(15,31,61,0.7); padding: 52px 0; position: re
 .footer-links a:hover { color: var(--bright); }
 .footer-copy { font-family: var(--mono); font-size: 10px; font-weight: 300; letter-spacing: 0.08em; color: var(--dim); opacity: 0.45; }
 
+/* ─── STATS ROW (horizontal) ──────────────────────────── */
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2px;
+  margin-bottom: 0;
+}
+.stats-row .stat-card {
+  padding: 44px 40px 40px;
+}
+.stats-row .stat-number {
+  font-size: clamp(56px, 10vw, 108px);
+}
+
+/* ─── PAIN TEXT ROW (below stats) ─────────────────────── */
+.pain-text-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 64px;
+  align-items: start;
+  padding: 60px 0 0;
+}
+
+/* ─── HIW ARROW ───────────────────────────────────────── */
+.hiw-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--navy);
+  font-size: 18px;
+  padding: 0 4px;
+  align-self: center;
+  margin-top: -30px;
+  opacity: 0.6;
+}
+
+/* ─── COMPARISON ──────────────────────────────────────── */
+.section-compare { padding: 100px 0; }
+.compare-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px;
+  margin-top: 60px;
+}
+.compare-col {
+  padding: 48px 44px;
+  border: 1px solid rgba(15,31,61,0.9);
+}
+.compare-col.compare-without {
+  background: rgba(239,68,68,0.025);
+  border-left: 2px solid rgba(239,68,68,0.22);
+}
+.compare-col.compare-with {
+  background: rgba(16,185,129,0.025);
+  border-left: 2px solid rgba(16,185,129,0.28);
+}
+.compare-col-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 300;
+  letter-spacing: 0.30em;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+}
+.compare-without .compare-col-label { color: rgba(239,68,68,0.55); }
+.compare-with   .compare-col-label { color: rgba(16,185,129,0.65); }
+.compare-col-headline {
+  font-family: var(--mono);
+  font-size: 18px;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  color: var(--white);
+  line-height: 1.35;
+  margin-bottom: 28px;
+}
+.compare-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.compare-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 300;
+  color: var(--dim);
+  line-height: 1.6;
+}
+.compare-list li .ci {
+  font-family: var(--mono);
+  font-size: 11px;
+  flex-shrink: 0;
+  margin-top: 2px;
+  line-height: 1.6;
+}
+.compare-without .compare-list li .ci { color: rgba(239,68,68,0.45); }
+.compare-with   .compare-list li .ci { color: rgba(16,185,129,0.55); }
+
+/* ─── PULL QUOTE ATMOSPHERE ───────────────────────────── */
+.section-pullquote { position: relative; overflow: hidden; }
+.section-pullquote::before {
+  content: '';
+  position: absolute;
+  left: 50%; top: 50%;
+  transform: translate(-50%, -50%);
+  width: 900px; height: 500px;
+  background: radial-gradient(ellipse at center, rgba(126,184,247,0.06) 0%, transparent 68%);
+  pointer-events: none;
+}
+.pullquote-text, .pullquote-mark, .pullquote-attr { position: relative; z-index: 1; }
+
+/* ─── FINAL CTA PRICING ANCHOR ────────────────────────── */
+.finalcta-pricing-anchor {
+  margin-top: 28px;
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 300;
+  letter-spacing: 0.14em;
+  color: var(--dim);
+}
+.finalcta-pricing-anchor .anchor-price { color: var(--glow); font-weight: 400; }
+
 /* ─── RESPONSIVE ──────────────────────────────────── */
 @media (max-width: 768px) {
-  .pain-grid, .chain-intro, .hiw-steps, .why-grid, .pricing-grid { grid-template-columns: 1fr; }
+  .pain-text-row, .chain-intro, .why-grid, .pricing-grid,
+  .compare-grid { grid-template-columns: 1fr; }
+  .stats-row { grid-template-columns: 1fr; }
+  .hiw-steps { grid-template-columns: 1fr !important; }
+  .hiw-arrow { display: none; }
   .nav-links { display: none; }
   .hero { padding: 110px 0 80px; }
   .hiw-step-ghost { display: none; }
@@ -613,12 +742,30 @@ footer { border-top: 1px solid rgba(15,31,61,0.7); padding: 52px 0; position: re
       </p>
     </div>
 
-    <!-- Pain grid -->
+    <!-- Pain stats — horizontal row -->
     <div class="section-pain">
-      <div class="pain-grid">
+      <div class="stats-row">
+        <div class="stat-card stat-breach">
+          <div class="stat-number">$60.1M</div>
+          <div class="stat-label">Average U.S. construction dispute value · Arcadis 2025</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">$12B</div>
+          <div class="stat-label">Annual industry spend on dispute transaction costs every year</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">12.5<span style="font-size:0.42em;letter-spacing:0.04em;opacity:0.55"> mo</span></div>
+          <div class="stat-label">Average time to resolution · while your cash bleeds out</div>
+        </div>
+      </div>
+
+      <!-- Explanation text below stats -->
+      <div class="pain-text-row">
         <div>
           <p class="section-label">The Structural Problem</p>
           <h2 class="section-headline">The party being<br/>evaluated controls<br/>the evidence.</h2>
+        </div>
+        <div>
           <div class="section-rule"></div>
           <p class="section-body">
             When you enter documentation into the GC's system — Procore, PlanGrid, whatever
@@ -630,20 +777,6 @@ footer { border-top: 1px solid rgba(15,31,61,0.7); padding: 52px 0; position: re
             <strong>AetherTrace puts custody outside their reach before the dispute starts.</strong>
             The chain is sealed the moment you capture. They cannot touch it.
           </p>
-        </div>
-        <div class="pain-stats">
-          <div class="stat-card stat-breach">
-            <div class="stat-number">$60.1M</div>
-            <div class="stat-label">Average U.S. construction dispute value · Arcadis 2025</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-number">$12B</div>
-            <div class="stat-label">Annual industry spend on dispute transaction costs</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-number">12.5<span style="font-size:0.45em;letter-spacing:0.05em;opacity:0.6"> mo</span></div>
-            <div class="stat-label">Average time to resolution · while your cash bleeds out</div>
-          </div>
         </div>
       </div>
     </div>
@@ -658,7 +791,7 @@ footer { border-top: 1px solid rgba(15,31,61,0.7); padding: 52px 0; position: re
     <p class="section-label">Protocol</p>
     <h2 class="section-headline">One function.<br/>Three steps.</h2>
 
-    <div class="hiw-steps">
+    <div class="hiw-steps" style="grid-template-columns: 1fr 36px 1fr 36px 1fr;">
       <div class="hiw-step">
         <span class="hiw-step-ghost">01</span>
         <p class="hiw-step-num">Step 01</p>
@@ -667,6 +800,11 @@ footer { border-top: 1px solid rgba(15,31,61,0.7); padding: 52px 0; position: re
           <strong>SHA-256 hash computed on ingestion. Timestamp locked. Identity recorded.</strong>
           Nothing changes after this moment.</p>
       </div>
+      <div class="hiw-arrow">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+          <path d="M3 9h12M11 5l4 4-4 4" stroke="#7EB8F7" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
       <div class="hiw-step">
         <span class="hiw-step-ghost">02</span>
         <p class="hiw-step-num">Step 02</p>
@@ -674,6 +812,11 @@ footer { border-top: 1px solid rgba(15,31,61,0.7); padding: 52px 0; position: re
         <p class="hiw-step-body">Each item chains to the previous — cryptographically linked, append-only.
           <strong>Alter one record and every link that follows breaks instantly.</strong>
           The chain is the proof.</p>
+      </div>
+      <div class="hiw-arrow">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+          <path d="M3 9h12M11 5l4 4-4 4" stroke="#7EB8F7" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
       </div>
       <div class="hiw-step">
         <span class="hiw-step-ghost">03</span>
@@ -770,6 +913,40 @@ footer { border-top: 1px solid rgba(15,31,61,0.7); padding: 52px 0; position: re
             <p class="chain-point-body">AetherTrace is a trustee, not a party. We cannot alter, delete, or backdate evidence any more than you can. The chain belongs to no one.</p>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════ COMPARISON -->
+<section class="section-compare" id="comparison">
+  <div class="container">
+    <p class="section-label">The Structural Trap</p>
+    <h2 class="section-headline">Self-custodied<br/>vs. neutral custody.</h2>
+
+    <div class="compare-grid">
+      <div class="compare-col compare-without">
+        <p class="compare-col-label">Self-Custodied Evidence</p>
+        <p class="compare-col-headline">You document it.<br/>They own the record.</p>
+        <ul class="compare-list">
+          <li><span class="ci">—</span> Evidence lives inside the GC's platform</li>
+          <li><span class="ci">—</span> GC controls access — and can revoke it</li>
+          <li><span class="ci">—</span> No independent chain of custody</li>
+          <li><span class="ci">—</span> Word against word when dispute starts</li>
+          <li><span class="ci">—</span> Resolution: 12.5 months average, cash bleeding</li>
+        </ul>
+      </div>
+      <div class="compare-col compare-with">
+        <p class="compare-col-label">AetherTrace Protocol</p>
+        <p class="compare-col-headline">You document it.<br/>No one can revoke it.</p>
+        <ul class="compare-list">
+          <li><span class="ci">+</span> Evidence sealed in neutral infrastructure</li>
+          <li><span class="ci">+</span> No entity — including AetherTrace — can alter or delete</li>
+          <li><span class="ci">+</span> Cryptographic chain proves integrity mathematically</li>
+          <li><span class="ci">+</span> Court-ready package generated on demand</li>
+          <li><span class="ci">+</span> Any attorney verifies independently, no account required</li>
+        </ul>
       </div>
     </div>
   </div>
@@ -902,6 +1079,9 @@ footer { border-top: 1px solid rgba(15,31,61,0.7); padding: 52px 0; position: re
     <h2 class="finalcta-headline">The chain doesn't start<br/>until you start it.</h2>
     <p class="finalcta-sub">Every day without custody is a day the evidence can be challenged, altered, or revoked.</p>
     <a href="#pricing" class="btn-primary" style="font-size:11px;padding:14px 32px;letter-spacing:0.18em;">Start Your First Project</a>
+    <p class="finalcta-pricing-anchor">
+      Starts at <span class="anchor-price">$199/mo</span> · No contracts · Cancel anytime
+    </p>
   </div>
 </section>
 

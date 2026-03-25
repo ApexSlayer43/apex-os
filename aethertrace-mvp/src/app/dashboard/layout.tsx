@@ -1,13 +1,12 @@
 /**
- * Dashboard Layout — Dark Void Sidebar Shell
- * Fixed 220px sidebar + flex-1 main content
- * Matches approved AetherTrace brand: dark void, glow accents
+ * Dashboard Layout
+ * Sticky nav with ring mark + sign out.
+ * No sidebar. Full-width shell.
+ * Pure server component — zero client JS.
  */
 
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
-import Link from 'next/link'
-import { LayoutDashboard, FolderOpen, LogOut, Shield } from 'lucide-react'
 
 export default async function DashboardLayout({
   children,
@@ -19,175 +18,138 @@ export default async function DashboardLayout({
   if (!user) redirect('/login')
 
   return (
-    <div className="flex min-h-screen" style={{ background: '#02050B' }}>
-
-      {/* ── Sidebar ───────────────────────────────────────────── */}
-      <aside
-        style={{
-          width: 220,
-          background: '#02050B',
-          borderRight: '1px solid rgba(22,48,88,0.35)',
-          display: 'flex',
-          flexDirection: 'column',
-          position: 'fixed',
-          top: 0, left: 0, bottom: 0,
-          zIndex: 50,
-        }}
-      >
-        {/* Mark */}
-        <div style={{
-          padding: '24px 20px 20px',
-          borderBottom: '1px solid rgba(22,48,88,0.25)',
-        }}>
-          <Link href="/dashboard" style={{ textDecoration: 'none' }}>
-            <div style={{
-              fontFamily: "'Bebas Neue', sans-serif",
-              fontSize: 18,
-              letterSpacing: '6px',
-              color: '#FFFFFF',
-              lineHeight: 1,
-              textShadow: '0 0 20px rgba(126,184,247,0.15)',
-            }}>
-              AETHERTRACE
-            </div>
-            <div style={{
-              fontFamily: "'IBM Plex Mono', monospace",
-              fontSize: 8,
-              letterSpacing: '4px',
-              color: 'rgba(90,120,160,0.52)',
-              marginTop: 4,
-              textTransform: 'uppercase',
-            }}>
-              Neutral Evidence Trustee
-            </div>
-          </Link>
-        </div>
-
-        {/* Nav */}
-        <nav style={{ flex: 1, padding: '12px 10px', overflowY: 'auto' }}>
-          <NavSection label="Overview">
-            <NavLink href="/dashboard" icon={<LayoutDashboard size={13} />} label="Dashboard" />
-            <NavLink href="/dashboard" icon={<FolderOpen size={13} />} label="Projects" />
-          </NavSection>
-
-          <NavSection label="Protocol">
-            <NavLink href="/dashboard" icon={<Shield size={13} />} label="Chain Status" />
-          </NavSection>
-        </nav>
-
-        {/* User footer */}
-        <div style={{
-          padding: '14px 20px',
-          borderTop: '1px solid rgba(22,48,88,0.25)',
-        }}>
-          <div style={{
-            fontFamily: "'IBM Plex Mono', monospace",
-            fontSize: 9,
-            color: '#486080',
-            marginBottom: 8,
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-            whiteSpace: 'nowrap',
-          }}>
-            {user.email}
-          </div>
-          <form action="/api/auth/signout" method="POST">
-            <button
-              type="submit"
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: 6,
-                background: 'none',
-                border: 'none',
-                cursor: 'pointer',
-                fontFamily: "'IBM Plex Mono', monospace",
-                fontSize: 9,
-                letterSpacing: '0.2em',
-                textTransform: 'uppercase',
-                color: '#486080',
-                padding: 0,
-                transition: 'color 0.15s',
-              }}
-              onMouseEnter={e => (e.currentTarget.style.color = '#7EB8F7')}
-              onMouseLeave={e => (e.currentTarget.style.color = '#486080')}
-            >
-              <LogOut size={10} />
-              Sign out
-            </button>
-          </form>
-        </div>
-      </aside>
-
-      {/* ── Main content ──────────────────────────────────────── */}
-      <main
-        style={{
-          marginLeft: 220,
-          flex: 1,
-          minHeight: '100vh',
-          position: 'relative',
-          zIndex: 1,
-        }}
-      >
+    <div style={{ minHeight: '100vh', background: '#02050B', position: 'relative', zIndex: 1 }}>
+      <Nav email={user.email ?? ''} />
+      <main style={{ position: 'relative', zIndex: 1 }}>
         {children}
       </main>
     </div>
   )
 }
 
-/* ── Sub-components ─────────────────────────────────────────── */
-
-function NavSection({ label, children }: { label: string; children: React.ReactNode }) {
+function Nav({ email }: { email: string }) {
   return (
-    <div style={{ marginBottom: 20 }}>
-      <div style={{
-        fontFamily: "'IBM Plex Mono', monospace",
-        fontSize: 8,
-        letterSpacing: '0.22em',
-        textTransform: 'uppercase',
-        color: '#284870',
-        padding: '0 10px 6px',
-      }}>
-        {label}
-      </div>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-        {children}
-      </div>
-    </div>
+    <nav style={{
+      position: 'sticky',
+      top: 0,
+      zIndex: 100,
+      height: 64,
+      background: 'rgba(2,5,11,0.96)',
+      borderBottom: '1px solid rgba(22,48,88,0.3)',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      padding: '0 52px',
+      backdropFilter: 'blur(12px)',
+      WebkitBackdropFilter: 'blur(12px)',
+    }}>
+      <NavMark />
+      <NavRight email={email} />
+    </nav>
   )
 }
 
-function NavLink({
-  href,
-  icon,
-  label,
-  active,
-}: {
-  href: string
-  icon: React.ReactNode
-  label: string
-  active?: boolean
-}) {
+function NavMark() {
   return (
-    <Link
-      href={href}
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        gap: 8,
-        padding: '7px 10px',
-        textDecoration: 'none',
-        borderRadius: 3,
-        fontFamily: "'Inter', sans-serif",
-        fontSize: 12,
-        color: active ? '#7EB8F7' : '#486080',
-        background: active ? 'rgba(126,184,247,0.07)' : 'transparent',
-        borderLeft: active ? '2px solid #7EB8F7' : '2px solid transparent',
-        transition: 'all 0.15s',
-      }}
-    >
-      <span style={{ opacity: active ? 1 : 0.6 }}>{icon}</span>
-      {label}
-    </Link>
+    <a href="/dashboard" style={{ textDecoration: 'none', display: 'block', lineHeight: 0 }}>
+      <svg
+        width="180"
+        height="28"
+        viewBox="-20 0 1100 330"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        aria-label="AetherTrace"
+        role="img"
+      >
+        <defs>
+          <filter id="fNav" x="-12%" y="-80%" width="124%" height="260%">
+            <feGaussianBlur stdDeviation="4" result="blur" />
+            <feMerge>
+              <feMergeNode in="blur" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+          <filter id="fNavNode" x="-300%" y="-300%" width="700%" height="700%">
+            <feGaussianBlur stdDeviation="8" result="blur" />
+            <feMerge>
+              <feMergeNode in="blur" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+          <linearGradient id="gNavRing" x1="40" y1="0" x2="1000" y2="0" gradientUnits="userSpaceOnUse">
+            <stop offset="0%"   stopColor="#7EB8F7" stopOpacity="0" />
+            <stop offset="8%"   stopColor="#7EB8F7" stopOpacity="0.40" />
+            <stop offset="28%"  stopColor="#C8DCFF" stopOpacity="0.70" />
+            <stop offset="48%"  stopColor="#FFFFFF" stopOpacity="0.95" />
+            <stop offset="52%"  stopColor="#FFFFFF" stopOpacity="0.95" />
+            <stop offset="72%"  stopColor="#C8DCFF" stopOpacity="0.70" />
+            <stop offset="92%"  stopColor="#7EB8F7" stopOpacity="0.40" />
+            <stop offset="100%" stopColor="#7EB8F7" stopOpacity="0" />
+          </linearGradient>
+          <clipPath id="cpNavBack">
+            <rect x="-30" y="-10" width="1140" height="165" />
+          </clipPath>
+          <clipPath id="cpNavFront">
+            <rect x="-30" y="155" width="1140" height="200" />
+          </clipPath>
+        </defs>
+        <ellipse
+          cx="520" cy="155" rx="440" ry="108"
+          stroke="rgba(126,184,247,0.18)"
+          strokeWidth="1.5"
+          fill="none"
+          transform="rotate(-12 520 155)"
+          clipPath="url(#cpNavBack)"
+        />
+        <text
+          x="520" y="202"
+          textAnchor="middle"
+          fontFamily="'Bebas Neue', Impact, sans-serif"
+          fontSize="118"
+          letterSpacing="8"
+          fill="#FFFFFF"
+        >
+          AETHERTRACE
+        </text>
+        <ellipse
+          cx="520" cy="155" rx="440" ry="108"
+          stroke="url(#gNavRing)"
+          strokeWidth="2"
+          fill="none"
+          transform="rotate(-12 520 155)"
+          clipPath="url(#cpNavFront)"
+          filter="url(#fNav)"
+        />
+        <circle cx="674" cy="227" r="18" fill="#7EB8F7" opacity="0.22" filter="url(#fNavNode)" />
+        <circle cx="674" cy="227" r="4.5" fill="#7EB8F7" />
+      </svg>
+    </a>
+  )
+}
+
+function NavRight({ email }: { email: string }) {
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap: 28 }}>
+      <span style={{
+        fontFamily: 'var(--font-mono)',
+        fontSize: 10,
+        color: '#284870',
+        letterSpacing: '0.04em',
+        maxWidth: 220,
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+        whiteSpace: 'nowrap',
+      }}>
+        {email}
+      </span>
+      <form action="/api/auth/signout" method="POST">
+        <button
+          type="submit"
+          className="nav-signout"
+        >
+          Sign out
+        </button>
+      </form>
+    </div>
   )
 }

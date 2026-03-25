@@ -1,7 +1,7 @@
 /**
  * Auth Forms — Login and Signup
  * Client components for Supabase auth.
- * Trust Fortress style: clean inputs, minimal decoration, clear states.
+ * Dark void + silver. Framer Motion transitions.
  */
 
 'use client'
@@ -9,6 +9,37 @@
 import { useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
+import { motion } from 'framer-motion'
+
+const fadeIn = {
+  initial: { opacity: 0, y: 12 },
+  animate: { opacity: 1, y: 0 },
+  transition: { duration: 0.4, ease: [0.22, 1, 0.36, 1] },
+}
+
+const inputStyle: React.CSSProperties = {
+  width: '100%',
+  padding: '12px 16px',
+  background: 'rgba(200,212,228,0.04)',
+  border: '1px solid rgba(200,212,228,0.1)',
+  borderRadius: 8,
+  fontFamily: 'var(--font-sans)',
+  fontSize: 14,
+  color: '#B8D4EE',
+  outline: 'none',
+  transition: 'border-color 0.2s, box-shadow 0.2s',
+  caretColor: '#C8D4E0',
+}
+
+const labelStyle: React.CSSProperties = {
+  display: 'block',
+  fontFamily: 'var(--font-mono)',
+  fontSize: 9,
+  letterSpacing: '0.12em',
+  textTransform: 'uppercase',
+  color: '#486080',
+  marginBottom: 6,
+}
 
 export function LoginForm() {
   const [email, setEmail] = useState('')
@@ -36,34 +67,32 @@ export function LoginForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      {error && (
-        <div className="bg-red-50 border border-red-200 text-red-700 text-sm rounded-md px-4 py-3">
-          {error}
-        </div>
-      )}
+    <motion.form onSubmit={handleSubmit} {...fadeIn}>
+      {error && <ErrorBanner message={error} />}
 
-      <div>
-        <label htmlFor="email" className="block text-sm font-medium text-slate-700 mb-1">
-          Email
-        </label>
+      <div style={{ marginBottom: 20 }}>
+        <label htmlFor="email" style={labelStyle}>Email</label>
         <input
           id="email"
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
-          className="w-full px-3 py-2 border border-slate-300 rounded-md text-sm
-            focus:outline-none focus:ring-2 focus:ring-accent/20 focus:border-accent
-            placeholder:text-slate-400"
           placeholder="you@company.com"
+          style={inputStyle}
+          onFocus={(e) => {
+            e.target.style.borderColor = 'rgba(200,212,228,0.25)'
+            e.target.style.boxShadow = '0 0 16px rgba(200,212,228,0.04)'
+          }}
+          onBlur={(e) => {
+            e.target.style.borderColor = 'rgba(200,212,228,0.1)'
+            e.target.style.boxShadow = 'none'
+          }}
         />
       </div>
 
-      <div>
-        <label htmlFor="password" className="block text-sm font-medium text-slate-700 mb-1">
-          Password
-        </label>
+      <div style={{ marginBottom: 28 }}>
+        <label htmlFor="password" style={labelStyle}>Password</label>
         <input
           id="password"
           type="password"
@@ -71,22 +100,44 @@ export function LoginForm() {
           onChange={(e) => setPassword(e.target.value)}
           required
           minLength={8}
-          className="w-full px-3 py-2 border border-slate-300 rounded-md text-sm
-            focus:outline-none focus:ring-2 focus:ring-accent/20 focus:border-accent
-            placeholder:text-slate-400"
           placeholder="••••••••"
+          style={inputStyle}
+          onFocus={(e) => {
+            e.target.style.borderColor = 'rgba(200,212,228,0.25)'
+            e.target.style.boxShadow = '0 0 16px rgba(200,212,228,0.04)'
+          }}
+          onBlur={(e) => {
+            e.target.style.borderColor = 'rgba(200,212,228,0.1)'
+            e.target.style.boxShadow = 'none'
+          }}
         />
       </div>
 
-      <button
+      <motion.button
         type="submit"
         disabled={loading}
-        className="w-full bg-primary text-white py-2.5 px-4 rounded-md text-sm font-medium
-          hover:bg-slate-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+        whileHover={!loading ? { scale: 1.01, boxShadow: '0 0 30px rgba(200,212,228,0.1)' } : {}}
+        whileTap={!loading ? { scale: 0.99 } : {}}
+        style={{
+          width: '100%',
+          padding: '12px 16px',
+          background: '#FFFFFF',
+          color: '#02050B',
+          border: 'none',
+          borderRadius: 8,
+          fontFamily: 'var(--font-sans)',
+          fontSize: 13,
+          fontWeight: 500,
+          letterSpacing: '0.02em',
+          cursor: loading ? 'wait' : 'pointer',
+          transition: 'opacity 0.2s',
+          boxShadow: '0 0 20px rgba(200,212,228,0.06)',
+          opacity: loading ? 0.5 : 1,
+        }}
       >
         {loading ? 'Signing in...' : 'Sign in'}
-      </button>
-    </form>
+      </motion.button>
+    </motion.form>
   )
 }
 
@@ -106,7 +157,6 @@ export function SignupForm() {
 
     const supabase = createClient()
 
-    // Create user
     const { data: authData, error: authError } = await supabase.auth.signUp({
       email,
       password,
@@ -121,14 +171,12 @@ export function SignupForm() {
       return
     }
 
-    // If email confirmation is required
     if (authData.user && !authData.session) {
       setSuccess(true)
       setLoading(false)
       return
     }
 
-    // If auto-confirmed, create org
     if (authData.session) {
       const res = await fetch('/api/organizations', {
         method: 'POST',
@@ -147,62 +195,94 @@ export function SignupForm() {
 
   if (success) {
     return (
-      <div className="text-center py-4">
-        <div className="text-accent text-lg font-medium mb-2">Check your email</div>
-        <p className="text-sm text-slate-600">
-          We sent a confirmation link to <strong>{email}</strong>.
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+        style={{ textAlign: 'center', padding: '16px 0' }}
+      >
+        {/* Checkmark */}
+        <div style={{
+          width: 48, height: 48, borderRadius: '50%',
+          background: 'rgba(16,185,129,0.1)',
+          border: '1px solid rgba(16,185,129,0.2)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          margin: '0 auto 16px',
+        }}>
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="#10B981">
+            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+          </svg>
+        </div>
+        <div style={{
+          fontFamily: 'var(--font-serif)',
+          fontSize: 20,
+          color: '#DCF0FF',
+          marginBottom: 12,
+        }}>
+          Check your email
+        </div>
+        <p style={{
+          fontFamily: 'var(--font-mono)',
+          fontSize: 12,
+          color: '#486080',
+          lineHeight: 1.7,
+        }}>
+          We sent a confirmation link to{' '}
+          <strong style={{ color: '#B8D4EE' }}>{email}</strong>.
           Click it to activate your account.
         </p>
-      </div>
+      </motion.div>
     )
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      {error && (
-        <div className="bg-red-50 border border-red-200 text-red-700 text-sm rounded-md px-4 py-3">
-          {error}
-        </div>
-      )}
+    <motion.form onSubmit={handleSubmit} {...fadeIn}>
+      {error && <ErrorBanner message={error} />}
 
-      <div>
-        <label htmlFor="orgName" className="block text-sm font-medium text-slate-700 mb-1">
-          Company name
-        </label>
+      <div style={{ marginBottom: 20 }}>
+        <label htmlFor="orgName" style={labelStyle}>Company name</label>
         <input
           id="orgName"
           type="text"
           value={orgName}
           onChange={(e) => setOrgName(e.target.value)}
           required
-          className="w-full px-3 py-2 border border-slate-300 rounded-md text-sm
-            focus:outline-none focus:ring-2 focus:ring-accent/20 focus:border-accent
-            placeholder:text-slate-400"
           placeholder="Acme Construction LLC"
+          style={inputStyle}
+          onFocus={(e) => {
+            e.target.style.borderColor = 'rgba(200,212,228,0.25)'
+            e.target.style.boxShadow = '0 0 16px rgba(200,212,228,0.04)'
+          }}
+          onBlur={(e) => {
+            e.target.style.borderColor = 'rgba(200,212,228,0.1)'
+            e.target.style.boxShadow = 'none'
+          }}
         />
       </div>
 
-      <div>
-        <label htmlFor="signupEmail" className="block text-sm font-medium text-slate-700 mb-1">
-          Email
-        </label>
+      <div style={{ marginBottom: 20 }}>
+        <label htmlFor="signupEmail" style={labelStyle}>Email</label>
         <input
           id="signupEmail"
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
-          className="w-full px-3 py-2 border border-slate-300 rounded-md text-sm
-            focus:outline-none focus:ring-2 focus:ring-accent/20 focus:border-accent
-            placeholder:text-slate-400"
           placeholder="you@company.com"
+          style={inputStyle}
+          onFocus={(e) => {
+            e.target.style.borderColor = 'rgba(200,212,228,0.25)'
+            e.target.style.boxShadow = '0 0 16px rgba(200,212,228,0.04)'
+          }}
+          onBlur={(e) => {
+            e.target.style.borderColor = 'rgba(200,212,228,0.1)'
+            e.target.style.boxShadow = 'none'
+          }}
         />
       </div>
 
-      <div>
-        <label htmlFor="signupPassword" className="block text-sm font-medium text-slate-700 mb-1">
-          Password
-        </label>
+      <div style={{ marginBottom: 28 }}>
+        <label htmlFor="signupPassword" style={labelStyle}>Password</label>
         <input
           id="signupPassword"
           type="password"
@@ -210,21 +290,66 @@ export function SignupForm() {
           onChange={(e) => setPassword(e.target.value)}
           required
           minLength={8}
-          className="w-full px-3 py-2 border border-slate-300 rounded-md text-sm
-            focus:outline-none focus:ring-2 focus:ring-accent/20 focus:border-accent
-            placeholder:text-slate-400"
           placeholder="Minimum 8 characters"
+          style={inputStyle}
+          onFocus={(e) => {
+            e.target.style.borderColor = 'rgba(200,212,228,0.25)'
+            e.target.style.boxShadow = '0 0 16px rgba(200,212,228,0.04)'
+          }}
+          onBlur={(e) => {
+            e.target.style.borderColor = 'rgba(200,212,228,0.1)'
+            e.target.style.boxShadow = 'none'
+          }}
         />
       </div>
 
-      <button
+      <motion.button
         type="submit"
         disabled={loading}
-        className="w-full bg-primary text-white py-2.5 px-4 rounded-md text-sm font-medium
-          hover:bg-slate-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+        whileHover={!loading ? { scale: 1.01, boxShadow: '0 0 30px rgba(200,212,228,0.1)' } : {}}
+        whileTap={!loading ? { scale: 0.99 } : {}}
+        style={{
+          width: '100%',
+          padding: '12px 16px',
+          background: '#FFFFFF',
+          color: '#02050B',
+          border: 'none',
+          borderRadius: 8,
+          fontFamily: 'var(--font-sans)',
+          fontSize: 13,
+          fontWeight: 500,
+          letterSpacing: '0.02em',
+          cursor: loading ? 'wait' : 'pointer',
+          transition: 'opacity 0.2s',
+          boxShadow: '0 0 20px rgba(200,212,228,0.06)',
+          opacity: loading ? 0.5 : 1,
+        }}
       >
         {loading ? 'Creating account...' : 'Create account'}
-      </button>
-    </form>
+      </motion.button>
+    </motion.form>
+  )
+}
+
+function ErrorBanner({ message }: { message: string }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: -8 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
+      style={{
+        marginBottom: 20,
+        padding: '10px 14px',
+        background: 'rgba(239,68,68,0.06)',
+        border: '1px solid rgba(239,68,68,0.2)',
+        borderRadius: 6,
+        fontFamily: 'var(--font-mono)',
+        fontSize: 12,
+        color: '#EF4444',
+        lineHeight: 1.5,
+      }}
+    >
+      {message}
+    </motion.div>
   )
 }

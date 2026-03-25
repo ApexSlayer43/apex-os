@@ -51,6 +51,7 @@ export async function POST(request: NextRequest) {
     const requirementId = formData.get('requirementId') as string | null
     const capturedAt = formData.get('capturedAt') as string | null
     const timeConfidence = (formData.get('timeConfidence') as string) || 'system-generated'
+    const note = formData.get('note') as string | null
     const metadataRaw = formData.get('metadata') as string | null
 
     if (!file || !projectId) {
@@ -175,6 +176,7 @@ export async function POST(request: NextRequest) {
         file_size: uploadResult.fileSize,
         content_hash: contentHash,
         requirement_id: requirementId || null,
+        note: note?.trim() || null,
         metadata,
         chain_hash: chainHash,
         chain_position: chainPosition,
@@ -250,6 +252,7 @@ export async function POST(request: NextRequest) {
         contentHash: evidenceItem.content_hash,
         chainHash: evidenceItem.chain_hash,
         chainPosition: evidenceItem.chain_position,
+        note: evidenceItem.note,
         ingestedAt: evidenceItem.ingested_at,
         capturedAt: evidenceItem.captured_at,
         timeConfidence: evidenceItem.time_confidence,

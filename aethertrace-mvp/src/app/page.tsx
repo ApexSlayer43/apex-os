@@ -9,7 +9,7 @@ import { ScrollReveal } from '@/components/scroll-reveal'
 
 export default function HomePage() {
   return (
-    <div style={{ minHeight: '100vh', background: '#02050B', position: 'relative', zIndex: 1 }}>
+    <div className="landing-page" style={{ minHeight: '100vh', position: 'relative', zIndex: 1 }}>
       <ScrollReveal />
       <LandingNav />
       <Hero />
@@ -151,7 +151,7 @@ function Hero() {
 
 function ProblemSection() {
   return (
-    <section className="landing-section" id="problem" style={{ borderTop: '1px solid rgba(22,48,88,0.2)' }}>
+    <section className="landing-section" id="problem" style={{ paddingTop: 100, paddingBottom: 120 }}>
       <div className="section-eye reveal">The Governance Gap</div>
 
       <div className="problem-statement reveal d1">
@@ -164,17 +164,17 @@ function ProblemSection() {
         <div className="problem-cell reveal">
           <div className="problem-cell-num">01 &middot; The Gap</div>
           <h3>Everyone holds evidence. Nobody is neutral.</h3>
-          <p>Vendors operate inside operator control boundaries. Operators have outcomes at stake. Auditors arrive after the fact. <strong>There is no designated neutral party</strong> before the dispute opens.</p>
+          <p>There is no designated neutral party before the dispute opens.</p>
         </div>
         <div className="problem-cell reveal d1">
           <div className="problem-cell-num">02 &middot; The Cost</div>
           <h3>Reconstruction is becoming unacceptable.</h3>
-          <p>Oversight bodies increasingly discount evidence assembled after a dispute begins. <strong>The era of fix it later is ending.</strong> Post-hoc assembly is slow, expensive, and challenged at every turn.</p>
+          <p>Evidence assembled after a dispute begins is slow, expensive, and challenged at every turn.</p>
         </div>
         <div className="problem-cell reveal d2">
           <div className="problem-cell-num">03 &middot; The Exposure</div>
-          <h3>Subcontractors carry the most risk with the least protection.</h3>
-          <p>Obligations flow down the hierarchy. <strong>Protection doesn&apos;t.</strong> The party who generates the evidence is the last party to control what happens to it when the dispute opens.</p>
+          <h3>Obligations flow down. Protection doesn&apos;t.</h3>
+          <p>The party who generates the evidence is the last party to control it when the dispute opens.</p>
         </div>
       </div>
     </section>
@@ -187,22 +187,40 @@ function ProblemSection() {
 
 function RoleSection() {
   return (
-    <section className="landing-section" id="role" style={{ borderTop: '1px solid rgba(22,48,88,0.2)' }}>
+    <section className="landing-section" id="role" style={{ paddingTop: 120, paddingBottom: 80 }}>
       <div className="section-eye reveal">The Role</div>
 
-      <div className="role-grid">
+      {/* Before/After Split Panel */}
+      <div className="before-after-panel reveal" style={{ maxWidth: 1100, margin: '0 auto 80px' }}>
+        <div className="before-panel">
+          <div className="before-after-label">Before AetherTrace</div>
+          <h3>Operational world</h3>
+          <p>Evidence lives across vendors, operators, email chains. Held by parties with outcomes at stake. Credibility is always in question.</p>
+        </div>
+        <div className="before-after-divider">
+          <div className="divider-line" />
+          <span className="divider-wordmark">AETHERTRACE</span>
+          <div className="divider-line" />
+        </div>
+        <div className="after-panel">
+          <div className="before-after-label">After Designation</div>
+          <h3>Sealed custody</h3>
+          <p>Evidence sealed at submission. Cryptographically time-indexed. No interpretation. No optimization. No retroactive creation. Available when authority asks.</p>
+        </div>
+      </div>
+
+      {/* Trustee Explanation + Principles */}
+      <div className="role-grid section-narrow">
         <div className="role-left reveal">
           <h2>Not a tool.<br /><em>A trustee.</em></h2>
-          <p>A trustee holds something on behalf of all parties. A trustee has a duty. A trustee cannot be adverse to any beneficiary.</p>
-          <p>You cannot buy software to solve a conflict of interest. Neutrality is a governance property — not a feature. As long as the operator holds the keys, the evidence is suspect.</p>
-          <p>AetherTrace solves custody, not outcomes.</p>
+          <p>Neutrality is a governance property — not a feature. As long as the operator holds the keys, the evidence is suspect. AetherTrace solves custody, not outcomes.</p>
         </div>
         <div className="reveal d1">
           <div className="role-principles">
-            <Principle num="01" title="Designated Ex-Ante" body="AetherTrace is designated before execution begins. The acceptance boundary is defined before any work occurs — not after a dispute opens." />
-            <Principle num="02" title="The Black Box Philosophy" body="We hold evidence without analyzing, certifying, or judging. We preserve presence, absence, and silence. Evidence remains credible even when all parties disagree." />
-            <Principle num="03" title="Separated Authority" body="Custody, access, and interpretation are held by different parties. AetherTrace holds the record. Others decide outcomes. Trust the architecture — not the people." />
-            <Principle num="04" title="No Retroactive Creation" body="Append-only. Time-indexed. Sealed at submission. No silent rewrite. No optimization. What was submitted is what is held." />
+            <Principle num="01" title="Designated Ex-Ante" body="Appointed before execution begins — not after a dispute opens." />
+            <Principle num="02" title="The Black Box" body="We hold evidence without analyzing, certifying, or judging it." />
+            <Principle num="03" title="Separated Authority" body="Custody, access, and interpretation are held by different parties." />
+            <Principle num="04" title="No Retroactive Creation" body="Append-only. Time-indexed. Sealed at submission. What was submitted is what is held." />
           </div>
         </div>
       </div>
@@ -228,64 +246,30 @@ function Principle({ num, title, body }: { num: string; title: string; body: str
 
 function LevelsSection() {
   return (
-    <section className="landing-section" id="levels" style={{ borderTop: '1px solid rgba(22,48,88,0.2)', paddingBottom: 0 }}>
+    <section className="landing-section section-narrow-sm" id="levels" style={{ paddingTop: 80, paddingBottom: 100 }}>
       <div className="section-eye reveal">Every Level of the Hierarchy</div>
 
-      <div className="levels-head">
-        <h2 className="reveal">Same trustee.<br /><em>Every party.</em><br />One record.</h2>
-        <p className="reveal d1">The subcontractor sealing a daily log and the program office designating custody before a $500M operation are using the same product. The same neutrality. The same protection.</p>
-      </div>
+      <h2 className="levels-title reveal">Same trustee.<br /><em>Every party.</em><br />One record.</h2>
 
-      <div className="levels-stack">
-        <LevelRow
-          role="Beachhead"
-          name="Subcontractor"
-          pain={<>You did the work. Your records are in the prime&apos;s system. When the dispute opens you&apos;re the last party with access to your own evidence — and <strong>the first party blamed for missing documentation.</strong></>}
-          promise="&ldquo;Your evidence doesn&rsquo;t live in someone else&rsquo;s system anymore. Sealed the day you submitted it. Independent of everyone above you.&rdquo;"
-          className="reveal"
-        />
-        <LevelRow
-          role="Prime Contractor"
-          name="Program Lead"
-          pain={<>When a subcontractor dispute opens, your program evidence gets pulled in. <strong>Fragmented records across your supply chain become your audit risk</strong> — not just theirs.</>}
-          promise="&ldquo;When your subcontractors&rsquo; records are sealed independently, your program evidence is stronger. Independent custody protects the whole chain.&rdquo;"
-          className="reveal d1"
-        />
-        <LevelRow
-          role="Federal"
-          name="Program Office"
-          pain={<>$1B+ in annual DoD audit remediation. Evidence assembled ex-post. IG and GAO scrutiny increasing. <strong>The era of reconstructing records after the dispute is ending.</strong></>}
-          promise="&ldquo;Designated before execution. Neutral to all parties. When the audit arrives, the record is already there — sealed since T=0.&rdquo;"
-          className="reveal d2"
-        />
-        <LevelRow
-          role="Oversight"
-          name="Auditor / IG"
-          pain={<>Evidence held by interested parties. Records reconstructed after the fact. <strong>Audit findings weakened by chain-of-custody questions</strong> that should have been resolved before the program began.</>}
-          promise="&ldquo;Evidence held by an independent trustee since T=0. No reconstruction. No interested parties. Just the record — exactly as it was submitted.&rdquo;"
-          className="reveal d3"
-        />
+      <div className="levels-cards">
+        <div className="level-card reveal">
+          <div className="level-card-role">Subcontractor</div>
+          <div className="level-card-text">Your evidence. Independent of everyone above you. Sealed the day you submitted it.</div>
+        </div>
+        <div className="level-card reveal d1">
+          <div className="level-card-role">Prime Contractor</div>
+          <div className="level-card-text">When your subs&apos; records are sealed independently, your program evidence is stronger.</div>
+        </div>
+        <div className="level-card reveal d2">
+          <div className="level-card-role">Program Office</div>
+          <div className="level-card-text">Designated before execution. When the audit arrives, the record is already there — sealed since T=0.</div>
+        </div>
+        <div className="level-card reveal d3">
+          <div className="level-card-role">Auditor / IG</div>
+          <div className="level-card-text">Evidence held by an independent trustee. No reconstruction. Just the record — exactly as submitted.</div>
+        </div>
       </div>
     </section>
-  )
-}
-
-function LevelRow({ role, name, pain, promise, className }: {
-  role: string; name: string; pain: React.ReactNode; promise: string; className: string
-}) {
-  return (
-    <div className={`level-row ${className}`}>
-      <div className="level-id">
-        <div className="level-role">{role}</div>
-        <div className="level-name">{name}</div>
-      </div>
-      <div className="level-pain">
-        <p>{pain}</p>
-      </div>
-      <div className="level-promise">
-        <p dangerouslySetInnerHTML={{ __html: promise }} />
-      </div>
-    </div>
   )
 }
 
@@ -295,34 +279,34 @@ function LevelRow({ role, name, pain, promise, className }: {
 
 function HowSection() {
   return (
-    <section className="landing-section" id="how" style={{ borderTop: '1px solid rgba(22,48,88,0.2)' }}>
+    <section className="landing-section" id="how" style={{ paddingTop: 120, paddingBottom: 100 }}>
       <div className="section-eye reveal">Custody as a System</div>
 
       <div className="how-head reveal">
         <h2>Simple to submit.<br />Impossible to compromise.</h2>
-        <p>Four steps. No new workflows. No behavior change required. The evidence you already generate — sealed independently, available when authority asks.</p>
+        <p>No new workflows. The evidence you already generate — sealed independently.</p>
       </div>
 
       <div className="how-steps">
         <div className="how-step reveal">
           <div className="how-step-num">Step 01 &middot; Designation</div>
           <h3>Define the boundary before work begins.</h3>
-          <p>AetherTrace is designated before execution. An acceptance boundary defines what counts as evidence. All parties know who holds the record before day one.</p>
+          <p>All parties know who holds the record before day one.</p>
         </div>
         <div className="how-step reveal d1">
           <div className="how-step-num">Step 02 &middot; Ingestion</div>
           <h3>Submit what you already report.</h3>
-          <p>Daily logs. Photo evidence. Inspection records. Whatever you already generate. Type it in plain language, attach files, hit Seal. Append-only, cryptographically sealed at submission.</p>
+          <p>Attach files, hit Seal. Cryptographically sealed at submission.</p>
         </div>
         <div className="how-step reveal d2">
           <div className="how-step-num">Step 03 &middot; Sealed Custody</div>
-          <h3>The black box holds it. Nobody touches it.</h3>
-          <p>No interpretation. No optimization. No silent rewrite. Time-indexed, access-controlled, held under separated authority. The record is what it is.</p>
+          <h3>The black box holds it.</h3>
+          <p>No interpretation. No rewrite. The record is what it is.</p>
         </div>
         <div className="how-step reveal d3">
           <div className="how-step-num">Step 04 &middot; Access</div>
-          <h3>Retrieved under audit authority. Not before.</h3>
-          <p>Authorized parties retrieve evidence under defined access authority. AI-assisted reconstruction for rapid export. No inference. No interpretation. The record speaks for itself.</p>
+          <h3>Retrieved under authority. Not before.</h3>
+          <p>The record speaks for itself.</p>
         </div>
       </div>
     </section>
@@ -340,21 +324,21 @@ function NumbersSection() {
         <div className="number-val">70%</div>
         <div className="number-label">
           <strong>Of disputes caused by documentation failure</strong>
-          <span>Not bad contracts. Not underbidding. The evidence was absent, incomplete, or held by the opposing party. The record determined the outcome — not the work.</span>
+          <span>The record determined the outcome — not the work.</span>
         </div>
       </div>
       <div className="number-cell">
         <div className="number-val">$84B</div>
         <div className="number-label">
-          <strong>In disputed sums across 2,002 projects in 2024</strong>
-          <span>~$42M average per project. A 2024 court ruling reversed damages entirely because there was no testimony to establish the amount. The work was done. The evidence wasn&apos;t held.</span>
+          <strong>Disputed across 2,002 projects in 2024</strong>
+          <span>The work was done. The evidence wasn&apos;t held.</span>
         </div>
       </div>
       <div className="number-cell">
         <div className="number-val">2028</div>
         <div className="number-label">
           <strong>DoD clean audit deadline — already slipping</strong>
-          <span>December 31, 2028 is the mandate. FM Systems has already pushed to FY2031. Congressional action is imminent if missed. The era of reconstructing records after the fact is ending.</span>
+          <span>Congressional action is imminent. The era of reconstruction is ending.</span>
         </div>
       </div>
     </div>

@@ -126,7 +126,8 @@
       "Bash(NODE_OPTIONS=\"--dns-result-order=ipv4first\" npx ruflo@latest autopilot status)",
       "Bash(NODE_OPTIONS=\"--dns-result-order=ipv4first\" npx ruflo@latest --help)",
       "Bash(node -e \"const path = require\\(''path''\\); const pkg = require\\(path.join\\(require\\(''child_process''\\).execSync\\(''npm root -g'', {encoding:''utf8''}\\).trim\\(\\), ''ruflo'', ''package.json''\\)\\); console.log\\(''version:'', pkg.version\\); console.log\\(''type:'', pkg.type\\);\")",
-      "mcp__scheduled-tasks__list_scheduled_tasks"
+      "mcp__scheduled-tasks__list_scheduled_tasks",
+      "Bash(ls -la .claude/evolution/*/)"
     ]
   }
 }

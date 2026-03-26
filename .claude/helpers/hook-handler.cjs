@@ -46,6 +46,7 @@ const router = safeRequire(path.join(helpersDir, 'router.js'));
 const session = safeRequire(path.join(helpersDir, 'session.js'));
 const memory = safeRequire(path.join(helpersDir, 'memory.js'));
 const intelligence = safeRequire(path.join(helpersDir, 'intelligence.cjs'));
+const apexOs = safeRequire(path.join(helpersDir, 'apex-os.cjs'));
 
 // Get the command from argv
 const [,, command, ...args] = process.argv;
@@ -146,17 +147,45 @@ const handlers = {
     console.log('[OK] Command validated');
   },
 
+  'pre-edit': () => {
+    // Apex OS scope check on file edits
+    const file = hookInput.file_path || (hookInput.toolInput && hookInput.toolInput.file_path)
+      || process.env.TOOL_INPUT_file_path || args[0] || '';
+    if (apexOs) {
+      const scopeWarning = apexOs.checkForgeScope(file);
+      if (scopeWarning) {
+        console.log(`[SCOPE WARNING] ${scopeWarning}`);
+        console.log('[SCOPE] Route scope changes through SENTINEL -> FORGE (Constitution Art. VI)');
+      }
+      const scope = apexOs.checkScope(file);
+      if (scope.reason) {
+        console.log(`[SCOPE] ${scope.reason}`);
+      }
+    }
+    // Original pre-edit intelligence
+    if (intelligence && intelligence.recordEdit) {
+      try { intelligence.recordEdit(file); } catch (e) { /* non-fatal */ }
+    }
+  },
+
   'post-edit': () => {
+    const file = hookInput.file_path || (hookInput.toolInput && hookInput.toolInput.file_path)
+      || process.env.TOOL_INPUT_file_path || args[0] || '';
     // Record edit for session metrics
     if (session && session.metric) {
       try { session.metric('edits'); } catch (e) { /* no active session */ }
     }
-    // Record edit for intelligence consolidation — prefer stdin data from Claude Code
+    // Record edit for intelligence consolidation
     if (intelligence && intelligence.recordEdit) {
+      try { intelligence.recordEdit(file); } catch (e) { /* non-fatal */ }
+    }
+    // Apex OS: track edit + log build activity
+    if (apexOs) {
       try {
-        const file = hookInput.file_path || (hookInput.toolInput && hookInput.toolInput.file_path)
-          || process.env.TOOL_INPUT_file_path || args[0] || '';
-        intelligence.recordEdit(file);
+        apexOs.trackEdit(file);
+        if (file.includes('aethertrace-mvp')) {
+          apexOs.logBuildActivity('EDIT', file);
+        }
       } catch (e) { /* non-fatal */ }
     }
     console.log('[OK] Edit recorded');
@@ -198,6 +227,17 @@ const handlers = {
   },
 
   'session-end': () => {
+    // Apex OS: update STATE.md with session summary
+    if (apexOs) {
+      try {
+        const summary = apexOs.generateSessionSummary();
+        if (summary) {
+          apexOs.touchState(summary);
+          console.log(`[APEX-OS] STATE.md updated: ${summary}`);
+        }
+        apexOs.clearSessionEdits();
+      } catch (e) { /* non-fatal */ }
+    }
     // Consolidate intelligence before ending session
     if (intelligence && intelligence.consolidate) {
       try {

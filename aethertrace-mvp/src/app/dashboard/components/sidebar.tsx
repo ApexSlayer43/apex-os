@@ -2,12 +2,14 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 
 const RAIL_WIDTH = 52
 const EXPANDED_WIDTH = 240
 
 export function DashboardShell({ email, children }: { email: string; children: React.ReactNode }) {
   const [expanded, setExpanded] = useState(false)
+  const pathname = usePathname()
 
   return (
     <div style={{ display: 'flex', minHeight: '100vh' }}>
@@ -33,10 +35,10 @@ export function DashboardShell({ email, children }: { email: string; children: R
 
         {/* Nav items */}
         <div style={{ flex: 1, padding: '0 6px' }}>
-          <RailLink href="/dashboard" icon="grid" label="Dashboard" expanded={expanded} active />
-          <RailLink href="/dashboard" icon="shield" label="Seal Evidence" expanded={expanded} />
-          <RailLink href="/dashboard" icon="file" label="Packages" expanded={expanded} />
-          <RailLink href="/dashboard" icon="eye" label="Verification" expanded={expanded} />
+          <RailLink href="/dashboard" icon="grid" label="Dashboard" expanded={expanded} active={pathname === '/dashboard'} />
+          <RailLink href="/dashboard/seal" icon="shield" label="Intelligence" expanded={expanded} active={pathname?.startsWith('/dashboard/seal')} />
+          <RailLink href="/dashboard/packages" icon="file" label="Packages" expanded={expanded} active={pathname?.startsWith('/dashboard/packages')} />
+          <RailLink href="/dashboard/verify" icon="eye" label="Verification" expanded={expanded} active={pathname?.startsWith('/dashboard/verify')} />
           <div style={{ height: 1, background: 'rgba(200,212,228,0.06)', margin: '10px 8px' }} />
           <RailLink href="/dashboard" icon="settings" label="Settings" expanded={expanded} />
         </div>
@@ -136,7 +138,11 @@ function RailLink({ href, icon, label, expanded, active }: {
       onMouseEnter={(e) => e.currentTarget.style.background = active ? 'rgba(200,212,228,0.06)' : 'rgba(200,212,228,0.03)'}
       onMouseLeave={(e) => e.currentTarget.style.background = active ? 'rgba(200,212,228,0.04)' : 'transparent'}
     >
-      <div style={{ flexShrink: 0, width: 18, display: 'flex', justifyContent: 'center' }}>
+      <div style={{
+        flexShrink: 0, width: 18, display: 'flex', justifyContent: 'center',
+        filter: active ? 'drop-shadow(0 0 4px rgba(200,212,228,0.4))' : 'none',
+        transition: 'filter 0.2s',
+      }}>
         <NavIcon name={icon} active={active} />
       </div>
       {expanded && (
@@ -154,7 +160,7 @@ function RailLink({ href, icon, label, expanded, active }: {
 }
 
 function NavIcon({ name, active }: { name: string; active?: boolean }) {
-  const c = active ? 'rgba(200,212,228,0.5)' : 'rgba(200,212,228,0.2)'
+  const c = active ? 'rgba(200,212,228,0.7)' : 'rgba(200,212,228,0.2)'
   switch (name) {
     case 'grid': return <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="6" height="6" rx="1" stroke={c} strokeWidth="1.2"/><rect x="9" y="1" width="6" height="6" rx="1" stroke={c} strokeWidth="1.2"/><rect x="1" y="9" width="6" height="6" rx="1" stroke={c} strokeWidth="1.2"/><rect x="9" y="9" width="6" height="6" rx="1" stroke={c} strokeWidth="1.2"/></svg>
     case 'shield': return <svg width="16" height="16" viewBox="0 0 16 18" fill="none"><path d="M8 1L1 4v5c0 4.4 3 8.5 7 9.5 4-1 7-5.1 7-9.5V4L8 1Z" stroke={c} strokeWidth="1.2" strokeLinejoin="round"/></svg>

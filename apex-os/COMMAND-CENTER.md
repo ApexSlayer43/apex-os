@@ -113,3 +113,40 @@ LIMIT 15
 ---
 
 *For the full visual command center, open `apex-os/COMMAND-CENTER.html` in a browser.*
+
+
+---
+
+## Sprint — Dashboard Rebuild
+**Date:** March 24, 2026
+**Status:** Build complete — pending manual file drop
+
+### Files to place in codebase
+
+```
+src/app/dashboard/actions.ts                      ← NEW
+src/app/dashboard/layout.tsx                      ← REPLACE
+src/app/dashboard/page.tsx                        ← REPLACE
+src/app/dashboard/components/new-project-input.tsx  ← NEW
+src/app/dashboard/components/inline-create-row.tsx  ← NEW
+```
+
+Full file contents in: `aethertrace-dashboard-build.md` (outputs folder)
+
+### What was built
+- Sidebar removed — full width layout
+- Nav: sticky, backdrop blur, inline SVG ring mark with custody node
+- Command header: Instrument Serif workspace name + inline project creation
+- Stats strip: Active Projects · Items Sealed · Custody Status (3 cells, Bebas Neue + Instrument Serif)
+- Project rows: hover glow border, left border = #7EB8F7, full row link
+- Inline create: two entry points (header right + docked bottom row), Instrument Serif italic input, Enter to create
+- Server action: auth + org membership check + RLS, typed result, revalidatePath
+- formatRelative: pure JS, no dependency
+
+### Verify after drop
+1. `npm run dev` — no TypeScript errors
+2. Sign in → dashboard renders
+3. Create project from header input → appears in list
+4. Create project from inline row → appears in list
+5. Error state: empty name → hint shows error, restores value
+6. Nav ring mark visible at all scroll positions

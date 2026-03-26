@@ -56,7 +56,7 @@ Build Risks (Non-Negotiable)
 3. Evidence package must be understandable by a non-technical attorney
 Windows Environment Notes
 * PowerShell does not support && chaining — run commands sequentially
-* Mullvad VPN may block npm — use --registry https://registry.npmjs.org
+* ExpressVPN may block npm/GitHub/CDN connections — disconnect or split-tunnel Node.js if needed
 * NODE_OPTIONS="--dns-result-order=ipv4first" if IPv6 connection issues occur
 
 ## Vault Structure (as of 2026-03-23)

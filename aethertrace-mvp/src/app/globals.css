@@ -2,6 +2,12 @@
 
 @import "tailwindcss";
 
+/* Kill all focus outlines globally — AetherTrace handles focus states via design */
+*:focus, *:focus-visible, *:focus-within {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
 /*
  * AetherTrace Design System — PRISM v3.0
  * Theme: Dark Void (matches approved landing page)
@@ -298,6 +304,25 @@ body::before {
 @keyframes nodePulse {
   0%,100% { opacity: 0.18; }
   50%      { opacity: 0.32; }
+}
+
+/* Orbit: node traces the rotated ellipse (cx=160 cy=100 rx=140 ry=72 rot=-12°) */
+@keyframes orbitRing {
+  0%   { transform: translate(136.9px, -29.1px); }
+  10%  { transform: translate(119.6px, 17.8px); }
+  20%  { transform: translate(56.6px, 58.0px); }
+  30%  { transform: translate(-28.1px, 76.0px); }
+  40%  { transform: translate(-102.0px, 64.9px); }
+  50%  { transform: translate(-136.9px, 29.1px); }
+  60%  { transform: translate(-119.6px, -17.8px); }
+  70%  { transform: translate(-56.6px, -58.0px); }
+  80%  { transform: translate(28.1px, -76.0px); }
+  90%  { transform: translate(102.0px, -64.9px); }
+  100% { transform: translate(136.9px, -29.1px); }
+}
+@keyframes orbitGlow {
+  0%,100% { opacity: 0.15; filter: drop-shadow(0 0 6px rgba(126,184,247,0.4)); }
+  50%     { opacity: 0.3; filter: drop-shadow(0 0 14px rgba(126,184,247,0.7)) drop-shadow(0 0 30px rgba(126,184,247,0.3)); }
 }
 
 /* ══════════════════════════════════════════════════════════════
@@ -897,6 +922,15 @@ body::before {
 .chain-line-pulse {
   animation: chainFlow 3s ease-in-out infinite;
 }
+/* ── Project detail page ──────────────────────────────────────── */
+.project-link-hover { color: #486080; transition: color 0.15s; }
+.project-link-hover:hover { color: #7EB8F7; }
+.action-card { transition: background 0.15s, border-color 0.15s; }
+.action-card:hover { background: #081422 !important; border-color: rgba(22,48,88,0.5) !important; }
+.action-card--primary:hover { background: rgba(126,184,247,0.07) !important; border-color: rgba(126,184,247,0.2) !important; }
+.project-tab-hover { transition: background 0.15s, border-color 0.15s; }
+.project-tab-hover:hover { background: rgba(22,48,88,0.15) !important; border-bottom-color: rgba(126,184,247,0.4) !important; }
+
 @keyframes chainFlow {
   0%,100% { opacity: 0.08; }
   50%     { opacity: 0.2; }

@@ -52,13 +52,13 @@ export function SealPageShell({ projectName, projectId, chainDepth, items }: {
         <SealChatBox projectId={projectId} />
 
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, marginTop: 20 }}>
-          <Link href="/dashboard/seal" className="project-link-hover" style={{
+          <Link href="/dashboard" className="project-link-hover" style={{
             fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.06em',
             color: 'rgba(200,212,228,0.25)', textDecoration: 'none',
             padding: '6px 14px', border: '1px solid rgba(200,212,228,0.06)',
             borderRadius: 20, transition: 'border-color 0.15s, color 0.15s',
           }}>
-            ← Projects
+            ← Dashboard
           </Link>
           <Link href={`/dashboard/projects/${projectId}/plan`} className="project-link-hover" style={{
             fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.06em',

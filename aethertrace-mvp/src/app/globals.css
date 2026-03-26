@@ -2,6 +2,9 @@
 
 @import "tailwindcss";
 
+/* Hide Vercel toolbar in dev */
+[data-vercel-toolbar], #vercel-toolbar, .vercel-toolbar { display: none !important; }
+
 /* Kill all focus outlines globally — AetherTrace handles focus states via design */
 *:focus, *:focus-visible, *:focus-within {
   outline: none !important;

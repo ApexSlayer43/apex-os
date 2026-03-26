@@ -33,16 +33,18 @@ export default async function DashboardPage() {
   const isActive = org?.subscription_status === 'active'
 
   // Guard: redirect to onboarding if profile not complete
+  let contactName: string | null = null
   if (org) {
     const { data: orgDetails } = await supabase
       .from('organizations')
-      .select('onboarding_complete')
+      .select('onboarding_complete, contact_name')
       .eq('id', org.id)
       .single()
 
     if (orgDetails && !orgDetails.onboarding_complete) {
       redirect('/onboarding')
     }
+    contactName = orgDetails?.contact_name ?? null
   }
 
   const { data: rawProjects } = org
@@ -97,6 +99,69 @@ export default async function DashboardPage() {
     chain_position: e.chain_position,
   }))
 
+  // First-time user experience — 0 projects
+  if (projects.length === 0) {
+    const firstName = contactName?.split(' ')[0] ?? null
+    return (
+      <div style={{ padding: '40px 44px 100px', position: 'relative', zIndex: 1 }}>
+        {!isActive && <SubscriptionBanner />}
+
+        <div style={{
+          display: 'flex', flexDirection: 'column', alignItems: 'center',
+          justifyContent: 'center', minHeight: '70vh', textAlign: 'center',
+        }}>
+          {/* Welcome heading */}
+          <div style={{
+            fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.2em',
+            textTransform: 'uppercase', color: 'rgba(200,212,228,0.25)', marginBottom: 16,
+          }}>
+            {org?.name ?? 'Your Organization'}
+          </div>
+          <h1 style={{
+            fontFamily: 'var(--font-serif)', fontSize: 36, fontWeight: 400,
+            color: '#DCF0FF', letterSpacing: '-0.02em', margin: 0, marginBottom: 12,
+            textShadow: '0 0 60px rgba(200,212,228,0.06)',
+          }}>
+            {firstName ? `Welcome, ${firstName}.` : 'Welcome to AetherTrace.'}
+          </h1>
+          <p style={{
+            fontFamily: 'var(--font-mono)', fontSize: 13, color: 'rgba(200,212,228,0.35)',
+            lineHeight: 1.8, maxWidth: 440, margin: '0 auto 40px',
+          }}>
+            Your evidence custody system is active. Create your first project to begin establishing a cryptographic chain of custody.
+          </p>
+
+          {/* Create project CTA */}
+          {isActive && org && (
+            <div style={{ marginBottom: 48 }}>
+              <NewProjectInput orgId={org.id} />
+            </div>
+          )}
+
+          {/* Three steps */}
+          <div style={{
+            display: 'flex', gap: 32, justifyContent: 'center',
+            padding: '32px 0',
+            borderTop: '1px solid rgba(200,212,228,0.06)',
+          }}>
+            <StepIndicator num="1" label="Create Project" desc="Name and scope your work" />
+            <StepIndicator num="2" label="Define Custody Plan" desc="Declare what you'll document" />
+            <StepIndicator num="3" label="Seal Evidence" desc="Upload with cryptographic proof" />
+          </div>
+
+          {/* Trust bar */}
+          <div style={{
+            fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.12em',
+            color: 'rgba(200,212,228,0.15)', marginTop: 40,
+          }}>
+            SHA-256 ENCRYPTION · IMMUTABLE CHAIN · YOUR EVIDENCE, YOUR CUSTODY
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  // Returning user — stats dashboard
   return (
     <div style={{ padding: '40px 44px 100px', position: 'relative', zIndex: 1 }}>
       {!isActive && <SubscriptionBanner />}
@@ -317,6 +382,32 @@ function EmptyState({ subscriptionRequired }: { subscriptionRequired: boolean })
       <p style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: 'rgba(200,212,228,0.25)', letterSpacing: '0.04em', lineHeight: 1.9 }}>
         {subscriptionRequired ? 'Active subscription required.' : 'Create a project to start sealing evidence.'}
       </p>
+    </div>
+  )
+}
+
+function StepIndicator({ num, label, desc }: { num: string; label: string; desc: string }) {
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, maxWidth: 160 }}>
+      <div style={{
+        width: 32, height: 32, borderRadius: '50%',
+        border: '1px solid rgba(200,212,228,0.1)',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        fontFamily: 'var(--font-mono)', fontSize: 12, color: 'rgba(200,212,228,0.3)',
+      }}>
+        {num}
+      </div>
+      <div style={{
+        fontFamily: 'var(--font-sans)', fontSize: 13, color: '#B8D4EE', fontWeight: 500,
+      }}>
+        {label}
+      </div>
+      <div style={{
+        fontFamily: 'var(--font-mono)', fontSize: 10, color: 'rgba(200,212,228,0.25)',
+        lineHeight: 1.6,
+      }}>
+        {desc}
+      </div>
     </div>
   )
 }

@@ -40,7 +40,7 @@ export function DashboardShell({ email, children }: { email: string; children: R
           <RailLink href="/dashboard/packages" icon="file" label="Packages" expanded={expanded} active={pathname?.startsWith('/dashboard/packages')} />
           <RailLink href="/dashboard/verify" icon="eye" label="Verification" expanded={expanded} active={pathname?.startsWith('/dashboard/verify')} />
           <div style={{ height: 1, background: 'rgba(200,212,228,0.06)', margin: '10px 8px' }} />
-          <RailLink href="/dashboard" icon="settings" label="Settings" expanded={expanded} />
+          <RailLink href="/dashboard/settings" icon="settings" label="Settings" expanded={expanded} active={pathname?.startsWith('/dashboard/settings')} />
         </div>
 
         {/* Toggle button — above user */}

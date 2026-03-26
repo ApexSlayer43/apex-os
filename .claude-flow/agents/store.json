@@ -1,0 +1,83 @@
+{
+  "agents": {
+    "coord-lead": {
+      "agentId": "coord-lead",
+      "agentType": "coordinator",
+      "status": "idle",
+      "health": 1,
+      "taskCount": 0,
+      "config": {
+        "model": "sonnet"
+      },
+      "createdAt": "2026-03-26T09:54:18.882Z",
+      "model": "sonnet",
+      "modelRoutedBy": "explicit"
+    },
+    "coder-1": {
+      "agentId": "coder-1",
+      "agentType": "coder",
+      "status": "idle",
+      "health": 1,
+      "taskCount": 0,
+      "config": {
+        "model": "sonnet"
+      },
+      "createdAt": "2026-03-26T09:54:18.906Z",
+      "model": "sonnet",
+      "modelRoutedBy": "explicit"
+    },
+    "researcher-1": {
+      "agentId": "researcher-1",
+      "agentType": "researcher",
+      "status": "idle",
+      "health": 1,
+      "taskCount": 0,
+      "config": {
+        "model": "sonnet"
+      },
+      "createdAt": "2026-03-26T09:54:18.913Z",
+      "model": "sonnet",
+      "modelRoutedBy": "explicit"
+    },
+    "tester-1": {
+      "agentId": "tester-1",
+      "agentType": "tester",
+      "status": "idle",
+      "health": 1,
+      "taskCount": 0,
+      "config": {
+        "model": "sonnet"
+      },
+      "createdAt": "2026-03-26T09:54:18.920Z",
+      "model": "sonnet",
+      "modelRoutedBy": "explicit"
+    },
+    "reviewer-1": {
+      "agentId": "reviewer-1",
+      "agentType": "reviewer",
+      "status": "idle",
+      "health": 1,
+      "taskCount": 0,
+      "config": {
+        "model": "sonnet"
+      },
+      "createdAt": "2026-03-26T09:54:18.930Z",
+      "model": "sonnet",
+      "modelRoutedBy": "explicit"
+    },
+    "security-1": {
+      "agentId": "security-1",
+      "agentType": "security",
+      "status": "idle",
+      "health": 1,
+      "taskCount": 0,
+      "config": {
+        "model": "sonnet"
+      },
+      "createdAt": "2026-03-26T09:54:18.938Z",
+      "model": "sonnet",
+      "modelRoutedBy": "explicit"
+    }
+  },
+  "version": "3.0.0"
+}

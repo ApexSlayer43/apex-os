@@ -121,7 +121,8 @@
       "mcp__ruflo__neural_status",
       "mcp__ruflo__hooks_model-stats",
       "mcp__ruflo__performance_report",
-      "mcp__ruflo__performance_metrics"
+      "mcp__ruflo__performance_metrics",
+      "mcp__ruflo__memory_retrieve"
     ]
   }
 }

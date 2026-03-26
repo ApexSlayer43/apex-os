@@ -6,6 +6,8 @@ This vault runs on Apex OS. Every session, before any work begins, read these fi
 2. `apex-os/CONSTITUTION.md` — immutable rules that govern all agent behavior
 When activating an agent role, read `apex-os/00-system/agents/{agent-name}/PERSONA.md` before adopting that role.
 After significant work, update `apex-os/00-system/STATE.md` with what changed and what's next.
+3. `apex-os/00-system/PRECISION-BRIEF-PROTOCOL.md` — mandatory 5-element brief before any build task
+Before executing ANY task, verify all 5 elements are present: Objective, Constraints, Context, Deliverable, Decision Boundary. If any are missing, STOP and ask Casey. No brief, no build. No exceptions.
 This is the standing order. The vault is the control tower. Read before touching anything.
 
 ## Ruflo Integration (Wired 2026-03-26)

@@ -128,7 +128,9 @@
       "Bash(node -e \"const path = require\\(''path''\\); const pkg = require\\(path.join\\(require\\(''child_process''\\).execSync\\(''npm root -g'', {encoding:''utf8''}\\).trim\\(\\), ''ruflo'', ''package.json''\\)\\); console.log\\(''version:'', pkg.version\\); console.log\\(''type:'', pkg.type\\);\")",
       "mcp__scheduled-tasks__list_scheduled_tasks",
       "Bash(ls -la .claude/evolution/*/)",
-      "Bash(npx vitest:*)"
+      "Bash(npx vitest:*)",
+      "mcp__ruflo__swarm_status",
+      "Bash(/c/Users/hall3/Downloads/Aethertrace/aethertrace-mvp/.env.local.example:*)"
     ]
   }
 }

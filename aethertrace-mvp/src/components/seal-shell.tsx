@@ -60,6 +60,14 @@ export function SealPageShell({ projectName, projectId, chainDepth, items }: {
           }}>
             ← Projects
           </Link>
+          <Link href={`/dashboard/projects/${projectId}/plan`} className="project-link-hover" style={{
+            fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.06em',
+            color: 'rgba(200,212,228,0.25)', textDecoration: 'none',
+            padding: '6px 14px', border: '1px solid rgba(200,212,228,0.06)',
+            borderRadius: 20, transition: 'border-color 0.15s, color 0.15s',
+          }}>
+            Custody Plan
+          </Link>
           {items.length > 0 && (
             <button onClick={() => setShowHistory(!showHistory)} style={{
               fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.06em',

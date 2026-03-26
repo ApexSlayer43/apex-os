@@ -271,6 +271,16 @@ body::before {
   box-shadow: 0 0 6px var(--color-glow);
 }
 
+/* ── Breadcrumb links (plan page — server component, no JS hover) ── */
+.plan-breadcrumb-link {
+  color: rgba(200,212,228,0.2);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+.plan-breadcrumb-link:hover {
+  color: #B8D4EE;
+}
+
 /* ── Animations ──────────────────────────────────────────────── */
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(24px); }

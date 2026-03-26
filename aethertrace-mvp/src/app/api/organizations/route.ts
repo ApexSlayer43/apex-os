@@ -5,6 +5,7 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
+import { sendWelcomeEmail } from '@/lib/email'
 
 export async function GET() {
   const supabase = await createClient()
@@ -81,6 +82,9 @@ export async function POST(request: NextRequest) {
   if (memberError) {
     console.error('Member assignment failed:', memberError)
   }
+
+  // Non-blocking: send welcome email after org creation
+  sendWelcomeEmail(user.email!, org.name).catch(() => {})
 
   return NextResponse.json({ organization: org }, { status: 201 })
 }

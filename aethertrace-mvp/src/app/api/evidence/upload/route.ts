@@ -28,6 +28,8 @@ import { createClient } from '@/lib/supabase/server'
 import { computeContentHash, computeEventHash } from '@/lib/hash-chain'
 import { uploadEvidenceFile, StorageError } from '@/lib/storage'
 import { rateLimit } from '@/lib/rate-limit'
+import { checkSubscription } from '@/lib/subscription'
+import { sendSealConfirmation } from '@/lib/email'
 
 export async function POST(request: NextRequest) {
   try {
@@ -43,6 +45,16 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         { error: 'Unauthorized' },
         { status: 401 }
+      )
+    }
+
+    // --- Subscription guard (write operation — must be active) ---
+    const subscription = await checkSubscription(supabase, user.id)
+    if (!subscription.active) {
+      const statusCode = 402
+      return NextResponse.json(
+        { error: subscription.error, code: 'SUBSCRIPTION_REQUIRED' },
+        { status: statusCode }
       )
     }
 
@@ -90,7 +102,7 @@ export async function POST(request: NextRequest) {
     // to prevent UUID guessing attacks where RLS might pass if misconfigured.
     const { data: project, error: projectError } = await supabase
       .from('projects')
-      .select('id, org_id')
+      .select('id, org_id, name')
       .eq('id', projectId)
       .single()
 
@@ -206,6 +218,16 @@ export async function POST(request: NextRequest) {
       console.error('Custody event insert failed:', eventError)
       // Evidence is saved -- custody event failure is logged but not fatal
       // The evidence is still immutable and verifiable
+    }
+
+    // Non-blocking: send seal confirmation email
+    if (user.email) {
+      sendSealConfirmation(
+        user.email,
+        file.name,
+        project.name || projectId,
+        evidenceItem.chain_position,
+      ).catch(() => {})
     }
 
     // --- Return the evidence record ---

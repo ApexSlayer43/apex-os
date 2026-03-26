@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { SealChatBox } from '@/components/seal-chat-box'
+import { SealChatBox } from './seal-chat-box'
 import { SealedFeed } from './sealed-feed'
 
 interface SealedItem {

@@ -2,21 +2,64 @@
 
 /**
  * Seal Input — The Chat Box
- * Text area + file attach + Seal button.
+ * Text area + file attach + requirement tag + Seal button.
  * Feels like Claude's input: one box, one action.
+ *
+ * Requirement tagging: fetches the active custody plan's unfulfilled
+ * requirements and presents a dropdown to tag evidence to a specific
+ * requirement during upload. The API already accepts requirementId.
  */
 
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+
+interface Requirement {
+  id: string
+  category: string
+  description: string
+  status: string
+  milestone: string | null
+  sort_order: number
+}
 
 export function SealInput({ projectId }: { projectId: string }) {
   const [note, setNote] = useState('')
   const [file, setFile] = useState<File | null>(null)
   const [sealing, setSealing] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [requirements, setRequirements] = useState<Requirement[]>([])
+  const [selectedRequirement, setSelectedRequirement] = useState<string>('')
+  const [loadingReqs, setLoadingReqs] = useState(false)
   const fileRef = useRef<HTMLInputElement>(null)
   const textRef = useRef<HTMLTextAreaElement>(null)
   const router = useRouter()
+
+  // Fetch unfulfilled requirements from the active custody plan
+  useEffect(() => {
+    async function fetchRequirements() {
+      setLoadingReqs(true)
+      try {
+        const res = await fetch(`/api/projects/${projectId}/custody-plan`)
+        if (!res.ok) return
+
+        const data = await res.json()
+        if (!data.plan || !data.plan.evidence_requirements) return
+
+        // Only show pending (unfulfilled) requirements from active plans
+        const unfulfilled = (data.plan.evidence_requirements as Requirement[])
+          .filter((r: Requirement) => r.status === 'pending')
+          .sort((a: Requirement, b: Requirement) => a.sort_order - b.sort_order)
+
+        setRequirements(unfulfilled)
+      } catch {
+        // Silent fail — requirements are optional
+      } finally {
+        setLoadingReqs(false)
+      }
+    }
+
+    fetchRequirements()
+  }, [projectId])
 
   async function handleSeal() {
     if (!file) {
@@ -34,6 +77,9 @@ export function SealInput({ projectId }: { projectId: string }) {
     if (note.trim()) {
       formData.append('note', note.trim())
     }
+    if (selectedRequirement) {
+      formData.append('requirementId', selectedRequirement)
+    }
 
     try {
       const res = await fetch('/api/evidence/upload', {
@@ -46,10 +92,31 @@ export function SealInput({ projectId }: { projectId: string }) {
         throw new Error(data.error || 'Seal failed')
       }
 
-      // Success — clear inputs and refresh
+      // On success: if a requirement was tagged, fulfill it via PATCH
+      if (selectedRequirement) {
+        const uploadData = await res.clone().json()
+        const evidenceId = uploadData.evidence?.id
+        if (evidenceId) {
+          await fetch(`/api/projects/${projectId}/requirements`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              requirementId: selectedRequirement,
+              evidenceItemId: evidenceId,
+            }),
+          })
+        }
+      }
+
+      // Clear inputs and refresh
       setNote('')
       setFile(null)
+      setSelectedRequirement('')
       if (fileRef.current) fileRef.current.value = ''
+
+      // Refresh requirements list (fulfilled one removed from pending)
+      setRequirements(prev => prev.filter(r => r.id !== selectedRequirement))
+
       router.refresh()
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Seal failed')
@@ -87,9 +154,6 @@ export function SealInput({ projectId }: { projectId: string }) {
         padding: '12px 16px',
         transition: 'border-color 0.2s, box-shadow 0.2s',
       }}
-      onFocus={() => {
-        // Handled inline for simplicity
-      }}
     >
       {/* Text area */}
       <textarea
@@ -114,6 +178,57 @@ export function SealInput({ projectId }: { projectId: string }) {
           opacity: sealing ? 0.5 : 1,
         }}
       />
+
+      {/* Requirement selector — only visible when plan has unfulfilled requirements */}
+      {requirements.length > 0 && (
+        <div style={{
+          marginTop: 8,
+          paddingTop: 8,
+          borderTop: '1px solid rgba(200,212,228,0.04)',
+        }}>
+          <label style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 8,
+          }}>
+            {/* Tag icon */}
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style={{ flexShrink: 0 }}>
+              <path
+                d="M1.5 7.914V2.5A1 1 0 012.5 1.5h5.414a1 1 0 01.707.293l4.086 4.086a1 1 0 010 1.414l-5.414 5.414a1 1 0 01-1.414 0L1.793 8.621A1 1 0 011.5 7.914z"
+                stroke="#486080"
+                strokeWidth="0.8"
+              />
+              <circle cx="4.5" cy="4.5" r="0.75" fill="#486080" />
+            </svg>
+            <select
+              value={selectedRequirement}
+              onChange={(e) => setSelectedRequirement(e.target.value)}
+              disabled={sealing || loadingReqs}
+              style={{
+                flex: 1,
+                background: 'rgba(200,212,228,0.04)',
+                border: '1px solid rgba(200,212,228,0.08)',
+                borderRadius: 6,
+                padding: '5px 8px',
+                fontFamily: 'var(--font-mono)',
+                fontSize: 11,
+                color: selectedRequirement ? '#B8D4EE' : '#486080',
+                cursor: sealing ? 'wait' : 'pointer',
+                outline: 'none',
+                appearance: 'none',
+                WebkitAppearance: 'none',
+              }}
+            >
+              <option value="">Tag to requirement (optional)</option>
+              {requirements.map((req) => (
+                <option key={req.id} value={req.id}>
+                  {req.category}{req.milestone ? ` / ${req.milestone}` : ''} — {req.description}
+                </option>
+              ))}
+            </select>
+          </label>
+        </div>
+      )}
 
       {/* Bottom bar: file + seal button */}
       <div style={{

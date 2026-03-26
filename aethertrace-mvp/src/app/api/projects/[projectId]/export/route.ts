@@ -18,6 +18,7 @@ import { createClient } from '@/lib/supabase/server'
 import { verifyChain, verifyCustodyChain, GENESIS, computeEventHash } from '@/lib/hash-chain'
 import type { ChainItem, CustodyEventItem } from '@/lib/hash-chain'
 import { verifyOrgMembership } from '@/lib/auth-guard'
+import { sendExportReady } from '@/lib/email'
 import archiver from 'archiver'
 import { PassThrough } from 'stream'
 
@@ -295,6 +296,15 @@ AetherTrace cannot modify evidence after ingestion.
     chunks.push(chunk as Uint8Array)
   }
   const zipBuffer = Buffer.concat(chunks)
+
+  // Non-blocking: send export-ready notification email
+  if (user.email) {
+    sendExportReady(
+      user.email,
+      project.name,
+      (items || []).length,
+    ).catch(() => {})
+  }
 
   const safeName = project.name.replace(/[^a-zA-Z0-9-_]/g, '_')
 

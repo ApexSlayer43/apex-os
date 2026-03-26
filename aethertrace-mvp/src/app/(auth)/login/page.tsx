@@ -105,45 +105,58 @@ export default function LoginPage() {
                       <div className="h-px bg-white/10 flex-1" />
                     </div>
 
-                    {/* Email input with arrow */}
+                    {/* Email input with labeled submit */}
                     <form onSubmit={handleEmailSubmit}>
-                      <div className="relative">
-                        <input
-                          type="email"
-                          placeholder="you@company.com"
-                          value={email}
-                          onChange={(e) => setEmail(e.target.value)}
-                          required
-                          className="w-full bg-transparent text-white border border-white/10
-                            rounded-full py-3.5 px-5 pr-12 focus:outline-none focus:border-white/30
-                            text-sm placeholder:text-white/25 transition-colors"
-                        />
-                        <button
-                          type="submit"
-                          className="absolute right-1.5 top-1/2 -translate-y-1/2 text-white w-9 h-9
-                            flex items-center justify-center rounded-full bg-white/10
-                            hover:bg-white/20 transition-colors group overflow-hidden"
+                      <div className="space-y-2">
+                        <label
+                          className="block text-left text-white/25 text-[9px] tracking-[0.14em] uppercase pl-5"
+                          style={{ fontFamily: "'IBM Plex Mono', monospace" }}
                         >
-                          <span className="relative w-full h-full block overflow-hidden">
-                            <span className="absolute inset-0 flex items-center justify-center transition-transform duration-300 group-hover:translate-x-full">
-                              →
-                            </span>
-                            <span className="absolute inset-0 flex items-center justify-center transition-transform duration-300 -translate-x-full group-hover:translate-x-0">
-                              →
-                            </span>
-                          </span>
-                        </button>
+                          Email Address
+                        </label>
+                        <div className="relative">
+                          <input
+                            type="email"
+                            placeholder="you@company.com"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            required
+                            className="w-full bg-transparent text-white border border-white/10
+                              rounded-full py-3.5 px-5 pr-36 focus:outline-none focus:border-white/30
+                              text-sm placeholder:text-white/25 transition-colors"
+                          />
+                          <button
+                            type="submit"
+                            className="absolute right-1.5 top-1/2 -translate-y-1/2 text-white/70 h-9
+                              flex items-center justify-center gap-1.5 rounded-full bg-white/8
+                              hover:bg-white/15 hover:text-white transition-all px-4 text-[10px] tracking-[0.1em] uppercase"
+                            style={{ fontFamily: "'IBM Plex Mono', monospace" }}
+                          >
+                            Continue
+                            <span className="text-xs">→</span>
+                          </button>
+                        </div>
                       </div>
                     </form>
                   </div>
 
-                  <p className="text-xs text-white/25 pt-6"
-                    style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10 }}>
+                  <p className="text-sm text-white/30 pt-6"
+                    style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 12 }}>
                     No account?{' '}
-                    <Link href="/signup" className="text-[#7EB8F7] hover:text-white/60 transition-colors">
+                    <Link href="/signup" className="text-[#7EB8F7] hover:text-white/70 transition-colors underline underline-offset-4 decoration-[#7EB8F7]/30">
                       Create one
                     </Link>
                   </p>
+
+                  {/* Trust bar */}
+                  <div className="flex items-center justify-center gap-4 pt-8"
+                    style={{ fontFamily: "'IBM Plex Mono', monospace" }}>
+                    <span className="text-[9px] tracking-[0.08em] text-white/12 uppercase">SHA-256 Encryption</span>
+                    <span className="text-white/6">·</span>
+                    <span className="text-[9px] tracking-[0.08em] text-white/12 uppercase">Immutable Chain</span>
+                    <span className="text-white/6">·</span>
+                    <span className="text-[9px] tracking-[0.08em] text-white/12 uppercase">Your Evidence, Your Custody</span>
+                  </div>
                 </motion.div>
               ) : (
                 <motion.div
@@ -244,10 +257,10 @@ export default function LoginPage() {
 function AuthRingMark() {
   return (
     <svg
-      width="280" height="80"
-      viewBox="-20 0 1100 330" fill="none"
+      width="320" height="110"
+      viewBox="-20 -60 1100 390" fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      style={{ display: 'block', margin: '0 auto' }}
+      style={{ display: 'block', margin: '0 auto', overflow: 'visible' }}
     >
       <defs>
         <filter id="fAuth" x="-12%" y="-80%" width="124%" height="260%">

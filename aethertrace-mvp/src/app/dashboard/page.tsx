@@ -41,7 +41,7 @@ export default async function DashboardPage() {
       .single()
 
     if (orgDetails && !orgDetails.onboarding_complete) {
-      redirect('/dashboard/onboarding')
+      redirect('/onboarding')
     }
   }
 

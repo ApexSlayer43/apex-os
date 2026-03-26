@@ -27,6 +27,20 @@ export default async function SealPage({
 
   if (!project) redirect('/dashboard')
 
+  // Guard: require an active custody plan before sealing evidence
+  const { data: activePlan } = await supabase
+    .from('custody_plans')
+    .select('id, status')
+    .eq('project_id', projectId)
+    .in('status', ['active', 'completed', 'archived'])
+    .limit(1)
+    .single()
+
+  if (!activePlan) {
+    // No active plan — redirect to custody ceremony
+    redirect(`/dashboard/projects/${projectId}/plan`)
+  }
+
   const { data: recentItems } = await supabase
     .from('evidence_items')
     .select('id, file_name, file_type, file_size, note, content_hash, ingested_at')

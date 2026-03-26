@@ -32,6 +32,19 @@ export default async function DashboardPage() {
   const org = (memberships?.[0]?.organizations as unknown as Org | null) ?? null
   const isActive = org?.subscription_status === 'active'
 
+  // Guard: redirect to onboarding if profile not complete
+  if (org) {
+    const { data: orgDetails } = await supabase
+      .from('organizations')
+      .select('onboarding_complete')
+      .eq('id', org.id)
+      .single()
+
+    if (orgDetails && !orgDetails.onboarding_complete) {
+      redirect('/dashboard/onboarding')
+    }
+  }
+
   const { data: rawProjects } = org
     ? await supabase.from('projects').select('id, name, status, created_at').eq('org_id', org.id).order('created_at', { ascending: false })
     : { data: [] }

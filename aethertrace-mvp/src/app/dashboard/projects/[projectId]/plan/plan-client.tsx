@@ -139,10 +139,12 @@ export function PlanClient({
   projectId,
   initialPlan,
   evidenceItems,
+  orgTrade,
 }: {
   projectId: string
   initialPlan: CustodyPlan | null
   evidenceItems: EvidenceItem[]
+  orgTrade?: string | null
 }) {
   const [plan, setPlan] = useState<CustodyPlan | null>(initialPlan)
   const [loading, setLoading] = useState(false)
@@ -150,7 +152,7 @@ export function PlanClient({
 
   // If no plan exists, show the 3-phase ceremony
   if (!plan) {
-    return <CustodyCeremony projectId={projectId} onPlanCreated={setPlan} />
+    return <CustodyCeremony projectId={projectId} onPlanCreated={setPlan} orgTrade={orgTrade} />
   }
 
   if (plan.status === 'draft') {
@@ -200,9 +202,11 @@ interface SelectedCategory {
 function CustodyCeremony({
   projectId,
   onPlanCreated,
+  orgTrade,
 }: {
   projectId: string
   onPlanCreated: (plan: CustodyPlan) => void
+  orgTrade?: string | null
 }) {
   const [phase, setPhase] = useState<CeremonyPhase>('identify')
 

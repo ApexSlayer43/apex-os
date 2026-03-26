@@ -45,6 +45,13 @@ export default async function CustodyPlanPage({
 
   if (!membership) redirect('/dashboard')
 
+  // Fetch org trade for domain-specific category suggestions
+  const { data: orgProfile } = await supabase
+    .from('organizations')
+    .select('trade')
+    .eq('id', project.org_id)
+    .single()
+
   // Fetch the most recent custody plan with requirements
   const { data: plan } = await supabase
     .from('custody_plans')
@@ -93,6 +100,7 @@ export default async function CustodyPlanPage({
         projectId={projectId}
         initialPlan={plan ?? null}
         evidenceItems={evidenceItems ?? []}
+        orgTrade={orgProfile?.trade ?? null}
       />
     </div>
   )

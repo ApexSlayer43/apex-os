@@ -144,6 +144,13 @@ const handlers = {
         process.exit(1);
       }
     }
+    // Git push guard — run checks before pushing
+    if (cmd.includes('git push')) {
+      const gitGuard = safeRequire(path.join(helpersDir, 'git-push-guard.cjs'));
+      if (gitGuard && gitGuard.main) {
+        try { gitGuard.main(); } catch (e) { console.log('[GIT-GUARD] Check failed:', e.message); }
+      }
+    }
     console.log('[OK] Command validated');
   },
 

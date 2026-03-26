@@ -1,0 +1,187 @@
+{
+  "workflows": {
+    "workflow-1774541229871-w50t4g": {
+      "workflowId": "workflow-1774541229871-w50t4g",
+      "name": "anvil-build-cycle",
+      "description": "ANVIL build automation — reads FORGE blueprint, executes task, validates against spec, updates vault state. Respects Constitution: no scope expansion, no design decisions.",
+      "steps": [
+        {
+          "stepId": "step-1",
+          "name": "load-context",
+          "type": "task",
+          "config": {
+            "description": "Read STATE.md, FORGE blueprint, BRAND-SPEC, and build log to understand current position"
+          },
+          "status": "pending"
+        },
+        {
+          "stepId": "step-2",
+          "name": "identify-next-task",
+          "type": "task",
+          "config": {
+            "description": "From build manifest, identify the next incomplete task with its done-gate criteria"
+          },
+          "status": "pending"
+        },
+        {
+          "stepId": "step-3",
+          "name": "scope-check",
+          "type": "condition",
+          "config": {
+            "description": "Verify task is in FORGE scope. If out of scope, stop and notify SENTINEL."
+          },
+          "status": "pending"
+        },
+        {
+          "stepId": "step-4",
+          "name": "execute-task",
+          "type": "task",
+          "config": {
+            "description": "Execute the identified task using appropriate Ruflo swarm agent"
+          },
+          "status": "pending"
+        },
+        {
+          "stepId": "step-5",
+          "name": "validate-output",
+          "type": "task",
+          "config": {
+            "description": "Run done-gate criteria: tests pass, blueprint compliance, brand spec compliance"
+          },
+          "status": "pending"
+        },
+        {
+          "stepId": "step-6",
+          "name": "update-vault",
+          "type": "task",
+          "config": {
+            "description": "Update STATE.md, build log, and sprint tracking with completed work"
+          },
+          "status": "pending"
+        },
+        {
+          "stepId": "step-7",
+          "name": "check-remaining",
+          "type": "condition",
+          "config": {
+            "description": "Check if more tasks remain. If yes, loop. If no, notify Casey: build complete."
+          },
+          "status": "pending"
+        }
+      ],
+      "status": "ready",
+      "currentStep": 0,
+      "variables": {
+        "project": "aethertrace",
+        "blueprint": "apex-os/10-projects/aethertrace/architecture/FORGE-2026-03-23-mvp-dual-path-blueprint.md",
+        "brand_spec": "apex-os/10-projects/aethertrace/design/BRAND-SPEC.md"
+      },
+      "createdAt": "2026-03-26T16:07:09.872Z"
+    },
+    "workflow-1774541240128-u0bhtt": {
+      "workflowId": "workflow-1774541240128-u0bhtt",
+      "name": "vault-state-sync",
+      "description": "Syncs Ruflo memory with Obsidian vault state. Reads STATE.md, updates Ruflo memory with current battle drill position, build progress, and blockers.",
+      "steps": [
+        {
+          "stepId": "step-1",
+          "name": "read-state",
+          "type": "task",
+          "config": {
+            "description": "Read apex-os/00-system/STATE.md via Obsidian MCP"
+          },
+          "status": "pending"
+        },
+        {
+          "stepId": "step-2",
+          "name": "read-sprint",
+          "type": "task",
+          "config": {
+            "description": "Read apex-os/00-system/SPRINT.md for current sprint status"
+          },
+          "status": "pending"
+        },
+        {
+          "stepId": "step-3",
+          "name": "sync-to-ruflo",
+          "type": "task",
+          "config": {
+            "description": "Update Ruflo memory namespace apex-os with current vault state"
+          },
+          "status": "pending"
+        },
+        {
+          "stepId": "step-4",
+          "name": "check-staleness",
+          "type": "condition",
+          "config": {
+            "description": "If STATE.md last-updated is >48h old, flag as stale and notify"
+          },
+          "status": "pending"
+        }
+      ],
+      "status": "ready",
+      "currentStep": 0,
+      "variables": {},
+      "createdAt": "2026-03-26T16:07:20.128Z"
+    },
+    "workflow-1774541252991-slfoy9": {
+      "workflowId": "workflow-1774541252991-slfoy9",
+      "name": "evolution-cycle",
+      "description": "Weekly agent evolution cycle. Pulls trajectory data from Ruflo, scores each active agent against rubric, identifies patterns, proposes improvements. Routes to Casey for approval per Constitution Article III.",
+      "steps": [
+        {
+          "stepId": "step-1",
+          "name": "collect-trajectories",
+          "type": "task",
+          "config": {
+            "description": "Pull all completed trajectories from the past week from Ruflo intelligence"
+          },
+          "status": "pending"
+        },
+        {
+          "stepId": "step-2",
+          "name": "score-agents",
+          "type": "parallel",
+          "config": {
+            "description": "Score each agent that had activity against their rubric criteria stored in agent-{name} namespace"
+          },
+          "status": "pending"
+        },
+        {
+          "stepId": "step-3",
+          "name": "identify-patterns",
+          "type": "task",
+          "config": {
+            "description": "Search for successful patterns (quality > 0.7) and anti-patterns (quality < 0.4) across all agents"
+          },
+          "status": "pending"
+        },
+        {
+          "stepId": "step-4",
+          "name": "generate-proposals",
+          "type": "task",
+          "config": {
+            "description": "For agents scoring below baseline, propose specific persona/rubric improvements with rollback plans"
+          },
+          "status": "pending"
+        },
+        {
+          "stepId": "step-5",
+          "name": "surface-to-casey",
+          "type": "task",
+          "config": {
+            "description": "Write evolution report to apex-os/00-system/ and notify Casey for approval. No changes enacted without human initiation."
+          },
+          "status": "pending"
+        }
+      ],
+      "status": "ready",
+      "currentStep": 0,
+      "variables": {},
+      "createdAt": "2026-03-26T16:07:32.991Z"
+    }
+  },
+  "templates": {},
+  "version": "3.0.0"
+}

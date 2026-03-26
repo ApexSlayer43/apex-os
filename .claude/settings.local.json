@@ -102,7 +102,19 @@
       "mcp__ruflo__hooks_intelligence_trajectory-end",
       "Bash(ls -la /c/Users/hall3/Downloads/Aethertrace/aethertrace-mvp/.env*)",
       "mcp__obsidian-claude-code__str_replace",
-      "mcp__obsidian-claude-code__create"
+      "mcp__obsidian-claude-code__create",
+      "mcp__ruflo__autopilot_enable",
+      "mcp__ruflo__autopilot_status",
+      "mcp__ruflo__workflow_create",
+      "Bash(NODE_OPTIONS=\"--dns-result-order=ipv4first\" npx ruflo@latest --version)",
+      "mcp__ruflo__hooks_intelligence",
+      "mcp__ruflo__hive-mind_status",
+      "mcp__ruflo__coordination_topology",
+      "mcp__ruflo__memory_stats",
+      "mcp__ruflo__embeddings_status",
+      "mcp__ruflo__hooks_worker-list",
+      "mcp__ruflo__embeddings_init",
+      "mcp__ruflo__hive-mind_init"
     ]
   }
 }

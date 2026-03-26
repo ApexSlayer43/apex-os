@@ -164,6 +164,7 @@ export async function POST(request: NextRequest) {
     // The RPC function `append_evidence_item` acquires FOR UPDATE lock on the
     // chain tip, computes chain_position + chain_hash + previous_hash, and
     // inserts — all atomically. No race condition possible.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const { data: evidenceItem, error: insertError } = await supabase
       .rpc('append_evidence_item', {
         p_project_id: projectId,
@@ -180,7 +181,7 @@ export async function POST(request: NextRequest) {
         p_time_confidence: timeConfidence,
         p_evidence_id: evidenceId,
       })
-      .single()
+      .single() as { data: any; error: any }
 
     if (insertError) {
       console.error('Evidence insert failed:', insertError)

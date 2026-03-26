@@ -281,7 +281,7 @@ AetherTrace cannot modify evidence after ingestion.
     .insert({
       project_id: projectId,
       generated_by: user.id,
-      package_hash: eventChainHash,
+      package_hash: eventHash,
       file_path: `exports/${projectId}/${now}`,
       evidence_count: (items || []).length,
       custody_event_count: (events || []).length,

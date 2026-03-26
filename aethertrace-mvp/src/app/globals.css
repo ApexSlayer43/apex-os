@@ -98,6 +98,12 @@ body::before {
   }
 }
 
+/* ── Plan Page Animations ────────────────────────────────────── */
+@keyframes plan-pulse-red {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
 /* ── Utility classes ─────────────────────────────────────────── */
 .text-glow {
   text-shadow: 0 0 20px rgba(126,184,247,0.4);

@@ -114,7 +114,14 @@
       "mcp__ruflo__embeddings_status",
       "mcp__ruflo__hooks_worker-list",
       "mcp__ruflo__embeddings_init",
-      "mcp__ruflo__hive-mind_init"
+      "mcp__ruflo__hive-mind_init",
+      "mcp__ruflo__hive-mind_spawn",
+      "mcp__ruflo__coordination_consensus",
+      "mcp__ruflo__aidefence_stats",
+      "mcp__ruflo__neural_status",
+      "mcp__ruflo__hooks_model-stats",
+      "mcp__ruflo__performance_report",
+      "mcp__ruflo__performance_metrics"
     ]
   }
 }

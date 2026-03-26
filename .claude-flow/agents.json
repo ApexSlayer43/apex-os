@@ -1,0 +1,56 @@
+{
+  "agents": {
+    "apex-worker-1774541566865-yjuc": {
+      "agentId": "apex-worker-1774541566865-yjuc",
+      "agentType": "worker",
+      "status": "idle",
+      "health": 1,
+      "taskCount": 0,
+      "config": {
+        "role": "worker",
+        "hiveRole": "worker"
+      },
+      "createdAt": "2026-03-26T16:12:46.865Z",
+      "domain": "hive-mind"
+    },
+    "apex-worker-1774541566865-2z1w": {
+      "agentId": "apex-worker-1774541566865-2z1w",
+      "agentType": "worker",
+      "status": "idle",
+      "health": 1,
+      "taskCount": 0,
+      "config": {
+        "role": "worker",
+        "hiveRole": "worker"
+      },
+      "createdAt": "2026-03-26T16:12:46.865Z",
+      "domain": "hive-mind"
+    },
+    "apex-worker-1774541566865-tyst": {
+      "agentId": "apex-worker-1774541566865-tyst",
+      "agentType": "worker",
+      "status": "idle",
+      "health": 1,
+      "taskCount": 0,
+      "config": {
+        "role": "worker",
+        "hiveRole": "worker"
+      },
+      "createdAt": "2026-03-26T16:12:46.865Z",
+      "domain": "hive-mind"
+    },
+    "apex-worker-1774541566865-fry5": {
+      "agentId": "apex-worker-1774541566865-fry5",
+      "agentType": "worker",
+      "status": "idle",
+      "health": 1,
+      "taskCount": 0,
+      "config": {
+        "role": "worker",
+        "hiveRole": "worker"
+      },
+      "createdAt": "2026-03-26T16:12:46.865Z",
+      "domain": "hive-mind"
+    }
+  }
+}

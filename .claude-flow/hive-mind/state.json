@@ -1,14 +1,19 @@
 {
   "initialized": true,
   "topology": "hierarchical",
-  "workers": [],
+  "workers": [
+    "apex-worker-1774541566865-yjuc",
+    "apex-worker-1774541566865-2z1w",
+    "apex-worker-1774541566865-tyst",
+    "apex-worker-1774541566865-fry5"
+  ],
   "consensus": {
     "pending": [],
     "history": []
   },
   "sharedMemory": {},
   "createdAt": "2026-03-26T16:11:47.120Z",
-  "updatedAt": "2026-03-26T16:11:47.121Z",
+  "updatedAt": "2026-03-26T16:12:46.866Z",
   "queen": {
     "agentId": "queen-1774541507120",
     "electedAt": "2026-03-26T16:11:47.120Z",

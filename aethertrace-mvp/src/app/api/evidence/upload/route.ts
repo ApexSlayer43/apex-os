@@ -2,15 +2,17 @@
  * POST /api/evidence/upload
  *
  * THE critical path of AetherTrace.
- * File → SHA-256 → Chain Link → Storage → Custody Event
- * All in one atomic flow. If any step fails, nothing is committed.
+ * File -> SHA-256 -> Atomic Chain Link (via Postgres RPC) -> Storage -> Custody Event
  *
  * Invariants enforced:
- * - K2: Content-addressed integrity — hash derived from file content
- * - L1: Chain ordering is explicit and deterministic
+ * - K2: Content-addressed integrity -- hash derived from file content
+ * - L1: Chain ordering is explicit, deterministic, and ATOMIC (no race conditions)
  * - L3: Time is metadata with stated confidence
  * - I1: Evidence is immutable after ingestion
- * - A3: Deterministic — same file always produces same content hash
+ * - A3: Deterministic -- same file always produces same content hash
+ *
+ * C1 FIX: The chain tip read-then-write is now atomic via Postgres RPC function
+ * `append_evidence_item`. Two concurrent uploads can no longer fork the chain.
  *
  * Request: multipart/form-data
  *   - file: The evidence file (required)
@@ -23,7 +25,7 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
-import { computeContentHash, computeChainHash, computeEventHash, computeEventChainHash, GENESIS } from '@/lib/hash-chain'
+import { computeContentHash, computeEventHash } from '@/lib/hash-chain'
 import { uploadEvidenceFile, StorageError } from '@/lib/storage'
 import { rateLimit } from '@/lib/rate-limit'
 
@@ -117,23 +119,6 @@ export async function POST(request: NextRequest) {
     // --- Compute content hash (K2: identity from content) ---
     const fileBuffer = Buffer.from(await file.arrayBuffer())
     const contentHash = computeContentHash(fileBuffer)
-    const now = new Date().toISOString()
-    const ingestedAt = now
-
-    // --- Get chain tip for this project (L1: explicit ordering) ---
-    const { data: lastItem } = await supabase
-      .from('evidence_items')
-      .select('chain_hash, chain_position')
-      .eq('project_id', projectId)
-      .order('chain_position', { ascending: false })
-      .limit(1)
-      .single()
-
-    const previousHash = lastItem?.chain_hash ?? GENESIS
-    const chainPosition = lastItem ? lastItem.chain_position + 1 : 1
-
-    // --- Compute chain hash (L1 + A3: deterministic chain link) ---
-    const chainHash = computeChainHash(contentHash, ingestedAt, previousHash)
 
     // --- Generate evidence item ID (needed for storage path) ---
     const evidenceId = crypto.randomUUID()
@@ -163,29 +148,26 @@ export async function POST(request: NextRequest) {
       throw err
     }
 
-    // --- Insert evidence item record ---
+    // --- C1 FIX: Atomic chain append via Postgres RPC ---
+    // The RPC function `append_evidence_item` acquires FOR UPDATE lock on the
+    // chain tip, computes chain_position + chain_hash + previous_hash, and
+    // inserts — all atomically. No race condition possible.
     const { data: evidenceItem, error: insertError } = await supabase
-      .from('evidence_items')
-      .insert({
-        id: evidenceId,
-        project_id: projectId,
-        submitted_by: user.id,
-        file_path: uploadResult.storagePath,
-        file_name: file.name,
-        file_type: file.type || 'application/octet-stream',
-        file_size: uploadResult.fileSize,
-        content_hash: contentHash,
-        requirement_id: requirementId || null,
-        note: note?.trim() || null,
-        metadata,
-        chain_hash: chainHash,
-        chain_position: chainPosition,
-        previous_hash: previousHash === GENESIS ? null : previousHash,
-        captured_at: capturedAt || now,
-        time_confidence: timeConfidence,
-        ingested_at: ingestedAt,
+      .rpc('append_evidence_item', {
+        p_project_id: projectId,
+        p_submitted_by: user.id,
+        p_file_path: uploadResult.storagePath,
+        p_file_name: file.name,
+        p_file_type: file.type || 'application/octet-stream',
+        p_file_size: uploadResult.fileSize,
+        p_content_hash: contentHash,
+        p_requirement_id: requirementId || null,
+        p_note: note?.trim() || null,
+        p_metadata: metadata,
+        p_captured_at: capturedAt || new Date().toISOString(),
+        p_time_confidence: timeConfidence,
+        p_evidence_id: evidenceId,
       })
-      .select()
       .single()
 
     if (insertError) {
@@ -196,18 +178,7 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // --- Create custody event: INGESTED (append to custody chain) ---
-    const { data: lastEvent } = await supabase
-      .from('custody_events')
-      .select('chain_hash, chain_position')
-      .eq('project_id', projectId)
-      .order('chain_position', { ascending: false })
-      .limit(1)
-      .single()
-
-    const eventPreviousHash = lastEvent?.chain_hash ?? GENESIS
-    const eventChainPosition = lastEvent ? lastEvent.chain_position + 1 : 1
-
+    // --- Create custody event: INGESTED (atomic via RPC) ---
     const eventData = {
       action: 'ingested',
       evidence_item_id: evidenceId,
@@ -217,27 +188,23 @@ export async function POST(request: NextRequest) {
       submitted_by: user.id,
     }
 
+    // event_hash is computed in Node.js (sorted-key JSON determinism)
+    // chain linking is done atomically in Postgres
     const eventHash = computeEventHash(eventData)
-    const eventChainHash = computeEventChainHash(eventHash, now, eventPreviousHash)
 
     const { error: eventError } = await supabase
-      .from('custody_events')
-      .insert({
-        evidence_item_id: evidenceId,
-        project_id: projectId,
-        actor_id: user.id,
-        event_type: 'ingested',
-        event_hash: eventHash,
-        chain_hash: eventChainHash,
-        chain_position: eventChainPosition,
-        previous_hash: eventPreviousHash === GENESIS ? null : eventPreviousHash,
-        event_data: eventData,
-        created_at: now,
+      .rpc('append_custody_event', {
+        p_project_id: projectId,
+        p_evidence_item_id: evidenceId,
+        p_actor_id: user.id,
+        p_event_type: 'ingested',
+        p_event_data: eventData,
+        p_event_hash: eventHash,
       })
 
     if (eventError) {
       console.error('Custody event insert failed:', eventError)
-      // Evidence is saved — custody event failure is logged but not fatal
+      // Evidence is saved -- custody event failure is logged but not fatal
       // The evidence is still immutable and verifiable
     }
 

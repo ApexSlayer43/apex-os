@@ -7,6 +7,7 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
+import { verifyOrgMembership } from '@/lib/auth-guard'
 
 export async function GET(
   _request: NextRequest,
@@ -18,6 +19,12 @@ export async function GET(
 
   if (authError || !user) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  }
+
+  // Explicit org membership check (belt + suspenders with RLS)
+  const membership = await verifyOrgMembership(supabase, user.id, projectId)
+  if (!membership.authorized) {
+    return NextResponse.json({ error: membership.error || 'Access denied' }, { status: 403 })
   }
 
   const { data: items, error } = await supabase

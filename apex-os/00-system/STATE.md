@@ -60,6 +60,25 @@ Status: in-progress
 ## Blockers
 None. All infrastructure operational.
 
+## Audit Gate — 2026-03-26 (AMBER)
+
+Full 4-agent parallel audit completed. Decision Gate: AMBER — fixable issues, remediation in progress.
+
+**Findings remediated:**
+- C1: Race condition on chain tip → Postgres RPC with FOR UPDATE (in progress)
+- C2: plan_hash not computed → SHA-256 on activation (in progress)
+- C3: Active plans editable → Immutability guard (in progress)
+- C6: org_members missing on 10 routes → Reusable auth-guard middleware (in progress)
+- C7: 8% test coverage → P0 tests for storage + rate-limit (in progress)
+
+**Findings dismissed (Casey approved current design):**
+- Bebas Neue wordmark — APPROVED (overrides BRAND-SPEC.md IBM Plex Mono)
+- Current color values — APPROVED
+- Instrument Serif headings — APPROVED
+- Merged verify endpoint (custody + completeness) — APPROVED for MVP
+
+**Decision:** Merged verify endpoint accepted. Standalone custody/completeness routes deferred to post-MVP.
+
 ## Infrastructure Status (Updated 2026-03-22)
 
 | Component | Status | Notes |

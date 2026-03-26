@@ -15,8 +15,9 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
-import { verifyChain, verifyCustodyChain, GENESIS, computeEventHash, computeEventChainHash } from '@/lib/hash-chain'
+import { verifyChain, verifyCustodyChain, GENESIS, computeEventHash } from '@/lib/hash-chain'
 import type { ChainItem, CustodyEventItem } from '@/lib/hash-chain'
+import { verifyOrgMembership } from '@/lib/auth-guard'
 import archiver from 'archiver'
 import { PassThrough } from 'stream'
 
@@ -30,6 +31,15 @@ export async function POST(
 
   if (authError || !user) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  }
+
+  // Explicit org membership + owner role check (per FORGE: only org owner can export)
+  const membership = await verifyOrgMembership(supabase, user.id, projectId)
+  if (!membership.authorized) {
+    return NextResponse.json({ error: membership.error || 'Access denied' }, { status: 403 })
+  }
+  if (membership.role !== 'owner') {
+    return NextResponse.json({ error: 'Only org owners can export evidence packages' }, { status: 403 })
   }
 
   // --- Fetch project ---
@@ -239,18 +249,9 @@ AetherTrace cannot modify evidence after ingestion.
 
   await archive.finalize()
 
-  // --- Record the export as a custody event ---
-  const { data: lastEvent } = await supabase
-    .from('custody_events')
-    .select('chain_hash, chain_position')
-    .eq('project_id', projectId)
-    .order('chain_position', { ascending: false })
-    .limit(1)
-    .single()
-
-  const eventPreviousHash = lastEvent?.chain_hash ?? GENESIS
-  const eventChainPosition = lastEvent ? lastEvent.chain_position + 1 : 1
-
+  // --- C1 FIX: Record the export as a custody event via atomic RPC ---
+  // Previously did a separate SELECT + INSERT which could race with concurrent events.
+  // Now uses append_custody_event RPC for atomic chain linking.
   const eventData = {
     action: 'exported',
     project_id: projectId,
@@ -261,18 +262,14 @@ AetherTrace cannot modify evidence after ingestion.
   }
 
   const eventHash = computeEventHash(eventData)
-  const eventChainHash = computeEventChainHash(eventHash, now, eventPreviousHash)
 
-  await supabase.from('custody_events').insert({
-    project_id: projectId,
-    actor_id: user.id,
-    event_type: 'exported',
-    event_hash: eventHash,
-    chain_hash: eventChainHash,
-    chain_position: eventChainPosition,
-    previous_hash: eventPreviousHash === GENESIS ? null : eventPreviousHash,
-    event_data: eventData,
-    created_at: now,
+  await supabase.rpc('append_custody_event', {
+    p_project_id: projectId,
+    p_evidence_item_id: null,
+    p_actor_id: user.id,
+    p_event_type: 'exported',
+    p_event_data: eventData,
+    p_event_hash: eventHash,
   })
 
   // --- Also record in evidence_packages table ---

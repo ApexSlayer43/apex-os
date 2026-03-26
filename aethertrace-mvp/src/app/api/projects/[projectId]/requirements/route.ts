@@ -5,6 +5,7 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
+import { verifyOrgMembership } from '@/lib/auth-guard'
 
 export async function POST(
   request: NextRequest,
@@ -18,12 +19,38 @@ export async function POST(
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
+  // Explicit org membership check (belt + suspenders with RLS)
+  const membership = await verifyOrgMembership(supabase, user.id, projectId)
+  if (!membership.authorized) {
+    return NextResponse.json({ error: membership.error || 'Access denied' }, { status: 403 })
+  }
+
   const body = await request.json()
   const { custodyPlanId, category, description, milestone, dueDate, required } = body
 
   if (!custodyPlanId || !category || !description) {
     return NextResponse.json(
       { error: 'Missing required fields: custodyPlanId, category, description' },
+      { status: 400 }
+    )
+  }
+
+  // --- C3 FIX: Block adding requirements to non-draft plans ---
+  // Once a plan is activated, its content is frozen (plan_hash was computed).
+  // Adding requirements would invalidate the hash and break immutability.
+  const { data: parentPlan, error: planFetchError } = await supabase
+    .from('custody_plans')
+    .select('id, status')
+    .eq('id', custodyPlanId)
+    .single()
+
+  if (planFetchError || !parentPlan) {
+    return NextResponse.json({ error: 'Custody plan not found' }, { status: 404 })
+  }
+
+  if (parentPlan.status !== 'draft') {
+    return NextResponse.json(
+      { error: 'Cannot add requirements to an activated plan' },
       { status: 400 }
     )
   }
@@ -73,6 +100,12 @@ export async function PATCH(
 
   if (authError || !user) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  }
+
+  // Explicit org membership check (belt + suspenders with RLS)
+  const patchMembership = await verifyOrgMembership(supabase, user.id, projectId)
+  if (!patchMembership.authorized) {
+    return NextResponse.json({ error: patchMembership.error || 'Access denied' }, { status: 403 })
   }
 
   const body = await request.json()

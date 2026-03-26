@@ -6,6 +6,7 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
+import { verifyOrgMembership } from '@/lib/auth-guard'
 
 export async function POST(req: NextRequest) {
   // Auth check
@@ -18,6 +19,12 @@ export async function POST(req: NextRequest) {
   const { message, projectId } = await req.json()
   if (!message || !projectId) {
     return NextResponse.json({ error: 'Message and project ID required' }, { status: 400 })
+  }
+
+  // Explicit org membership check (belt + suspenders with RLS)
+  const membership = await verifyOrgMembership(supabase, user.id, projectId)
+  if (!membership.authorized) {
+    return NextResponse.json({ error: membership.error || 'Access denied' }, { status: 403 })
   }
 
   const apiKey = process.env.ANTHROPIC_API_KEY

@@ -5,6 +5,7 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
+import { getUserOrgMembership } from '@/lib/auth-guard'
 
 export async function GET() {
   const supabase = await createClient()
@@ -14,11 +15,18 @@ export async function GET() {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
+  // Explicit org membership check — only return projects for user's org
+  const orgMembership = await getUserOrgMembership(supabase, user.id)
+  if (!orgMembership) {
+    return NextResponse.json({ error: 'Access denied — no org membership' }, { status: 403 })
+  }
+
   const { data: projects, error } = await supabase
     .from('projects')
     .select(`
       id, org_id, name, description, status, created_at, updated_at
     `)
+    .eq('org_id', orgMembership.orgId)
     .order('created_at', { ascending: false })
 
   if (error) {

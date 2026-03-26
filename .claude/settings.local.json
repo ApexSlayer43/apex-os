@@ -130,7 +130,9 @@
       "Bash(ls -la .claude/evolution/*/)",
       "Bash(npx vitest:*)",
       "mcp__ruflo__swarm_status",
-      "Bash(/c/Users/hall3/Downloads/Aethertrace/aethertrace-mvp/.env.local.example:*)"
+      "Bash(/c/Users/hall3/Downloads/Aethertrace/aethertrace-mvp/.env.local.example:*)",
+      "Bash(powershell -Command \"Get-ChildItem -Path src -Recurse -Filter ''*.tsx'' | ForEach-Object { \\(Get-Content $_FullName -Raw\\) -replace ''ease: \\\\[0\\\\.22, 1, 0\\\\.36, 1\\\\]'', ''ease: [0.22, 1, 0.36, 1] as [number, number, number, number]'' | Set-Content $_FullName -NoNewline }\")",
+      "Bash(find src:*)"
     ]
   }
 }

@@ -129,7 +129,7 @@ export function SealPageClient({ projects, userName }: { projects: Project[]; us
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
+          transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] }}
           className="mb-8"
         >
           <OrbitingRing />
@@ -139,7 +139,7 @@ export function SealPageClient({ projects, userName }: { projects: Project[]; us
         <motion.h1
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+          transition={{ duration: 0.6, delay: 0.2, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] }}
           style={{
             fontFamily: "'Instrument Serif', Georgia, serif",
             fontSize: 'clamp(24px, 3vw, 36px)',
@@ -173,7 +173,7 @@ export function SealPageClient({ projects, userName }: { projects: Project[]; us
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
+          transition={{ duration: 0.6, delay: 0.3, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] }}
           className="w-full max-w-2xl"
         >
           <div style={{
@@ -341,7 +341,7 @@ export function SealPageClient({ projects, userName }: { projects: Project[]; us
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 12 }}
-              transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+              transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] }}
               className="w-full max-w-2xl mt-6"
             >
               {sealedMessages.length === 0 ? (

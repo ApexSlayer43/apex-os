@@ -676,7 +676,7 @@ function PhaseDefine({
                     <motion.svg
                       initial={{ scale: 0 }}
                       animate={{ scale: 1 }}
-                      transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
+                      transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] }}
                       width="10" height="10" viewBox="0 0 10 10" fill="none"
                     >
                       <path d="M2 5l2 2 4-4" stroke={cat.color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
@@ -1215,7 +1215,7 @@ function DraftPlanView({
               initial={{ height: 0, opacity: 0 }}
               animate={{ height: 'auto', opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
-              transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+              transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] }}
               style={{ overflow: 'hidden' }}
             >
               <div style={{
@@ -1373,7 +1373,7 @@ function ActivateModal({
         initial={{ opacity: 0, scale: 0.95, y: 12 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.95, y: 12 }}
-        transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+        transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] }}
         style={{
           background: 'var(--color-navy)', border: '1px solid rgba(245,158,11,0.15)',
           borderRadius: 12, padding: '36px 32px 28px', maxWidth: 480, width: '100%',
@@ -1555,7 +1555,7 @@ function ActivePlanView({
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, minWidth: 140 }}>
             <div style={{ flex: 1, height: 3, borderRadius: 2, background: 'rgba(200,212,228,0.04)', overflow: 'hidden' }}>
-              <motion.div initial={{ width: 0 }} animate={{ width: `${percent}%` }} transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1], delay: 0.5 }} style={{ height: '100%', borderRadius: 2, background: percent === 100 ? 'var(--color-sealed)' : 'var(--color-glow)' }} />
+              <motion.div initial={{ width: 0 }} animate={{ width: `${percent}%` }} transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] as [number, number, number, number], delay: 0.5 }} style={{ height: '100%', borderRadius: 2, background: percent === 100 ? 'var(--color-sealed)' : 'var(--color-glow)' }} />
             </div>
             <span style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: 'rgba(200,212,228,0.3)' }}>{percent}%</span>
           </div>

@@ -14,7 +14,7 @@ import { motion } from 'framer-motion'
 const fadeIn = {
   initial: { opacity: 0, y: 12 },
   animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.4, ease: [0.22, 1, 0.36, 1] },
+  transition: { duration: 0.4, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] },
 }
 
 const inputStyle: React.CSSProperties = {
@@ -198,7 +198,7 @@ export function SignupForm() {
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+        transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] }}
         style={{ textAlign: 'center', padding: '16px 0' }}
       >
         {/* Checkmark */}

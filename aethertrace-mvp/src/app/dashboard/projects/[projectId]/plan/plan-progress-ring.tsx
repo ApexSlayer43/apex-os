@@ -116,7 +116,7 @@ export function PlanProgressRing({
           strokeDasharray={circumference}
           initial={{ strokeDashoffset: circumference }}
           animate={{ strokeDashoffset: offset }}
-          transition={{ duration: 1.8, ease: [0.22, 1, 0.36, 1], delay: 0.3 }}
+          transition={{ duration: 1.8, ease: [0.22, 1, 0.36, 1] as [number, number, number, number], delay: 0.3 }}
           style={{
             filter: `drop-shadow(0 0 ${glowIntensity}px ${glowColor})`,
           }}
@@ -137,7 +137,7 @@ export function PlanProgressRing({
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8, delay: 0.6, ease: [0.22, 1, 0.36, 1] }}
+          transition={{ duration: 0.8, delay: 0.6, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] }}
           style={{
             fontFamily: 'var(--font-display)',
             fontSize: size * 0.25,

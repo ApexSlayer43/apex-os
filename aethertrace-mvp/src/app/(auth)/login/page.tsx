@@ -60,7 +60,7 @@ export default function LoginPage() {
       <div className="relative z-10 flex flex-col flex-1">
         <div className="flex-1 flex flex-col justify-center items-center px-4">
           {/* Brand mark */}
-          <div className="mb-12">
+          <div className="mb-12" style={{ overflow: 'visible', padding: '20px 0' }}>
             <AuthRingMark />
           </div>
 
@@ -256,39 +256,66 @@ export default function LoginPage() {
 
 function AuthRingMark() {
   return (
-    <svg
-      width="320" height="110"
-      viewBox="-20 -60 1100 390" fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      style={{ display: 'block', margin: '0 auto', overflow: 'visible' }}
-    >
-      <defs>
-        <filter id="fAuth" x="-12%" y="-80%" width="124%" height="260%">
-          <feGaussianBlur stdDeviation="4" result="blur" />
-          <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
-        </filter>
-        <filter id="fAuthNode" x="-300%" y="-300%" width="700%" height="700%">
-          <feGaussianBlur stdDeviation="8" result="blur" />
-          <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
-        </filter>
-        <linearGradient id="gAuth" x1="40" y1="0" x2="1000" y2="0" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stopColor="#7EB8F7" stopOpacity="0" />
-          <stop offset="8%" stopColor="#7EB8F7" stopOpacity="0.40" />
-          <stop offset="28%" stopColor="#C8DCFF" stopOpacity="0.70" />
-          <stop offset="48%" stopColor="#FFFFFF" stopOpacity="0.95" />
-          <stop offset="52%" stopColor="#FFFFFF" stopOpacity="0.95" />
-          <stop offset="72%" stopColor="#C8DCFF" stopOpacity="0.70" />
-          <stop offset="92%" stopColor="#7EB8F7" stopOpacity="0.40" />
-          <stop offset="100%" stopColor="#7EB8F7" stopOpacity="0" />
-        </linearGradient>
-        <clipPath id="cpAuthF"><rect x="-30" y="155" width="1140" height="200" /></clipPath>
-        <clipPath id="cpAuthB"><rect x="-30" y="-10" width="1140" height="165" /></clipPath>
-      </defs>
-      <ellipse cx="520" cy="155" rx="440" ry="108" stroke="rgba(126,184,247,0.18)" strokeWidth="1.5" fill="none" transform="rotate(-12 520 155)" clipPath="url(#cpAuthB)" />
-      <text x="520" y="202" textAnchor="middle" fontFamily="'Bebas Neue', Impact, sans-serif" fontSize="118" letterSpacing="8" fill="#FFFFFF">AETHERTRACE</text>
-      <ellipse cx="520" cy="155" rx="440" ry="108" stroke="url(#gAuth)" strokeWidth="2" fill="none" transform="rotate(-12 520 155)" clipPath="url(#cpAuthF)" filter="url(#fAuth)" />
-      <circle cx="674" cy="227" r="18" fill="#7EB8F7" opacity="0.22" filter="url(#fAuthNode)" style={{ animation: 'nodePulse 4s ease-in-out infinite' }} />
-      <circle cx="674" cy="227" r="4.5" fill="#7EB8F7" />
-    </svg>
+    <div style={{ width: 340, margin: '0 auto' }}>
+      <svg
+        width="100%"
+        viewBox="-20 0 1080 380"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        style={{ overflow: 'visible', display: 'block' }}
+      >
+        <defs>
+          <filter id="fAg" x="-10%" y="-50%" width="120%" height="200%">
+            <feGaussianBlur stdDeviation="4" result="b" />
+            <feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge>
+          </filter>
+          <filter id="fANode" x="-300%" y="-300%" width="700%" height="700%">
+            <feGaussianBlur stdDeviation="8" result="blur" />
+            <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
+          </filter>
+          <linearGradient id="gAr" x1="40" y1="0" x2="1000" y2="0" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stopColor="rgba(126,184,247,0)" />
+            <stop offset="8%" stopColor="rgba(126,184,247,0.4)" />
+            <stop offset="28%" stopColor="rgba(200,220,255,0.7)" />
+            <stop offset="48%" stopColor="rgba(255,255,255,0.95)" />
+            <stop offset="52%" stopColor="rgba(255,255,255,0.95)" />
+            <stop offset="72%" stopColor="rgba(200,220,255,0.7)" />
+            <stop offset="92%" stopColor="rgba(126,184,247,0.4)" />
+            <stop offset="100%" stopColor="rgba(126,184,247,0)" />
+          </linearGradient>
+          <clipPath id="cpAf"><rect x="-20" y="155" width="1080" height="225" /></clipPath>
+          <clipPath id="cpAb"><rect x="-20" y="0" width="1080" height="155" /></clipPath>
+        </defs>
+
+        {/* Wordmark */}
+        <text
+          x="520" y="200" textAnchor="middle"
+          fontFamily="'Bebas Neue', sans-serif"
+          fontSize="118" letterSpacing="8"
+          fill="#FFFFFF"
+          style={{ filter: 'drop-shadow(0 0 30px rgba(200,220,255,0.08))' }}
+        >AETHERTRACE</text>
+
+        {/* Ring back */}
+        <ellipse
+          cx="520" cy="155" rx="440" ry="108"
+          stroke="rgba(126,184,247,0.18)" strokeWidth="1.5" fill="none"
+          transform="rotate(-12 520 155)" clipPath="url(#cpAb)"
+        />
+
+        {/* Ring front */}
+        <ellipse
+          cx="520" cy="155" rx="440" ry="108"
+          stroke="url(#gAr)" strokeWidth="2" fill="none"
+          transform="rotate(-12 520 155)"
+          clipPath="url(#cpAf)"
+          filter="url(#fAg)"
+        />
+
+        {/* Custody node */}
+        <circle cx="674" cy="227" r="20" fill="#7EB8F7" filter="url(#fANode)" style={{ animation: 'nodePulse 4s ease-in-out infinite' }} />
+        <circle cx="674" cy="227" r="5" fill="#7EB8F7" />
+      </svg>
+    </div>
   )
 }

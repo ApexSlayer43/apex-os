@@ -15,7 +15,7 @@ import { SpotlightProjectRow } from './components/spotlight-project-row'
 import { ChainIntegrityCard } from './components/chain-integrity-card'
 
 type Org = { id: string; name: string; plan: string; subscription_status: string }
-type ProjectWithStats = { id: string; name: string; status: 'active' | 'archived'; created_at: string; itemsSealed: number; lastSealed: string | null }
+type ProjectWithStats = { id: string; name: string; status: 'active' | 'archived'; created_at: string; itemsSealed: number; lastSealed: string | null; planStatus: 'none' | 'draft' | 'active' | 'completed' | 'archived' }
 type RecentSeal = { file_name: string; project_name: string; ingested_at: string; chain_position: number }
 
 export default async function DashboardPage() {
@@ -66,10 +66,20 @@ export default async function DashboardPage() {
     if (!s.lastSealed || row.ingested_at > s.lastSealed) s.lastSealed = row.ingested_at
   }
 
+  // Fetch custody plan status for each project
+  const { data: planRows } = projectIds.length > 0
+    ? await supabase.from('custody_plans').select('project_id, status').in('project_id', projectIds)
+    : { data: [] }
+  const planStatusMap: Record<string, string> = {}
+  for (const row of (planRows ?? [])) {
+    planStatusMap[row.project_id] = row.status
+  }
+
   const projectsWithStats: ProjectWithStats[] = projects.map(p => ({
     id: p.id, name: p.name, status: p.status as 'active' | 'archived',
     created_at: p.created_at, itemsSealed: statsMap[p.id]?.count ?? 0,
     lastSealed: statsMap[p.id]?.lastSealed ?? null,
+    planStatus: (planStatusMap[p.id] as ProjectWithStats['planStatus']) ?? 'none',
   }))
 
   const activeCount = projectsWithStats.filter(p => p.status === 'active').length
@@ -162,22 +172,20 @@ export default async function DashboardPage() {
   }
 
   // Returning user — stats dashboard
+  const hasSeals = totalSealed > 0
+  const firstProject = projectsWithStats[0]
+
   return (
     <div style={{ padding: '40px 44px 100px', position: 'relative', zIndex: 1 }}>
       {!isActive && <SubscriptionBanner />}
 
-      {/* Header — compact */}
+      {/* Header — org name only, no tier label */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 36 }}>
-        <div>
-          <h1 style={{
-            fontFamily: 'var(--font-serif)', fontSize: 28, fontWeight: 400,
-            color: '#DCF0FF', letterSpacing: '-0.02em', margin: 0, marginBottom: 4,
-            textShadow: '0 0 60px rgba(200,212,228,0.06)',
-          }}>{org?.name ?? 'Your Workspace'}</h1>
-          <p style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: 'rgba(200,212,228,0.3)', letterSpacing: '0.1em', margin: 0 }}>
-            {org?.plan ? `${org.plan.toUpperCase()} · ${org.subscription_status?.toUpperCase()}` : 'INACTIVE'}
-          </p>
-        </div>
+        <h1 style={{
+          fontFamily: 'var(--font-serif)', fontSize: 28, fontWeight: 400,
+          color: '#DCF0FF', letterSpacing: '-0.02em', margin: 0,
+          textShadow: '0 0 60px rgba(200,212,228,0.06)',
+        }}>{org?.name ?? 'Your Workspace'}</h1>
         {isActive && org && <NewProjectInput orgId={org.id} />}
       </div>
 
@@ -186,14 +194,50 @@ export default async function DashboardPage() {
         <ChainIntegrityCard totalItems={totalSealed} totalProjects={activeCount} />
         <SpotlightStat label="Items Sealed" value={String(totalSealed)} sub="sealed to chain" valueFont="display" valueSize={40} />
         <SpotlightStat label="Active Projects" value={String(activeCount)} sub={`${projects.length} total`} valueFont="display" valueSize={40} />
-        <SpotlightStat label="Last Sealed" value={lastSealedTimestamp} sub={lastSealedProject?.name ?? '—'} valueFont="serif" valueSize={24} />
+        <SpotlightStat label="Last Sealed" value={lastSealedTimestamp} sub={lastSealedProject?.name ?? '—'} valueFont="display" valueSize={24} />
       </div>
 
-      {/* Row 2: Activity feed (wide) + Custody summary (narrow) */}
-      <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: 10, marginBottom: 10 }}>
-        <ActivityFeed seals={recentSeals} />
-        <ChainViz seals={recentSeals.slice(0, 5)} />
-      </div>
+      {/* Row 2: Activity + Chain (when seals exist) OR guided CTA (when empty) */}
+      {hasSeals ? (
+        <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: 10, marginBottom: 10 }}>
+          <ActivityFeed seals={recentSeals} />
+          <ChainViz seals={recentSeals.slice(0, 5)} />
+        </div>
+      ) : (
+        <div className="glass-card" style={{
+          padding: '32px 28px', marginBottom: 10,
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+          borderLeft: '2px solid rgba(126,184,247,0.2)',
+        }}>
+          <div>
+            <div style={{
+              fontFamily: 'var(--font-serif)', fontSize: 18, color: '#DCF0FF',
+              marginBottom: 6,
+            }}>
+              Seal your first piece of evidence
+            </div>
+            <div style={{
+              fontFamily: 'var(--font-mono)', fontSize: 11, color: 'rgba(200,212,228,0.3)',
+              lineHeight: 1.6,
+            }}>
+              {firstProject?.planStatus === 'active'
+                ? `Your custody plan for "${firstProject.name}" is locked. Start uploading evidence to build your chain.`
+                : firstProject?.planStatus === 'draft'
+                  ? `Finish your custody plan for "${firstProject.name}" to begin sealing evidence.`
+                  : `Open "${firstProject?.name ?? 'your project'}" to define a custody plan and start sealing.`
+              }
+            </div>
+          </div>
+          <Link href={`/dashboard/projects/${firstProject?.id}`} style={{
+            fontFamily: 'var(--font-mono)', fontSize: 11, letterSpacing: '0.08em',
+            textTransform: 'uppercase', color: '#B8D4EE', textDecoration: 'none',
+            padding: '10px 20px', border: '1px solid rgba(200,212,228,0.1)',
+            borderRadius: 6, flexShrink: 0, transition: 'background 0.15s, border-color 0.15s',
+          }}>
+            {firstProject?.planStatus === 'active' ? 'Seal Evidence →' : firstProject?.planStatus === 'draft' ? 'Finish Plan →' : 'Get Started →'}
+          </Link>
+        </div>
+      )}
 
       {/* Row 3: Projects */}
       <div className="glass-card" style={{ padding: '24px 0', overflow: 'hidden' }}>
@@ -204,14 +248,10 @@ export default async function DashboardPage() {
         }}>
           Projects
         </div>
-        {projects.length === 0 ? (
-          <EmptyState subscriptionRequired={!isActive} />
-        ) : (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 4, padding: '0 12px' }}>
-            {projectsWithStats.map(project => <SpotlightProjectRow key={project.id} project={project} />)}
-            {isActive && org && <InlineCreateRow orgId={org.id} />}
-          </div>
-        )}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 4, padding: '0 12px' }}>
+          {projectsWithStats.map(project => <SpotlightProjectRow key={project.id} project={project} />)}
+          {isActive && org && <InlineCreateRow orgId={org.id} />}
+        </div>
       </div>
     </div>
   )

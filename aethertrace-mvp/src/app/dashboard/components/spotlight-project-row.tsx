@@ -10,6 +10,29 @@ type ProjectWithStats = {
   created_at: string
   itemsSealed: number
   lastSealed: string | null
+  planStatus: 'none' | 'draft' | 'active' | 'completed' | 'archived'
+}
+
+function PlanBadge({ status }: { status: ProjectWithStats['planStatus'] }) {
+  const config = {
+    none: { label: 'NO PLAN', color: 'rgba(200,212,228,0.15)', bg: 'transparent', border: 'rgba(200,212,228,0.08)' },
+    draft: { label: 'DRAFT', color: '#F59E0B', bg: 'rgba(245,158,11,0.06)', border: 'rgba(245,158,11,0.15)' },
+    active: { label: 'LOCKED', color: '#10B981', bg: 'rgba(16,185,129,0.06)', border: 'rgba(16,185,129,0.15)' },
+    completed: { label: 'COMPLETE', color: '#10B981', bg: 'rgba(16,185,129,0.06)', border: 'rgba(16,185,129,0.15)' },
+    archived: { label: 'ARCHIVED', color: 'rgba(200,212,228,0.25)', bg: 'transparent', border: 'rgba(200,212,228,0.08)' },
+  }[status]
+
+  return (
+    <div style={{
+      fontFamily: 'var(--font-mono)', fontSize: 8, letterSpacing: '0.12em',
+      color: config.color, background: config.bg,
+      border: `1px solid ${config.border}`,
+      padding: '3px 8px', borderRadius: 4,
+      whiteSpace: 'nowrap',
+    }}>
+      {config.label}
+    </div>
+  )
 }
 
 export function SpotlightProjectRow({ project }: { project: ProjectWithStats }) {
@@ -53,6 +76,9 @@ export function SpotlightProjectRow({ project }: { project: ProjectWithStats }) 
             </div>
           </div>
         </div>
+
+        {/* Center: plan status badge */}
+        <PlanBadge status={project.planStatus} />
 
         {/* Center: sealed count */}
         <div style={{ textAlign: 'center', minWidth: 60 }}>

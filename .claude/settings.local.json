@@ -88,7 +88,8 @@
       "mcp__ruflo__mcp_status",
       "mcp__ruflo__swarm_init",
       "mcp__ruflo__agent_spawn",
-      "mcp__ruflo__coordination_orchestrate"
+      "mcp__ruflo__coordination_orchestrate",
+      "mcp__ruflo__swarm_shutdown"
     ]
   }
 }

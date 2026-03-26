@@ -77,6 +77,110 @@
       "createdAt": "2026-03-26T09:54:18.938Z",
       "model": "sonnet",
       "modelRoutedBy": "explicit"
+    },
+    "at-lead": {
+      "agentId": "at-lead",
+      "agentType": "coordinator",
+      "status": "idle",
+      "health": 1,
+      "taskCount": 0,
+      "config": {
+        "model": "opus"
+      },
+      "createdAt": "2026-03-26T14:33:59.489Z",
+      "model": "opus",
+      "modelRoutedBy": "explicit"
+    },
+    "at-frontend": {
+      "agentId": "at-frontend",
+      "agentType": "coder",
+      "status": "idle",
+      "health": 1,
+      "taskCount": 0,
+      "config": {
+        "model": "sonnet"
+      },
+      "createdAt": "2026-03-26T14:34:00.697Z",
+      "model": "sonnet",
+      "modelRoutedBy": "explicit"
+    },
+    "at-backend": {
+      "agentId": "at-backend",
+      "agentType": "coder",
+      "status": "idle",
+      "health": 1,
+      "taskCount": 0,
+      "config": {
+        "model": "sonnet"
+      },
+      "createdAt": "2026-03-26T14:34:02.085Z",
+      "model": "sonnet",
+      "modelRoutedBy": "explicit"
+    },
+    "at-crypto": {
+      "agentId": "at-crypto",
+      "agentType": "security",
+      "status": "idle",
+      "health": 1,
+      "taskCount": 0,
+      "config": {
+        "model": "sonnet"
+      },
+      "createdAt": "2026-03-26T14:34:03.858Z",
+      "model": "sonnet",
+      "modelRoutedBy": "explicit"
+    },
+    "at-qa": {
+      "agentId": "at-qa",
+      "agentType": "tester",
+      "status": "idle",
+      "health": 1,
+      "taskCount": 0,
+      "config": {
+        "model": "sonnet"
+      },
+      "createdAt": "2026-03-26T14:34:05.124Z",
+      "model": "sonnet",
+      "modelRoutedBy": "explicit"
+    },
+    "at-review": {
+      "agentId": "at-review",
+      "agentType": "reviewer",
+      "status": "idle",
+      "health": 1,
+      "taskCount": 0,
+      "config": {
+        "model": "sonnet"
+      },
+      "createdAt": "2026-03-26T14:34:06.216Z",
+      "model": "sonnet",
+      "modelRoutedBy": "explicit"
+    },
+    "at-infra": {
+      "agentId": "at-infra",
+      "agentType": "coder",
+      "status": "idle",
+      "health": 1,
+      "taskCount": 0,
+      "config": {
+        "model": "sonnet"
+      },
+      "createdAt": "2026-03-26T14:34:07.603Z",
+      "model": "sonnet",
+      "modelRoutedBy": "explicit"
+    },
+    "at-design": {
+      "agentId": "at-design",
+      "agentType": "coder",
+      "status": "idle",
+      "health": 1,
+      "taskCount": 0,
+      "config": {
+        "model": "sonnet"
+      },
+      "createdAt": "2026-03-26T14:34:08.620Z",
+      "model": "sonnet",
+      "modelRoutedBy": "explicit"
     }
   },
   "version": "3.0.0"

@@ -95,7 +95,11 @@
       "mcp__ruflo__memory_search",
       "mcp__ruflo__hooks_intelligence_pattern-search",
       "mcp__ruflo__hooks_route",
-      "mcp__ruflo__memory_list"
+      "mcp__ruflo__memory_list",
+      "mcp__ruflo__hooks_intelligence_trajectory-start",
+      "mcp__ruflo__agentdb_pattern-store",
+      "mcp__ruflo__hooks_intelligence_trajectory-step",
+      "mcp__ruflo__hooks_intelligence_trajectory-end"
     ]
   }
 }

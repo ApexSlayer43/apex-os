@@ -1,0 +1,35 @@
+{
+  "version": "1.0.0",
+  "patterns": {
+    "sentinel:agent+establishing+evolution+learn+learning+loop+master+orchestrator+sentinel+wiring": {
+      "keywords": [
+        "learn",
+        "sentinel",
+        "agent",
+        "evolution",
+        "wiring",
+        "establishing",
+        "learning",
+        "loop",
+        "master",
+        "orchestrator"
+      ],
+      "agent": "sentinel",
+      "confidence": 0.55,
+      "successCount": 1,
+      "failureCount": 0,
+      "lastUsed": 1774538983779,
+      "createdAt": 1774538983779
+    }
+  },
+  "stats": {
+    "trajectoriesProcessed": 1,
+    "successfulRoutings": 1,
+    "failedRoutings": 0,
+    "lastUpdate": 1774538983779
+  },
+  "metadata": {
+    "createdAt": "2026-03-26T15:29:43.780Z",
+    "savedAt": "2026-03-26T15:29:43.780Z"
+  }
+}

@@ -7,7 +7,7 @@ updated-by: cowork-session — design-inspiration vault cataloged, apex-os wirin
 # APEX OS — System State
 
 ## Last Updated
-2026-03-23 by SENTINEL status update — all agents upgraded to v2.0.0 (Step 0 + plugin wiring)
+2026-03-26 by Ruflo integration session — corrected battle drill status, wired Ruflo ↔ Apex OS learning loop
 
 ## Active Sprint
 Sprint: S-2026-Q1-13
@@ -18,7 +18,7 @@ Status: in-progress
 
 | Project | Phase | Lead Agent | Last Activity | Next Action |
 |---------|-------|------------|---------------|-------------|
-| [[10-projects/aethertrace/_index\|AetherTrace]] | Build-ready | SENTINEL | 2026-03-23 | PRISM design brief → ANVIL activation |
+| [[10-projects/aethertrace/_index\|AetherTrace]] | ANVIL build | ANVIL | 2026-03-26 | Complete remaining 8 tasks → production deploy |
 
 ## Battle Drill Status (AetherTrace)
 
@@ -29,8 +29,8 @@ Status: in-progress
 | 3 | HELIOS | COMPLETE | Lender stakeholder frame (Path C), AI reconstruction data moat (Path D) |
 | 4 | VIGIL | COMPLETE | Foundational Principles joint analysis with HELIOS |
 | 5 | FORGE | COMPLETE | Dual-path MVP blueprint (6 weeks, 7 phases) |
-| 6 | PRISM | PENDING | Design brief for AetherTrace UI — skill installed, awaiting activation |
-| 7 | ANVIL | PENDING | Build MVP — first commit: lib/hash-chain.ts |
+| 6 | PRISM | COMPLETE | Brand spec locked by Casey 2026-03-24 (Orbital Lock) |
+| 7 | ANVIL | IN PROGRESS | Landing page, dashboard, intelligence chat, seal interface, 13 evidence items sealed |
 | 8 | BEACON | PENDING | Go-to-market execution |
 | 9 | SCRIBE | PENDING | Launch content |
 

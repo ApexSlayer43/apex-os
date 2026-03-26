@@ -8,6 +8,22 @@ When activating an agent role, read `apex-os/00-system/agents/{agent-name}/PERSO
 After significant work, update `apex-os/00-system/STATE.md` with what changed and what's next.
 This is the standing order. The vault is the control tower. Read before touching anything.
 
+## Ruflo Integration (Wired 2026-03-26)
+Ruflo (claude-flow) is the execution layer. Apex OS agents are the strategy layer. They are separate but connected.
+- **Ruflo memory namespace `apex-os`** contains: agent registry, constitution rules, project state, build manifest, brand spec, routing map
+- **Agent namespaces `agent-{name}`** contain: profiles with rubric criteria, anti-patterns, successful strategies, performance baselines
+- **Routing patterns** (HNSW-indexed): UI tasks -> PRISM authority, schema/API tasks -> FORGE authority, crypto tasks -> Foundational Rules, scope changes -> STOP (Constitution Art. VI)
+- **Self-evolution loop**: trajectory-start on activation -> trajectory-step on decisions -> trajectory-end on completion -> SONA learning -> pattern storage if quality > 0.7
+- When building, spawn Ruflo swarm agents (at-frontend, at-backend, at-crypto, at-qa, at-review, at-infra, at-design) for parallel execution under Apex OS strategic authority
+- Ruflo agents NEVER make strategic decisions. Those come from Apex OS agents via vault files.
+
+## Supabase Project (Active)
+- **Project:** aethertrace v6 mvp (`pcjuknjzslwhbieerhyb`)
+- **Region:** eu-central-1
+- **Status:** ACTIVE_HEALTHY
+- **Schema:** All 8 FORGE tables deployed with RLS
+- **Data:** 1 org, 4 projects, 13 evidence items sealed
+
 What AetherTrace Is
 AetherTrace is a neutral, cryptographically enforced custody system that transforms raw events into immutable, verifiable evidence with preserved time, identity, and lineage. It performs ONE function: prove that an event happened, when it happened, who produced it, and whether the record has been altered. It is NOT: analytics, AI, a dashboard, a scoring system, a decision engine, or a blockchain product.
 Strategic Position

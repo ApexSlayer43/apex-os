@@ -1,44 +1,46 @@
 ---
 type: sprint
-sprint-id: S-2026-Q1-13
+sprint-id: S-2026-Q1-14
 status: active
-start-date: 2026-03-22
-end-date: 2026-03-28
-goal: Apex OS vault scaffold — build the operating system
-tags: [apex-os, infrastructure]
+start-date: 2026-03-24
+end-date: 2026-04-04
+goal: AetherTrace MVP — complete ANVIL build phase
+tags: [aethertrace, build, anvil]
 ---
 
-# Sprint S-2026-Q1-13 — Build the Operating System
+# Sprint S-2026-Q1-14 — AetherTrace MVP Build
 
 ## Goal
-Complete the Apex OS vault scaffold with all agent personas, rubrics, templates, and system files. Ready for Casey to open in Obsidian and begin using.
+Complete the remaining 8 ANVIL tasks to ship a working AetherTrace MVP to production.
 
 ## Tasks
 
 | Task | Agent | Status | Notes |
 |------|-------|--------|-------|
-| Create folder structure | ANVIL | complete | All directories created |
-| Write CONSTITUTION.md | ANVIL | complete | Immutable rules defined |
-| Write CLAUDE.md | ANVIL | complete | Under 200 lines |
-| Write STATE.md | ANVIL | complete | Evolution state fields included |
-| Write 9 agent personas | ANVIL | in-progress | Porting from original skills |
-| Write 9 evaluation rubrics | ANVIL | in-progress | 3-5 criteria each |
-| Write templates | ANVIL | in-progress | |
-| Write supporting docs | ANVIL | in-progress | NAMING, BATTLE-DRILL, DECISIONS |
-| Create AetherTrace scaffold | ANVIL | pending | |
-| Install Obsidian plugins | Casey | pending | On Windows machine |
-| Configure MCP connections | Casey | pending | Outside Cowork |
+| Custody Plan CRUD API | ANVIL | pending | Routes exist, need full wiring to DB |
+| Evidence Requirements API | ANVIL | pending | Routes exist, need full wiring |
+| Completeness tracking API | ANVIL | pending | New route needed |
+| Package generator (PDF + ZIP) | ANVIL | pending | Biggest build risk per FORGE |
+| Subscription guard middleware | ANVIL | pending | Enforce plan limits on API routes |
+| Write-once storage verification | ANVIL | pending | May already work, needs testing |
+| Design tokens in Tailwind | ANVIL | pending | Brand spec → CSS variables |
+| Production deploy | ANVIL | pending | Vercel + custom domain |
 
-## Completed
+## Already Completed (Sprint S-2026-Q1-13)
 
 | Task | Agent | Date | Outcome |
 |------|-------|------|---------|
-| SENTINEL brief approved | SENTINEL | 2026-03-22 | Frame confirmed by Casey |
-| FORGE blueprint delivered | FORGE | 2026-03-22 | Full architecture spec |
-| VIGIL LEDGER research | VIGIL | 2026-03-22 | Financial agent patterns validated |
+| Vault scaffold | ANVIL | 2026-03-22 | All system files, 9 agents, templates |
+| Battle drill Steps 1-5 | Multiple | 2026-03-23 | SENTINEL → VIGIL → HELIOS → FORGE complete |
+| PRISM brand spec | PRISM | 2026-03-24 | Orbital Lock approved by Casey |
+| PRISM design overhaul | ANVIL | 2026-03-24 | Landing, login/signup, bento dashboard (18 files, 1,999 lines) |
+| Intelligence chat system | ANVIL | 2026-03-25 | Claude API integration, seal interface (23 files, 2,681 lines) |
+| Supabase schema deployed | ANVIL | 2026-03-25 | All 8 FORGE tables live with RLS |
+| 13 evidence items sealed | — | 2026-03-25 | Real data in production DB |
+| Ruflo ↔ Apex OS integration | — | 2026-03-26 | Learning loop, routing, memory wired |
 
 ## Blockers
-- MCP setup cannot happen in Cowork (broke it last time) — Casey handles on Windows
+None. All infrastructure operational. Supabase active, env configured, schema deployed.
 
 ## Retrospective
 {To be filled at sprint end}

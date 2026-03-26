@@ -26,17 +26,20 @@ AetherTrace is Truth Infrastructure — a protocol layer like TCP/IP or HTTPS. "
 | 3 — HELIOS | Visionary expansion (Path D AI layer) | ✅ COMPLETE | `research/` |
 | 4 — VIGIL | Re-validate after HELIOS pivot | ✅ COMPLETE | `research/` |
 | 5 — FORGE | MVP blueprint (6 weeks, 7 phases) | ✅ COMPLETE | `architecture/` |
-| 6 — PRISM | Design system + component spec | ⏳ **NEXT** | inspiration vault ready |
-| 7 — ANVIL | Build MVP | ⏳ PENDING | — |
+| 6 — PRISM | Brand spec (Orbital Lock) | ✅ COMPLETE | `design/BRAND-SPEC.md` — locked 2026-03-24 |
+| 7 — ANVIL | Build MVP | 🔨 **IN PROGRESS** | Landing, dashboard, intelligence chat, seal interface |
 | 8 — BEACON | Go-to-market | ⏳ PENDING | — |
 | 9 — SCRIBE | Launch content | ⏳ PENDING | — |
 
-**PRISM activation checklist:**
-1. Read `design/inspiration/VAULT-MAP.md`
-2. Read `design/inspiration/BUILD-PROTOCOL.md`
-3. Run `python3 ../../../../ui-ux-pro-max/scripts/search.py "cryptographic evidence custody" --design-system -p "AetherTrace"`
-4. Read `../../../../ui-ux-pro-max/PRISM-OVERRIDE.md`
-5. Produce design spec → save to `design/PRISM-{date}-aethertrace-design-system.md`
+**ANVIL remaining work (8 tasks):**
+1. Custody Plan CRUD API wiring
+2. Evidence Requirements API wiring
+3. Completeness tracking API
+4. Package generator (PDF + ZIP)
+5. Subscription guard middleware
+6. Write-once storage verification
+7. Design tokens in Tailwind
+8. Production deploy
 
 ## Revenue Paths
 

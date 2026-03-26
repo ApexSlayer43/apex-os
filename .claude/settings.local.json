@@ -99,7 +99,8 @@
       "mcp__ruflo__hooks_intelligence_trajectory-start",
       "mcp__ruflo__agentdb_pattern-store",
       "mcp__ruflo__hooks_intelligence_trajectory-step",
-      "mcp__ruflo__hooks_intelligence_trajectory-end"
+      "mcp__ruflo__hooks_intelligence_trajectory-end",
+      "Bash(ls -la /c/Users/hall3/Downloads/Aethertrace/aethertrace-mvp/.env*)"
     ]
   }
 }

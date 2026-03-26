@@ -88,3 +88,51 @@ export async function POST(request: NextRequest) {
 
   return NextResponse.json({ organization: org }, { status: 201 })
 }
+
+export async function PATCH(request: NextRequest) {
+  const supabase = await createClient()
+  const { data: { user }, error: authError } = await supabase.auth.getUser()
+
+  if (authError || !user) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  }
+
+  // Get user's org (must be owner)
+  const { data: membership } = await supabase
+    .from('org_members')
+    .select('org_id, role')
+    .eq('user_id', user.id)
+    .eq('role', 'owner')
+    .single()
+
+  if (!membership) {
+    return NextResponse.json({ error: 'Only org owners can update settings' }, { status: 403 })
+  }
+
+  const body = await request.json()
+  const allowedFields = ['name', 'contact_name', 'contact_role', 'company_type', 'trade', 'phone']
+  const updates: Record<string, string> = {}
+
+  for (const field of allowedFields) {
+    if (field in body) {
+      updates[field] = body[field]
+    }
+  }
+
+  if (Object.keys(updates).length === 0) {
+    return NextResponse.json({ error: 'No valid fields to update' }, { status: 400 })
+  }
+
+  const { data: org, error } = await supabase
+    .from('organizations')
+    .update(updates)
+    .eq('id', membership.org_id)
+    .select()
+    .single()
+
+  if (error) {
+    return NextResponse.json({ error: 'Failed to update organization' }, { status: 500 })
+  }
+
+  return NextResponse.json({ organization: org })
+}

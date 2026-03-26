@@ -36,11 +36,11 @@ export function DashboardShell({ email, children }: { email: string; children: R
         {/* Nav items */}
         <div style={{ flex: 1, padding: '0 6px' }}>
           <RailLink href="/dashboard" icon="grid" label="Dashboard" expanded={expanded} active={pathname === '/dashboard'} />
-          <RailLink href="/dashboard/seal" icon="shield" label="Intelligence" expanded={expanded} active={pathname?.startsWith('/dashboard/seal')} />
-          <RailLink href="/dashboard/packages" icon="file" label="Packages" expanded={expanded} active={pathname?.startsWith('/dashboard/packages')} />
-          <RailLink href="/dashboard/verify" icon="eye" label="Verification" expanded={expanded} active={pathname?.startsWith('/dashboard/verify')} />
+          <RailLink href="/dashboard/intelligence" icon="sparkle" label="Intelligence" expanded={expanded} active={pathname?.startsWith('/dashboard/intelligence')} />
+          <RailLink href="/dashboard/packages" icon="archive" label="Exports" expanded={expanded} active={pathname?.startsWith('/dashboard/packages')} />
+          <RailLink href="/dashboard/verify" icon="eye" label="Integrity" expanded={expanded} active={pathname?.startsWith('/dashboard/verify')} />
           <div style={{ height: 1, background: 'rgba(200,212,228,0.06)', margin: '10px 8px' }} />
-          <RailLink href="/dashboard/settings" icon="settings" label="Settings" expanded={expanded} active={pathname?.startsWith('/dashboard/settings')} />
+          <RailLink href="/dashboard/settings" icon="gear" label="Settings" expanded={expanded} active={pathname?.startsWith('/dashboard/settings')} />
         </div>
 
         {/* Toggle button — above user */}
@@ -163,10 +163,10 @@ function NavIcon({ name, active }: { name: string; active?: boolean }) {
   const c = active ? 'rgba(200,212,228,0.7)' : 'rgba(200,212,228,0.2)'
   switch (name) {
     case 'grid': return <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="6" height="6" rx="1" stroke={c} strokeWidth="1.2"/><rect x="9" y="1" width="6" height="6" rx="1" stroke={c} strokeWidth="1.2"/><rect x="1" y="9" width="6" height="6" rx="1" stroke={c} strokeWidth="1.2"/><rect x="9" y="9" width="6" height="6" rx="1" stroke={c} strokeWidth="1.2"/></svg>
-    case 'shield': return <svg width="16" height="16" viewBox="0 0 16 18" fill="none"><path d="M8 1L1 4v5c0 4.4 3 8.5 7 9.5 4-1 7-5.1 7-9.5V4L8 1Z" stroke={c} strokeWidth="1.2" strokeLinejoin="round"/></svg>
-    case 'file': return <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M9 1H3a1 1 0 00-1 1v12a1 1 0 001 1h10a1 1 0 001-1V6L9 1Z" stroke={c} strokeWidth="1.2" strokeLinejoin="round"/><path d="M9 1v5h5" stroke={c} strokeWidth="1.2" strokeLinejoin="round"/></svg>
+    case 'sparkle': return <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1l1.5 4.5L14 7l-4.5 1.5L8 13l-1.5-4.5L2 7l4.5-1.5L8 1Z" stroke={c} strokeWidth="1.2" strokeLinejoin="round"/><path d="M12.5 1l.5 1.5L14.5 3l-1.5.5-.5 1.5-.5-1.5L10.5 3l1.5-.5.5-1.5Z" stroke={c} strokeWidth="0.8" strokeLinejoin="round"/></svg>
+    case 'archive': return <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M1 4h14v-2a1 1 0 00-1-1H2a1 1 0 00-1 1v2Z" stroke={c} strokeWidth="1.2" strokeLinejoin="round"/><path d="M2 4v9a1 1 0 001 1h10a1 1 0 001-1V4" stroke={c} strokeWidth="1.2" strokeLinejoin="round"/><path d="M6 7h4" stroke={c} strokeWidth="1.2" strokeLinecap="round"/></svg>
     case 'eye': return <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M1 8s2.5-5 7-5 7 5 7 5-2.5 5-7 5-7-5-7-5Z" stroke={c} strokeWidth="1.2"/><circle cx="8" cy="8" r="2" stroke={c} strokeWidth="1.2"/></svg>
-    case 'settings': return <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="2.5" stroke={c} strokeWidth="1.2"/><path d="M8 1v2M8 13v2M1 8h2M13 8h2M3.05 3.05l1.41 1.41M11.54 11.54l1.41 1.41M3.05 12.95l1.41-1.41M11.54 4.46l1.41-1.41" stroke={c} strokeWidth="1.2" strokeLinecap="round"/></svg>
+    case 'gear': return <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="2" stroke={c} strokeWidth="1.2"/><path d="M6.5 1.5h3l.4 1.8a5.5 5.5 0 011.3.7l1.7-.7 1.5 2.6-1.3 1.1a5.5 5.5 0 010 1.5l1.3 1.1-1.5 2.6-1.7-.7a5.5 5.5 0 01-1.3.7l-.4 1.8h-3l-.4-1.8a5.5 5.5 0 01-1.3-.7l-1.7.7-1.5-2.6 1.3-1.1a5.5 5.5 0 010-1.5L2.6 5.9l1.5-2.6 1.7.7a5.5 5.5 0 011.3-.7l.4-1.8Z" stroke={c} strokeWidth="1.2" strokeLinejoin="round"/></svg>
     default: return null
   }
 }

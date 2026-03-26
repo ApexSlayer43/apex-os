@@ -83,7 +83,9 @@
       "Bash(NODE_OPTIONS=\"--dns-result-order=ipv4first\" ruflo mcp setup)",
       "Bash(NODE_OPTIONS=\"--dns-result-order=ipv4first\" ruflo memory init)",
       "Bash(NODE_OPTIONS=\"--dns-result-order=ipv4first\" ruflo daemon start)",
-      "Bash(NODE_OPTIONS=\"--dns-result-order=ipv4first\" npx ruflo@latest init upgrade --add-missing)"
+      "Bash(NODE_OPTIONS=\"--dns-result-order=ipv4first\" npx ruflo@latest init upgrade --add-missing)",
+      "mcp__ruflo__system_status",
+      "mcp__ruflo__mcp_status"
     ]
   }
 }

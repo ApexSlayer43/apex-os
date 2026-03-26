@@ -47,6 +47,7 @@ const session = safeRequire(path.join(helpersDir, 'session.js'));
 const memory = safeRequire(path.join(helpersDir, 'memory.js'));
 const intelligence = safeRequire(path.join(helpersDir, 'intelligence.cjs'));
 const apexOs = safeRequire(path.join(helpersDir, 'apex-os.cjs'));
+const evolution = safeRequire(path.join(helpersDir, 'evolution.cjs'));
 
 // Get the command from argv
 const [,, command, ...args] = process.argv;
@@ -279,6 +280,18 @@ const handlers = {
     if (intelligence && intelligence.feedback) {
       try {
         intelligence.feedback(true);
+      } catch (e) { /* non-fatal */ }
+    }
+    // Evolution: check for rollback candidates after task completion
+    if (evolution && evolution.checkRollbacks) {
+      try {
+        const candidates = evolution.checkRollbacks();
+        if (candidates.length > 0) {
+          for (const c of candidates) {
+            console.log(`[EVOLUTION WARNING] ${c.recommendation}`);
+          }
+          console.log('[EVOLUTION] Surface to Casey for approval before rollback (Constitution Art. III)');
+        }
       } catch (e) { /* non-fatal */ }
     }
     console.log('[OK] Task completed');

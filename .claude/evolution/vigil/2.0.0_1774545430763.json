@@ -1,0 +1,12 @@
+{
+  "agent": "VIGIL",
+  "version": "2.0.0",
+  "taskId": "aethertrace-market-validation",
+  "timestamp": "2026-03-26T17:17:10.763Z",
+  "metrics": {
+    "sources_cited": 12,
+    "behavioral_evidence_ratio": 85,
+    "forge_clarifications": 0,
+    "verdict_accuracy": 1
+  }
+}

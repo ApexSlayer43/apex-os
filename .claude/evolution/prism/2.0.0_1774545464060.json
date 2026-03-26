@@ -1,0 +1,11 @@
+{
+  "agent": "PRISM",
+  "version": "2.0.0",
+  "taskId": "aethertrace-brand-spec",
+  "timestamp": "2026-03-26T17:17:44.060Z",
+  "metrics": {
+    "brand_deviations": 0,
+    "iterations_to_approval": 3,
+    "anvil_design_questions": 0
+  }
+}

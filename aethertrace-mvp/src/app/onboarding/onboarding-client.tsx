@@ -263,32 +263,42 @@ export function OnboardingClient({
           </div>
         </div>
 
-        {/* Trade */}
+        {/* Trade — pill buttons, consistent with Role and Company Type */}
         <div style={{ marginBottom: 24 }}>
-          <label style={labelStyle}>Primary Trade</label>
-          <select
-            value={trade}
-            onChange={e => setTrade(e.target.value)}
-            style={{ ...inputStyle, cursor: 'pointer' }}
-          >
-            <option value="">Select your trade (optional)</option>
+          <label style={labelStyle}>Primary Trade (optional)</label>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
             {TRADES.map(t => (
-              <option key={t} value={t}>{t}</option>
+              <button
+                key={t}
+                onClick={() => setTrade(trade === t ? '' : t)}
+                style={{
+                  padding: '6px 12px', borderRadius: 4,
+                  background: trade === t ? 'rgba(126,184,247,0.08)' : 'rgba(200,212,228,0.02)',
+                  border: `1px solid ${trade === t ? 'rgba(126,184,247,0.3)' : 'rgba(200,212,228,0.08)'}`,
+                  color: trade === t ? 'rgba(126,184,247,0.8)' : 'rgba(200,212,228,0.3)',
+                  fontFamily: 'var(--font-mono)', fontSize: 10,
+                  cursor: 'pointer', transition: 'all 0.2s',
+                }}
+              >
+                {t}
+              </button>
             ))}
-          </select>
+          </div>
           <div style={hintStyle}>Used to suggest relevant evidence categories</div>
         </div>
 
-        {/* Phone */}
-        <div style={{ marginBottom: 32 }}>
-          <label style={labelStyle}>Phone (Optional)</label>
-          <input
-            type="tel"
-            value={phone}
-            onChange={e => setPhone(e.target.value)}
-            placeholder="(555) 000-0000"
-            style={inputStyle}
-          />
+        {/* Phone — compact inline */}
+        <div style={{ marginBottom: 28 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+            <label style={{ ...labelStyle, marginBottom: 0, flexShrink: 0 }}>Phone</label>
+            <input
+              type="tel"
+              value={phone}
+              onChange={e => setPhone(e.target.value)}
+              placeholder="(555) 000-0000 — optional"
+              style={{ ...inputStyle, padding: '10px 14px', fontSize: 11 }}
+            />
+          </div>
         </div>
 
         {/* Error */}
@@ -304,16 +314,31 @@ export function OnboardingClient({
           </div>
         )}
 
-        {/* Submit */}
+        {/* Submit — confident CTA */}
         <button
           onClick={handleSubmit}
           disabled={!canSubmit || submitting}
-          className="btn-seal"
           style={{
-            width: '100%', justifyContent: 'center',
-            borderRadius: 6, padding: '14px 28px',
-            fontSize: 11, letterSpacing: '0.18em',
-            opacity: canSubmit ? 1 : 0.4,
+            width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center',
+            gap: 8, borderRadius: 6, padding: '16px 28px',
+            fontSize: 11, fontWeight: 500, letterSpacing: '0.18em',
+            textTransform: 'uppercase' as const,
+            fontFamily: 'var(--font-sans)',
+            background: canSubmit ? 'rgba(255,255,255,0.95)' : 'rgba(200,212,228,0.04)',
+            color: canSubmit ? '#040D21' : 'rgba(200,212,228,0.2)',
+            border: `1px solid ${canSubmit ? 'rgba(255,255,255,0.3)' : 'rgba(200,212,228,0.06)'}`,
+            cursor: canSubmit ? 'pointer' : 'not-allowed',
+            transition: 'all 0.3s ease',
+          }}
+          onMouseEnter={e => {
+            if (canSubmit) {
+              (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,1)'
+              ;(e.currentTarget as HTMLElement).style.boxShadow = '0 0 30px rgba(255,255,255,0.1)'
+            }
+          }}
+          onMouseLeave={e => {
+            (e.currentTarget as HTMLElement).style.background = canSubmit ? 'rgba(255,255,255,0.95)' : 'rgba(200,212,228,0.04)'
+            ;(e.currentTarget as HTMLElement).style.boxShadow = 'none'
           }}
         >
           {submitting ? 'Saving...' : 'Complete Setup → Create First Project'}
@@ -325,7 +350,7 @@ export function OnboardingClient({
         variants={fadeUp} custom={5}
         style={{
           fontFamily: 'var(--font-mono)', fontSize: 9,
-          color: 'rgba(200,212,228,0.12)', letterSpacing: '0.08em',
+          color: 'rgba(200,212,228,0.2)', letterSpacing: '0.08em',
           textAlign: 'center', marginTop: 24,
         }}
       >

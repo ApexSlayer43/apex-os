@@ -138,7 +138,8 @@
       "Bash(taskkill /PID 43840 /F)",
       "Bash(cmd //c \"taskkill /PID 43840 /F\")",
       "Bash(npm run:*)",
-      "Bash(\"C:/Users/hall3/Downloads/Aethertrace/aethertrace-mvp/.env.local.example\":*)"
+      "Bash(\"C:/Users/hall3/Downloads/Aethertrace/aethertrace-mvp/.env.local.example\":*)",
+      "Bash(dir \"C:\\\\Users\\\\hall3\\\\Downloads\\\\Aethertrace\\\\aethertrace-mvp\\\\.vercel\")"
     ]
   }
 }

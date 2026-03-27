@@ -113,7 +113,7 @@ export default async function DashboardPage() {
   if (projects.length === 0) {
     const firstName = contactName?.split(' ')[0] ?? null
     return (
-      <div style={{ padding: '40px 44px 100px', position: 'relative', zIndex: 1 }}>
+      <div className="mobile-page-pad" style={{ padding: '40px 44px 100px', position: 'relative', zIndex: 1 }}>
         {!isActive && <SubscriptionBanner />}
 
         <div style={{
@@ -149,7 +149,7 @@ export default async function DashboardPage() {
           )}
 
           {/* Three steps */}
-          <div style={{
+          <div className="dash-steps" style={{
             display: 'flex', gap: 32, justifyContent: 'center',
             padding: '32px 0',
             borderTop: '1px solid rgba(200,212,228,0.06)',
@@ -176,21 +176,21 @@ export default async function DashboardPage() {
   const firstProject = projectsWithStats[0]
 
   return (
-    <div style={{ padding: '40px 44px 100px', position: 'relative', zIndex: 1 }}>
+    <div className="mobile-page-pad" style={{ padding: '40px 44px 100px', position: 'relative', zIndex: 1 }}>
       {!isActive && <SubscriptionBanner />}
 
       {/* Header — org name only, no tier label */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 36 }}>
+      <div className="dash-header" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 36 }}>
         <h1 style={{
           fontFamily: 'var(--font-serif)', fontSize: 28, fontWeight: 400,
           color: '#DCF0FF', letterSpacing: '-0.02em', margin: 0,
           textShadow: '0 0 60px rgba(200,212,228,0.06)',
         }}>{org?.name ?? 'Your Workspace'}</h1>
-        {isActive && org && <NewProjectInput orgId={org.id} />}
+        {isActive && org && <div className="new-project-wrap"><NewProjectInput orgId={org.id} /></div>}
       </div>
 
       {/* Row 1: 4 stat cards */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 10, marginBottom: 10 }}>
+      <div className="dash-stat-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 10, marginBottom: 10 }}>
         <ChainIntegrityCard totalItems={totalSealed} totalProjects={activeCount} />
         <SpotlightStat label="Items Sealed" value={String(totalSealed)} sub="sealed to chain" valueFont="display" valueSize={40} />
         <SpotlightStat label="Active Projects" value={String(activeCount)} sub={`${projects.length} total`} valueFont="display" valueSize={40} />
@@ -199,12 +199,12 @@ export default async function DashboardPage() {
 
       {/* Row 2: Activity + Chain (when seals exist) OR guided CTA (when empty) */}
       {hasSeals ? (
-        <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: 10, marginBottom: 10 }}>
+        <div className="dash-activity-grid" style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: 10, marginBottom: 10 }}>
           <ActivityFeed seals={recentSeals} />
           <ChainViz seals={recentSeals.slice(0, 5)} />
         </div>
       ) : (
-        <div className="glass-card" style={{
+        <div className="glass-card dash-cta-row" style={{
           padding: '32px 28px', marginBottom: 10,
           display: 'flex', alignItems: 'center', justifyContent: 'space-between',
           borderLeft: '2px solid rgba(126,184,247,0.2)',

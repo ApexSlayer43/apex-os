@@ -954,3 +954,209 @@ body::before {
   0%,100% { opacity: 0.08; }
   50%     { opacity: 0.2; }
 }
+
+/* ══════════════════════════════════════════════════════════════
+   RESPONSIVE — Mobile-first for construction jobsite use
+   ══════════════════════════════════════════════════════════════ */
+
+/* ── Mobile bottom tab bar (hidden on desktop) ──────────────── */
+.mobile-tab-bar {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  /* ── Sidebar → hidden on mobile, replaced by bottom tab bar ── */
+  .sidebar-rail {
+    display: none !important;
+  }
+
+  .mobile-tab-bar {
+    display: flex !important;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    height: 56px;
+    background: rgba(2,5,11,0.95);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-top: 1px solid rgba(200,212,228,0.06);
+    align-items: center;
+    justify-content: space-around;
+    padding: 0 8px;
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  .dashboard-shell {
+    flex-direction: column !important;
+  }
+
+  .dashboard-main {
+    padding-bottom: 64px; /* room for tab bar */
+  }
+}
+
+/* ── Dashboard page responsive (<640px) ─────────────────────── */
+@media (max-width: 639px) {
+  /* Stat cards: 4-col → 2-col grid */
+  .dash-stat-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  /* Activity + chain viz: 2-col → stacked */
+  .dash-activity-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Dashboard header: row → column, input below title */
+  .dash-header {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 12px !important;
+  }
+
+  .dash-header .new-project-wrap {
+    width: 100%;
+  }
+
+  /* Empty state step indicators: row → column on very small */
+  .dash-steps {
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 20px !important;
+  }
+
+  /* Empty state CTA: row → column */
+  .dash-cta-row {
+    flex-direction: column !important;
+    gap: 12px !important;
+  }
+}
+
+/* ── Settings page responsive ───────────────────────────────── */
+@media (max-width: 639px) {
+  .settings-row {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 4px !important;
+  }
+  .settings-row input {
+    text-align: left !important;
+    width: 100% !important;
+    max-width: none !important;
+  }
+  .settings-row span:last-child {
+    max-width: none !important;
+    text-align: left !important;
+  }
+  .settings-page {
+    padding: 24px 16px !important;
+  }
+}
+
+/* ── Exports page responsive ────────────────────────────────── */
+@media (max-width: 639px) {
+  .exports-page {
+    padding: 24px 16px !important;
+  }
+  .exports-meta-row {
+    flex-direction: column !important;
+    gap: 12px !important;
+  }
+  .exports-meta-row > div:last-child {
+    margin-left: 0 !important;
+    width: 100%;
+  }
+  .exports-empty-bottom {
+    flex-direction: column !important;
+    gap: 12px !important;
+    align-items: flex-start !important;
+  }
+}
+
+/* ── Verify/Integrity page responsive ───────────────────────── */
+@media (max-width: 639px) {
+  .verify-page {
+    padding: 24px 16px !important;
+  }
+  .verify-project-card {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 12px !important;
+  }
+  .verify-project-actions {
+    width: 100%;
+    flex-wrap: wrap !important;
+  }
+  .verify-manual-form {
+    flex-direction: column !important;
+    gap: 8px !important;
+  }
+  .verify-manual-form button {
+    width: 100%;
+  }
+}
+
+/* ── Custody ceremony (plan) responsive ─────────────────────── */
+@media (max-width: 639px) {
+  .ceremony-phase-indicator {
+    gap: 12px !important;
+  }
+  .ceremony-phase-label {
+    display: none !important;
+  }
+  .ceremony-phase-line {
+    width: 16px !important;
+  }
+  .ceremony-container {
+    padding-top: 10px !important;
+  }
+  .ceremony-card-inner {
+    padding: 24px 16px 20px !important;
+  }
+  .ceremony-milestone-row {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 8px !important;
+  }
+  .ceremony-milestone-row input {
+    width: 100% !important;
+    flex: none !important;
+  }
+  .ceremony-milestone-row span {
+    width: 100% !important;
+  }
+  .ceremony-custom-row {
+    flex-direction: column !important;
+    gap: 8px !important;
+  }
+  .ceremony-custom-row input {
+    width: 100% !important;
+  }
+}
+
+/* ── Seal page responsive ───────────────────────────────────── */
+@media (max-width: 639px) {
+  .seal-shell {
+    padding: 0 12px !important;
+  }
+  .seal-input-wrap {
+    padding: 10px 12px !important;
+  }
+  .seal-file-chip span {
+    max-width: 120px !important;
+  }
+  .seal-bottom-bar {
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+  }
+}
+
+/* ── Global page padding override for mobile ────────────────── */
+@media (max-width: 639px) {
+  .mobile-page-pad {
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+}

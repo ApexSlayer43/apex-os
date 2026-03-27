@@ -55,7 +55,7 @@ export function VerifyClient({ projects }: { projects: Project[] }) {
   const hasProjects = projects.length > 0
 
   return (
-    <div style={{ padding: '48px 40px', maxWidth: 800 }}>
+    <div className="verify-page" style={{ padding: '48px 40px', maxWidth: 800 }}>
       {/* Header */}
       <h1 style={{
         fontFamily: 'var(--font-serif)', fontSize: 28, fontWeight: 400,
@@ -97,7 +97,7 @@ export function VerifyClient({ projects }: { projects: Project[] }) {
                     ? (hasFailed ? '2px solid rgba(239,68,68,0.3)' : '2px solid rgba(16,185,129,0.3)')
                     : '2px solid rgba(200,212,228,0.06)',
                 }}>
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <div className="verify-project-card" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                     <div>
                       <div style={{
                         fontFamily: 'var(--font-sans)', fontSize: 15,
@@ -149,7 +149,7 @@ export function VerifyClient({ projects }: { projects: Project[] }) {
                       )}
                     </div>
 
-                    <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+                    <div className="verify-project-actions" style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
                       {!isEmpty && !pr && (
                         <button
                           onClick={() => handleProjectVerify(project.id)}
@@ -266,7 +266,7 @@ export function VerifyClient({ projects }: { projects: Project[] }) {
             </p>
 
             <form onSubmit={handleManualVerify} style={{ marginBottom: 20 }}>
-              <div style={{ display: 'flex', gap: 12 }}>
+              <div className="verify-manual-form" style={{ display: 'flex', gap: 12 }}>
                 <input
                   type="text"
                   value={hash}

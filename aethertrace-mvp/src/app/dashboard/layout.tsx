@@ -6,6 +6,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import { DashboardShell } from './components/sidebar'
+import { IntelligenceWidget } from './components/intelligence-widget'
 
 export default async function DashboardLayout({
   children,
@@ -20,6 +21,7 @@ export default async function DashboardLayout({
     <div style={{ minHeight: '100vh', background: '#02050B' }}>
       <DashboardShell email={user.email ?? ''}>
         {children}
+        <IntelligenceWidget />
       </DashboardShell>
     </div>
   )

@@ -7,8 +7,13 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { verifyOrgMembership } from '@/lib/auth-guard'
+import { rateLimit } from '@/lib/rate-limit'
 
 export async function POST(req: NextRequest) {
+  // Rate limit — strict tier (10/min) to prevent Anthropic API cost abuse
+  const rateLimited = rateLimit(req, 'strict')
+  if (rateLimited) return rateLimited
+
   // Auth check
   const supabase = await createClient()
   const { data: { user }, error: authError } = await supabase.auth.getUser()

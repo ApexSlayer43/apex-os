@@ -38,7 +38,7 @@ export default async function PackagesPage() {
   const hasPackages = packages && packages.length > 0
 
   return (
-    <div style={{ padding: '48px 40px', maxWidth: 960 }}>
+    <div className="exports-page" style={{ padding: '48px 40px', maxWidth: 960 }}>
       {/* Header */}
       <div style={{ marginBottom: 36 }}>
         <h1 style={{
@@ -88,7 +88,7 @@ export default async function PackagesPage() {
             <PackageFeature label="README written for non-technical attorneys" />
           </div>
 
-          <div style={{
+          <div className="exports-empty-bottom" style={{
             padding: '16px 0', borderTop: '1px solid rgba(200,212,228,0.06)',
             display: 'flex', alignItems: 'center', justifyContent: 'space-between',
           }}>
@@ -159,7 +159,7 @@ export default async function PackagesPage() {
                 </div>
 
                 {/* Bottom row: metadata */}
-                <div style={{
+                <div className="exports-meta-row" style={{
                   display: 'flex', alignItems: 'center', gap: 24,
                   flexWrap: 'wrap',
                 }}>

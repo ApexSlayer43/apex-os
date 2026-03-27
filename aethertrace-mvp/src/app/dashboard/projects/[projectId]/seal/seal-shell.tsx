@@ -25,7 +25,7 @@ export function SealPageShell({ projectName, projectId, chainDepth, items }: {
   const [showHistory, setShowHistory] = useState(false)
 
   return (
-    <div style={{
+    <div className="seal-shell" style={{
       display: 'flex', flexDirection: 'column',
       alignItems: 'center', justifyContent: 'center',
       minHeight: '100vh',

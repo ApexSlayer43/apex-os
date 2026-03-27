@@ -58,7 +58,7 @@ export function SettingsClient({ org, email, userId }: {
   }
 
   return (
-    <div style={{ padding: '48px 40px', maxWidth: 720 }}>
+    <div className="settings-page" style={{ padding: '48px 40px', maxWidth: 720 }}>
       <h1 style={{
         fontFamily: 'var(--font-serif)', fontSize: 28, fontWeight: 400,
         color: '#DCF0FF', letterSpacing: '-0.02em', margin: 0, marginBottom: 6,
@@ -145,7 +145,7 @@ export function SettingsClient({ org, email, userId }: {
         <h2 style={{
           fontFamily: 'var(--font-mono)', fontSize: 11,
           color: 'rgba(200,212,228,0.4)', letterSpacing: '0.1em',
-          textTransform: 'uppercase', marginBottom: 20, margin: 0, marginBottom: 20,
+          textTransform: 'uppercase', margin: 0, marginBottom: 20,
         }}>
           Subscription
         </h2>
@@ -197,18 +197,34 @@ export function SettingsClient({ org, email, userId }: {
           <SettingsRow label="User ID" value={userId} mono />
           <SettingsRow label="Org ID" value={org.id} mono />
         </div>
-        <form action="/api/auth/signout" method="POST" style={{ marginTop: 24 }}>
-          <button type="submit" style={{
-            fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.08em',
-            textTransform: 'uppercase', padding: '8px 16px',
-            background: 'rgba(239,68,68,0.06)',
-            border: '1px solid rgba(239,68,68,0.12)',
-            borderRadius: 6, color: 'rgba(239,68,68,0.7)', cursor: 'pointer',
-            transition: 'background 0.15s',
-          }}>
-            Sign Out
-          </button>
-        </form>
+        <div style={{ display: 'flex', gap: 12, alignItems: 'center', marginTop: 24 }}>
+          <a
+            href={`mailto:support@aethertrace.com?subject=Support%20Request%20-%20${encodeURIComponent(org.name || 'Unknown')}`}
+            style={{
+              fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.08em',
+              textTransform: 'uppercase', padding: '8px 16px',
+              background: 'rgba(200,212,228,0.06)',
+              border: '1px solid rgba(200,212,228,0.1)',
+              borderRadius: 6, color: '#B8D4EE', cursor: 'pointer',
+              transition: 'background 0.15s', textDecoration: 'none',
+              display: 'inline-block',
+            }}
+          >
+            Contact Support
+          </a>
+          <form action="/api/auth/signout" method="POST">
+            <button type="submit" style={{
+              fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.08em',
+              textTransform: 'uppercase', padding: '8px 16px',
+              background: 'rgba(239,68,68,0.06)',
+              border: '1px solid rgba(239,68,68,0.12)',
+              borderRadius: 6, color: 'rgba(239,68,68,0.7)', cursor: 'pointer',
+              transition: 'background 0.15s',
+            }}>
+              Sign Out
+            </button>
+          </form>
+        </div>
       </section>
     </div>
   )
@@ -219,7 +235,7 @@ function EditableRow({ label, field, value, editing, onChange, placeholder }: {
   onChange: (v: string) => void; placeholder?: string
 }) {
   return (
-    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+    <div className="settings-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
       <span style={{
         fontFamily: 'var(--font-mono)', fontSize: 12,
         color: 'rgba(200,212,228,0.35)', letterSpacing: '0.04em',
@@ -259,7 +275,7 @@ function EditableRow({ label, field, value, editing, onChange, placeholder }: {
 
 function SettingsRow({ label, value, mono }: { label: string; value: string; mono?: boolean }) {
   return (
-    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+    <div className="settings-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
       <span style={{
         fontFamily: 'var(--font-mono)', fontSize: 12,
         color: 'rgba(200,212,228,0.35)', letterSpacing: '0.04em',

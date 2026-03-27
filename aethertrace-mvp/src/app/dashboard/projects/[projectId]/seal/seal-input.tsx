@@ -145,6 +145,7 @@ export function SealInput({ projectId }: { projectId: string }) {
 
   return (
     <div
+      className="seal-input-wrap"
       onDrop={handleDrop}
       onDragOver={handleDragOver}
       style={{
@@ -231,7 +232,7 @@ export function SealInput({ projectId }: { projectId: string }) {
       )}
 
       {/* Bottom bar: file + seal button */}
-      <div style={{
+      <div className="seal-bottom-bar" style={{
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
@@ -290,7 +291,7 @@ export function SealInput({ projectId }: { projectId: string }) {
 
           {/* Selected file chip */}
           {file && (
-            <div style={{
+            <div className="seal-file-chip" style={{
               display: 'flex',
               alignItems: 'center',
               gap: 6,

@@ -73,6 +73,23 @@ const SUGGESTED_CATEGORIES: CategorySuggestion[] = [
   { name: 'Permits & Approvals', description: 'Building permits, inspection sign-offs, regulatory approvals', defaultChecked: false, color: '#0EA5E9', icon: '⬥' },
 ]
 
+/** Trade-specific category defaults — overrides defaultChecked based on org trade */
+const TRADE_DEFAULTS: Record<string, string[]> = {
+  'Mechanical (HVAC/Plumbing)': ['Inspection Documentation', 'Material Certifications', 'Test Results & Reports', 'Commissioning Records'],
+  'Electrical': ['Inspection Documentation', 'Test Results & Reports', 'Safety Compliance', 'Commissioning Records'],
+  'Solar / Renewable Energy': ['Commissioning Records', 'Test Results & Reports', 'Permits & Approvals', 'Daily Progress Photos'],
+  'Concrete': ['Material Certifications', 'Test Results & Reports', 'Daily Progress Photos', 'Inspection Documentation'],
+  'Plumbing': ['Inspection Documentation', 'Material Certifications', 'Test Results & Reports', 'Daily Progress Photos'],
+}
+
+function getDefaultCategories(orgTrade?: string | null): string[] {
+  if (orgTrade && TRADE_DEFAULTS[orgTrade]) {
+    return TRADE_DEFAULTS[orgTrade]
+  }
+  // Default: use the defaultChecked values from SUGGESTED_CATEGORIES
+  return SUGGESTED_CATEGORIES.filter(c => c.defaultChecked).map(c => c.name)
+}
+
 /** Category → accent color for visual grouping */
 const CATEGORY_COLORS: Record<string, string> = {}
 for (const cat of SUGGESTED_CATEGORIES) {
@@ -214,10 +231,12 @@ function CustodyCeremony({
   const [planName, setPlanName] = useState('')
   const [planDescription, setPlanDescription] = useState('')
 
-  // Phase 2 state — pre-checked categories
-  const [selectedCategories, setSelectedCategories] = useState<SelectedCategory[]>(
-    SUGGESTED_CATEGORIES
-      .filter(c => c.defaultChecked)
+  // Phase 2 state — pre-checked categories (trade-aware defaults)
+  const [selectedCategories, setSelectedCategories] = useState<SelectedCategory[]>(() => {
+    const defaults = getDefaultCategories(orgTrade)
+    const defaultSet = new Set(defaults)
+    return SUGGESTED_CATEGORIES
+      .filter(c => defaultSet.has(c.name))
       .map(c => ({
         name: c.name,
         description: c.description,
@@ -225,7 +244,7 @@ function CustodyCeremony({
         dueDate: '',
         color: c.color,
       }))
-  )
+  })
   const [customCategory, setCustomCategory] = useState('')
   const [customDescription, setCustomDescription] = useState('')
 
@@ -331,7 +350,7 @@ function CustodyCeremony({
   }, [projectId, planName, planDescription, selectedCategories, onPlanCreated])
 
   return (
-    <div style={{ maxWidth: 680, margin: '0 auto', paddingTop: 20 }}>
+    <div className="ceremony-container" style={{ maxWidth: 680, margin: '0 auto', paddingTop: 20 }}>
       {/* Ambient glow */}
       <div style={{
         position: 'absolute', left: '50%', top: '15%',
@@ -345,6 +364,7 @@ function CustodyCeremony({
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.6 }}
+        className="ceremony-phase-indicator"
         style={{
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           gap: 32, marginBottom: 48,
@@ -377,7 +397,7 @@ function CustodyCeremony({
                   </span>
                 )}
               </div>
-              <span style={{
+              <span className="ceremony-phase-label" style={{
                 fontFamily: 'var(--font-mono)', fontSize: 9,
                 letterSpacing: '0.14em',
                 color: isActive ? 'rgba(200,212,228,0.5)' : isPast ? 'rgba(16,185,129,0.4)' : 'rgba(200,212,228,0.12)',
@@ -386,7 +406,7 @@ function CustodyCeremony({
                 {label}
               </span>
               {i < 2 && (
-                <div style={{
+                <div className="ceremony-phase-line" style={{
                   width: 32, height: 1, marginLeft: 8,
                   background: isPast ? 'rgba(16,185,129,0.2)' : 'rgba(200,212,228,0.06)',
                   transition: 'background 0.4s',
@@ -505,7 +525,7 @@ function PhaseIdentify({
 
       <motion.div
         variants={fadeUp} custom={3}
-        className="glass-card"
+        className="glass-card ceremony-card-inner"
         style={{ padding: '40px 36px 32px', position: 'relative' }}
       >
         {/* Corner accent */}
@@ -739,7 +759,7 @@ function PhaseDefine({
               animate={{ opacity: 1, height: 'auto' }}
               style={{ overflow: 'hidden' }}
             >
-              <div style={{ display: 'flex', gap: 10, marginBottom: 8 }}>
+              <div className="ceremony-custom-row" style={{ display: 'flex', gap: 10, marginBottom: 8 }}>
                 <input
                   type="text"
                   value={customCategory}
@@ -788,7 +808,7 @@ function PhaseDefine({
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
             {selectedCategories.map(cat => (
-              <div key={cat.name} style={{
+              <div key={cat.name} className="ceremony-milestone-row" style={{
                 display: 'flex', alignItems: 'center', gap: 10,
                 padding: '8px 0',
               }}>

@@ -51,6 +51,7 @@ export async function GET(
     return NextResponse.json({
       verified: false,
       error: 'No evidence item found with this chain hash.',
+      humanVerdict: 'This record does not match what was originally sealed.',
     }, { status: 404 })
   }
 
@@ -112,6 +113,9 @@ export async function GET(
       nextLinkValid: nextValid,
       recomputedHash: recomputed,
     },
+    humanVerdict: (hashValid && previousValid && nextValid)
+      ? 'This evidence has not been altered since it was sealed.'
+      : 'This record does not match what was originally sealed.',
     verifiedAt: new Date().toISOString(),
   })
 }

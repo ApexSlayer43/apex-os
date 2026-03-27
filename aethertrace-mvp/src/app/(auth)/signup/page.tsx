@@ -254,8 +254,8 @@ export default function SignupPage() {
                     transition={{ duration: 0.5, delay: 0.3 }}
                     className="py-6"
                   >
-                    <div className="mx-auto w-14 h-14 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
-                      <svg width="24" height="24" viewBox="0 0 20 20" fill="#10B981">
+                    <div className="mx-auto w-14 h-14 rounded-full bg-[rgba(126,184,247,0.1)] border border-[rgba(126,184,247,0.2)] flex items-center justify-center">
+                      <svg width="24" height="24" viewBox="0 0 20 20" fill="#7EB8F7">
                         <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                       </svg>
                     </div>

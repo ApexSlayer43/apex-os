@@ -15,7 +15,23 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "AetherTrace — Evidence Custody",
   description:
-    "Cryptographically enforced evidence custody. Prove what happened, when it happened, and whether the record has been altered.",
+    "Neutral, cryptographically enforced custody for high-stakes operational evidence.",
+  icons: {
+    icon: "/favicon.svg",
+  },
+  openGraph: {
+    title: "AetherTrace — Evidence Custody",
+    description:
+      "Neutral, cryptographically enforced custody for high-stakes operational evidence.",
+    siteName: "AetherTrace",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "AetherTrace — Evidence Custody",
+    description:
+      "Neutral, cryptographically enforced custody for high-stakes operational evidence.",
+  },
 };
 
 export default function RootLayout({

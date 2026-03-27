@@ -12,9 +12,9 @@ export function DashboardShell({ email, children }: { email: string; children: R
   const pathname = usePathname()
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh' }}>
-      {/* Sidebar — always visible rail, expands to show labels */}
-      <div style={{
+    <div className="dashboard-shell" style={{ display: 'flex', minHeight: '100vh' }}>
+      {/* Sidebar — desktop: side rail, mobile: bottom tab bar */}
+      <div className="sidebar-rail" style={{
         width: expanded ? EXPANDED_WIDTH : RAIL_WIDTH,
         flexShrink: 0,
         transition: 'width 0.2s cubic-bezier(0.22, 1, 0.36, 1)',
@@ -109,13 +109,48 @@ export function DashboardShell({ email, children }: { email: string; children: R
         </div>
       </div>
 
+      {/* Mobile bottom tab bar */}
+      <nav className="mobile-tab-bar">
+        <TabBarLink href="/dashboard" icon="grid" label="Home" active={pathname === '/dashboard'} />
+        <TabBarLink href="/dashboard/packages" icon="archive" label="Exports" active={pathname?.startsWith('/dashboard/packages')} />
+        <TabBarLink href="/dashboard/verify" icon="eye" label="Integrity" active={pathname?.startsWith('/dashboard/verify')} />
+        <TabBarLink href="/dashboard/settings" icon="gear" label="Settings" active={pathname?.startsWith('/dashboard/settings')} />
+      </nav>
+
       {/* Main content */}
-      <div style={{ flex: 1, minWidth: 0 }}>
+      <div className="dashboard-main" style={{ flex: 1, minWidth: 0 }}>
         <main style={{ position: 'relative', zIndex: 1 }}>
           {children}
         </main>
       </div>
     </div>
+  )
+}
+
+function TabBarLink({ href, icon, label, active }: {
+  href: string; icon: string; label: string; active?: boolean
+}) {
+  return (
+    <Link href={href} style={{
+      display: 'flex', flexDirection: 'column', alignItems: 'center',
+      justifyContent: 'center', gap: 3, flex: 1,
+      textDecoration: 'none', padding: '6px 0',
+    }}>
+      <div style={{
+        width: 20, display: 'flex', justifyContent: 'center',
+        filter: active ? 'drop-shadow(0 0 4px rgba(200,212,228,0.4))' : 'none',
+      }}>
+        <NavIcon name={icon} active={active} />
+      </div>
+      <span style={{
+        fontFamily: 'var(--font-mono)', fontSize: 8,
+        letterSpacing: '0.06em', textTransform: 'uppercase',
+        color: active ? '#B8D4EE' : 'rgba(200,212,228,0.25)',
+        fontWeight: active ? 500 : 400,
+      }}>
+        {label}
+      </span>
+    </Link>
   )
 }
 

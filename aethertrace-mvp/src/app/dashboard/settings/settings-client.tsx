@@ -17,7 +17,9 @@ type OrgData = {
 }
 
 const PLAN_DETAILS: Record<string, { label: string; limit: string; price: string }> = {
-  starter: { label: 'Starter', limit: 'Up to 5 active projects', price: '$199/mo' },
+  foundation: { label: 'Foundation', limit: 'Up to 2 active projects', price: '$99/mo' },
+  standard: { label: 'Standard', limit: 'Up to 5 active projects', price: '$199/mo' },
+  starter: { label: 'Standard', limit: 'Up to 5 active projects', price: '$199/mo' }, // legacy alias
   professional: { label: 'Professional', limit: 'Unlimited projects', price: '$499/mo' },
 }
 

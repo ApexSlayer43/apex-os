@@ -6,7 +6,8 @@
  * before proceeding with write operations.
  *
  * Plan limits:
- *   - starter:      max 5 active projects
+ *   - foundation:    max 2 active projects
+ *   - standard:      max 5 active projects
  *   - professional:  unlimited
  *
  * Status behavior:
@@ -27,7 +28,9 @@ export interface SubscriptionResult {
 }
 
 const PLAN_LIMITS: Record<string, number> = {
-  starter: 5,
+  foundation: 2,
+  standard: 5,
+  starter: 5, // legacy alias for standard
   professional: Infinity,
 }
 

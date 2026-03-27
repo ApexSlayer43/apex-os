@@ -1,9 +1,10 @@
 /**
  * Stripe Configuration
  *
- * Two tiers, no free plan. Payment before custody begins.
- * $199/mo — up to 5 active projects
- * $499/mo — unlimited projects
+ * Three tiers, no free plan. Payment before custody begins.
+ * $99/mo  — up to 2 active projects (Foundation)
+ * $199/mo — up to 5 active projects (Standard)
+ * $499/mo — unlimited projects (Professional)
  */
 
 import Stripe from 'stripe'
@@ -36,6 +37,13 @@ export const stripe = typeof process !== 'undefined' && process.env.STRIPE_SECRE
  * This keeps test vs. live keys separate.
  */
 export const PLANS = {
+  foundation: {
+    name: 'Foundation',
+    priceId: process.env.STRIPE_FOUNDATION_PRICE_ID!,
+    price: 99,
+    projectLimit: 2,
+    description: 'Up to 2 active projects',
+  },
   standard: {
     name: 'Standard',
     priceId: process.env.STRIPE_STANDARD_PRICE_ID!,
